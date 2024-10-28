@@ -4,7 +4,8 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import pg from 'pg';
-
+import { AuthModule } from './auth/auth.module';
+import { User } from './users/entities/user.entity';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -23,6 +24,7 @@ import pg from 'pg';
                 database: configService.get('DB_NAME'),
                 autoLoadModels: true,
                 synchronize: true,
+                models: [User],
                 dialectOptions: {
                     ssl: {
                         require: true,
@@ -32,6 +34,7 @@ import pg from 'pg';
             }),
             inject: [ConfigService],
         }),
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],
