@@ -28,5 +28,5 @@ jobs:
             - name: Run ESLint
               run: cd server && pnpm lint && cd ../client && pnpm lint
 
-            - name: Run Prettier
-              run: pnpm prettier
+            - name: Run Prettier (server)
+              run: cd server && pnpm format
