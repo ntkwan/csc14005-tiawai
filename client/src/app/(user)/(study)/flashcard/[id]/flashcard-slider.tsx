@@ -11,7 +11,15 @@ import {
 } from "@ant-design/icons";
 import { twMerge } from "tailwind-merge";
 
-export default function FlashcardSlider({ flashcards }: { flashcards: any[] }) {
+export default function FlashcardSlider({
+    flashcards,
+}: {
+    flashcards: {
+        word: string;
+        meaning: string;
+        partOfSpeech: string; // Lưu ý: "partOfSpeech" viết hoa P và O
+    }[];
+}) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showMeaning, setShowMeaning] = useState(false);
 
