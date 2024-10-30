@@ -48,6 +48,9 @@ body {
 }
 
 .form__button {
-    /* m-auto flex justify-center rounded-full bg-[#E9DAE9] font-bold text-black */
     @apply !m-auto !flex !justify-center !rounded-full !bg-[#E9DAE9] !font-bold !text-black;
+}
+
+.form__button--auth {
+    @apply !relative !m-auto !flex !min-h-14 !min-w-14 !items-center !rounded-full;
 }

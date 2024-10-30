@@ -54,10 +54,10 @@ const Header = () => {
         setCurrent(key);
     };
     const onLoginClick = () => {
-        router.push("/login");
+        router.push("/sign-in");
     };
     const onRegisterClick = () => {
-        router.push("/register");
+        router.push("/sign-up");
     };
 
     return (
