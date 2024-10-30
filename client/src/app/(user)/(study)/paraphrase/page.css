@@ -1,0 +1,7 @@
+.ant-tabs-tab-btn {
+    @apply text-2xl;
+}
+
+.paraphrase__text-area {
+    @apply !border-b-0 !text-xl;
+}
