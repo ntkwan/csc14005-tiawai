@@ -1,12 +1,12 @@
 name: Build Packages
 on:
     push:
-        branches: [main, dev]
+        branches: ["main", "dev"]
     pull_request:
-        branches: [main, dev]
-    paths-ignore:
-        - "README.md"
-        - "LICENSE"
+        branches: ["main", "dev"]
+        paths-ignore:
+            - "README.md"
+            - "LICENSE"
 jobs:
     lint-prettier:
         runs-on: ubuntu-latest
