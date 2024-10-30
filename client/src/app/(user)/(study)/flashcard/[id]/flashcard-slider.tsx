@@ -32,17 +32,15 @@ export default function FlashcardSlider({ flashcards }: { flashcards: any[] }) {
         <div className="m-auto w-5/6 max-w-[1440px]">
             <div className="flash-card__slider m-auto grid grid-cols-3 items-center justify-center justify-items-center gap-8">
                 <Flashcard
-                    word={flashcards[currentIndex].word}
+                    word={flashcards[Math.max(currentIndex - 1, 0)].word}
                     position="left"
                     isHidden={currentIndex === 0}
-                    index={Math.max(currentIndex - 1, 0)}
                 />
 
                 <Flashcard
                     word={flashcards[currentIndex].word}
                     position="middle"
                     isHidden={false}
-                    index={currentIndex}
                 >
                     <Button
                         className="!absolute !left-0 !top-1/2 !h-12 !w-12 !-translate-x-1/2 !-translate-y-1/2"
@@ -69,10 +67,13 @@ export default function FlashcardSlider({ flashcards }: { flashcards: any[] }) {
                 </Flashcard>
 
                 <Flashcard
-                    word={flashcards[currentIndex].word}
+                    word={
+                        flashcards[
+                            Math.min(currentIndex + 1, flashcards.length - 1)
+                        ].word
+                    }
                     position="right"
                     isHidden={currentIndex === flashcards.length - 1}
-                    index={Math.min(currentIndex + 1, flashcards.length - 1)}
                 />
 
                 {showMeaning && (
@@ -114,13 +115,11 @@ const Flashcard = ({
     word,
     position,
     isHidden,
-    index,
     children,
 }: {
     word?: string;
     position: string;
     isHidden: boolean;
-    index: number;
     children?: React.ReactNode;
 }) => {
     return (
