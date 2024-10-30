@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Roboto } from "next/font/google";
+import { ConfigProvider } from "antd";
 import "@/app/globals.css";
 
 const roboto = Roboto({
@@ -23,7 +24,15 @@ export default function RootLayout({
     return (
         <html lang="vn">
             <body className={`${roboto.variable} antialiased`}>
-                <AntdRegistry>{children}</AntdRegistry>
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorBgContainerDisabled: "#d4d4d8",
+                        },
+                    }}
+                >
+                    <AntdRegistry>{children}</AntdRegistry>
+                </ConfigProvider>
             </body>
         </html>
     );
