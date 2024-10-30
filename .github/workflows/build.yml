@@ -23,7 +23,7 @@ jobs:
               run: npm install -g pnpm
 
             - name: Install dependencies
-              run: pnpm install
+              run: cd server && pnpm install && cd ../client && pnpm install
 
             - name: Run ESLint
               run: cd server && pnpm lint && cd ../client && pnpm lint
