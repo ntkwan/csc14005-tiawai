@@ -31,10 +31,6 @@ const items: MenuItem[] = [
         key: "paraphrase",
     },
     {
-        label: <Link href="/translate">Dịch</Link>,
-        key: "translate",
-    },
-    {
         label: <Link href="/contact">Liên hệ</Link>,
         key: "contact",
     },

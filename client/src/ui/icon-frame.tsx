@@ -9,6 +9,7 @@ const IconFrame = ({
     height = 54,
     frameSize = "6.25rem",
     className = "",
+    lazy = false,
 }: Readonly<{
     src: string;
     alt: string;
@@ -17,6 +18,7 @@ const IconFrame = ({
     height?: number;
     frameSize?: string;
     className?: string;
+    lazy?: boolean;
 }>) => {
     return (
         <div
@@ -36,6 +38,7 @@ const IconFrame = ({
                 width={width}
                 height={height}
                 className="self-center"
+                loading={lazy ? "lazy" : "eager"}
             />
         </div>
     );
