@@ -54,14 +54,16 @@ const FeaturesBox = ({ className = "" }: Readonly<{ className?: string }>) => {
     return (
         <Flex className={twMerge("relative mb-36 justify-center", className)}>
             <div className="max-h-[26.75rem] max-w-[89.5rem] rounded-xl bg-[rgba(83,105,161,0.7)] p-8">
-                <div className="relative mb-16 content-center text-center text-5xl font-black text-[#050C26]">
-                    <div className="absolute left-[61%] top-[55%] h-[3.75rem] w-[3.75rem] content-center rounded-full bg-[rgba(217,217,217,0.3)] text-white">
+                <div className="relative mb-28 content-center text-center text-5xl font-black text-[#050C26]">
+                    <div className="absolute left-[61%] top-[1.75rem] h-[3.75rem] w-[3.75rem] content-center rounded-full bg-[rgba(217,217,217,0.3)] text-white">
                         ?
                     </div>
-                    <span className="font-chango font-normal text-[#F5F6FC]">
-                        tiawai
-                    </span>{" "}
-                    có gì
+                    <div className="absolute left-[38%]">
+                        <span className="font-chango font-normal text-[#F5F6FC]">
+                            tiawai
+                        </span>{" "}
+                        có gì
+                    </div>
                 </div>
                 <Row gutter={[4, 24]}>
                     {mainFeatures.map((feature, index) => (
@@ -78,7 +80,7 @@ const FeaturesBox = ({ className = "" }: Readonly<{ className?: string }>) => {
                                     <h3 className="mb-2 text-2xl font-bold text-white">
                                         {feature.title}
                                     </h3>
-                                    <p className="font-roboto text-sm font-medium text-white/60">
+                                    <p className="text-justify font-roboto text-sm font-medium text-white/60">
                                         {feature.description}
                                     </p>
                                 </Col>

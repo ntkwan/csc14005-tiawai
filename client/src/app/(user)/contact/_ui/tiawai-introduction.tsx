@@ -35,7 +35,7 @@ export const TiawaiIntroduction = () => {
     return (
         <section className="flex items-center gap-24">
             <Col span={16}>
-                <p className="text-3xl">
+                <p className="text-justify text-3xl">
                     <i>
                         <b>tiawai </b>
                         là một ứng dụng tiên tiến được thiết kế để hỗ trợ học
@@ -98,7 +98,7 @@ export const TiawaiDescription = () => {
                 </div>
             </Col>
             <Col span={16}>
-                <p className="text-3xl">
+                <p className="text-justify text-3xl">
                     <i>
                         Tia không chỉ là một
                         <b> linh vật </b>

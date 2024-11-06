@@ -99,7 +99,7 @@ export default function Home() {
                     <Heading>
                         Nền tảng luyện thi THPTQG môn Tiếng Anh cùng với AI
                     </Heading>
-                    <p className="pr-12 text-xl text-[#8A8A8A]">
+                    <p className="pr-12 text-justify text-xl text-[#8A8A8A]">
                         <span className="font-chango text-[1.375rem] leading-[2.375rem]">
                             tiawai
                         </span>{" "}
@@ -143,7 +143,7 @@ export default function Home() {
             </Flex>
             <Flex className="relative mb-52">
                 <Space size="large">
-                    <Image src={bigTiawai} alt="big tiawai" />
+                    <Image src={bigTiawai} alt="big tiawai" loading="lazy" />
                     <Flex className="text-[#050C26]" vertical justify="center">
                         <Space direction="vertical" size={46}>
                             <h2 className="font-roboto text-7xl font-bold">
@@ -183,16 +183,19 @@ export default function Home() {
                 </Space>
                 <Image
                     className="absolute left-12 top-[43%]"
+                    loading="lazy"
                     src={homeIconBg2}
                     alt="home icon bg 2"
                 />
                 <Image
                     className="absolute -bottom-48 -left-10 rotate-180"
+                    loading="lazy"
                     src={home7Svg}
                     alt="home icon 7"
                 />
                 <Image
                     className="absolute -bottom-36 -right-10"
+                    loading="lazy"
                     src={home11}
                     alt="home icon 11"
                 />
@@ -214,6 +217,7 @@ export default function Home() {
                                 height={90}
                                 frameSize="200px"
                                 bgColor="#FFFFFF80"
+                                lazy={true}
                             ></IconFrame>
                             <Link
                                 href="/paraphrase"
@@ -238,6 +242,7 @@ export default function Home() {
                                 height={100}
                                 frameSize="200px"
                                 bgColor="#FFFFFF80"
+                                lazy={true}
                             ></IconFrame>
                             <Link
                                 href="/flashcard"
