@@ -2,17 +2,13 @@ import Image from "next/image";
 import circle1 from "./circle-1.png";
 import circle2 from "./circle-2.png";
 import TiawaiMascot from "@/ui/tiawai-mascot";
-import Title from "antd/es/typography/Title";
 import { twMerge } from "tailwind-merge";
-import { Form } from "antd";
 
 export default function FormLayout({
     className,
-    title,
     children,
 }: {
-    className: string;
-    title: string;
+    className?: string;
     children: React.ReactNode;
 }) {
     return (
@@ -20,26 +16,14 @@ export default function FormLayout({
             <div
                 className={twMerge(
                     "form__layout relative m-auto flex min-h-[600px] w-full max-w-3xl overflow-clip rounded-3xl p-12 shadow-xl",
-                    className.match(/bg-/) ? className : "bg-white",
+                    className || "bg-white",
                 )}
             >
                 <FormBackground />
                 <TiawaiMascot />
-                <Form
-                    className="form flex-[1.3] content-center"
-                    // name="signIn"
-                    layout="vertical"
-                    initialValues={{ remember: true }}
-                    //   onFinish={onFinish}
-                    //   onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                    size="large"
-                >
-                    <Title className="form__title text-center" level={1}>
-                        {title}
-                    </Title>
-                    <div className="form__content">{children}</div>
-                </Form>
+                <div className="form__content flex-[1.4] content-center">
+                    {children}
+                </div>
             </div>
         </>
     );
