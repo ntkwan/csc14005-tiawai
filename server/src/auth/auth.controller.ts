@@ -12,7 +12,6 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { ATAuthGuard } from './guards/at-auth.guard';
-import { CreateDto } from '../users/dtos/user-signup.dto';
 import { RTAuthGuard } from './guards/rt-auth.guard';
 import { ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { TokensEntity } from './entities/tokens.entity';
