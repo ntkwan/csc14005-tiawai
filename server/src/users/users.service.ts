@@ -60,7 +60,7 @@ export class UsersService {
     async create(CreateDto: CreateDto): Promise<User> {
         const { username, email, password } = CreateDto;
         const hashedPassword = await this.hashPassword(password);
-        const user = this.userModel.create({
+        const user = await this.userModel.create({
             id: uuidv4(),
             username: username,
             email: email,
