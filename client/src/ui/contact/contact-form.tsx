@@ -1,10 +1,19 @@
-"use client";
-
+import { FormTitle } from "../common/title";
 import { Form, Input, Button } from "antd";
+const { TextArea } = Input;
 
 export default function ContactForm() {
     return (
-        <>
+        <Form
+            // form={form}
+            name="sign-in"
+            layout="vertical"
+            initialValues={{ remember: true }}
+            autoComplete="off"
+            size="large"
+        >
+            <FormTitle>Liên hệ với chúng tôi</FormTitle>
+
             <Form.Item
                 name="fullname"
                 rules={[
@@ -14,11 +23,7 @@ export default function ContactForm() {
                     },
                 ]}
             >
-                <Input
-                    className="form__input"
-                    placeholder="Họ và tên"
-                    style={{ boxShadow: "none" }}
-                />
+                <Input className="form__input" placeholder="Họ và tên" />
             </Form.Item>
 
             <Form.Item
@@ -45,22 +50,26 @@ export default function ContactForm() {
                 <Input className="form__input" placeholder="Số điện thoại" />
             </Form.Item>
 
-            <Form.Item
-                name="content"
-                rules={[{ required: true, message: "Vui lòng nhập nội dung" }]}
-            >
-                <Input className="form__input" placeholder="Nội dung" />
+            <Form.Item>
+                <TextArea
+                    className="form__input"
+                    name="content"
+                    autoSize={{ minRows: 1, maxRows: 5 }}
+                    placeholder="Nhập nội dung"
+                    required
+                />
             </Form.Item>
 
             <Form.Item>
                 <Button
-                    className="form__button"
-                    type="primary"
+                    className="!m-auto !block !bg-[#E9DAE9] !font-bold"
                     htmlType="submit"
+                    shape="round"
+                    size="large"
                 >
                     Gửi nội dung
                 </Button>
             </Form.Item>
-        </>
+        </Form>
     );
 }

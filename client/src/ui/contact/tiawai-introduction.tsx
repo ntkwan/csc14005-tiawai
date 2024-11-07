@@ -1,12 +1,11 @@
+"use client";
 import Image from "next/image";
-import Title from "antd/es/typography/Title";
-import { Row, Col } from "antd";
-
+import { Row, Col, Typography } from "antd";
 import chatbotIcon from "@public/mascot/chatbot-icon.png";
 import mascot from "@public/mascot/full.png";
 import mascotBgBlur from "@public/mascot/bg-blur.png";
 import bigTiawai from "@public/big-tiawai.svg";
-import Heading from "@/ui/heading";
+const { Title } = Typography;
 
 export const TiawaiIntroductionHeader = () => {
     return (
@@ -14,7 +13,9 @@ export const TiawaiIntroductionHeader = () => {
             <Row justify="center">
                 <Col span={16} className="content-center">
                     <div className="flex items-center justify-center gap-4">
-                        <Heading>Về tiawai và Tia - chatbot AI</Heading>
+                        <Title className="!m-0 !font-roboto !text-5xl !font-bold">
+                            Về tiawai và Tia - chatbot AI
+                        </Title>
                         <Image
                             src={chatbotIcon}
                             alt="tiawai chatbot icon"
@@ -35,7 +36,7 @@ export const TiawaiIntroduction = () => {
     return (
         <section className="flex items-center gap-24">
             <Col span={16}>
-                <p className="text-justify text-3xl">
+                <Title level={3} className="text-justify !font-normal">
                     <i>
                         <b>tiawai </b>
                         là một ứng dụng tiên tiến được thiết kế để hỗ trợ học
@@ -64,7 +65,7 @@ export const TiawaiIntroduction = () => {
                         cường khả năng ghi nhớ thông qua việc lặp lại và sử dụng
                         từ trong ngữ cảnh thực tế.
                     </i>
-                </p>
+                </Title>
             </Col>
             <Col span={6}>
                 <div className="relative h-full w-full content-center text-center">
@@ -73,7 +74,9 @@ export const TiawaiIntroduction = () => {
                         src={mascotBgBlur}
                         alt="maskot-bg-blur"
                     />
-                    <Title>tiawai</Title>
+                    <Title className="!font-chango !text-5xl !font-normal">
+                        tiawai
+                    </Title>
                 </div>
             </Col>
         </section>
@@ -98,7 +101,7 @@ export const TiawaiDescription = () => {
                 </div>
             </Col>
             <Col span={16}>
-                <p className="text-justify text-3xl">
+                <Title level={3} className="!text-justify !font-normal">
                     <i>
                         Tia không chỉ là một
                         <b> linh vật </b>
@@ -111,7 +114,7 @@ export const TiawaiDescription = () => {
                         học tập tích cực, khuyến khích học sinh tham gia và
                         tương tác nhiều hơn
                     </i>
-                </p>
+                </Title>
             </Col>
         </section>
     );

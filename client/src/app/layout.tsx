@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Roboto } from "next/font/google";
-import { ConfigProvider } from "antd";
+import ThemeProvider from "./theme";
+import StoreProvider from "@/lib/store/store-provider";
 import "@/app/globals.css";
 
 const roboto = Roboto({
@@ -23,16 +24,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="vn">
-            <body className={`${roboto.variable} bg-white antialiased`}>
-                <ConfigProvider
-                    theme={{
-                        token: {
-                            colorBgContainerDisabled: "#d4d4d8",
-                        },
-                    }}
-                >
-                    <AntdRegistry>{children}</AntdRegistry>
-                </ConfigProvider>
+            <body className={`${roboto.variable}bg-white antialiased`}>
+                <StoreProvider>
+                    <ThemeProvider>
+                        <AntdRegistry>{children}</AntdRegistry>
+                    </ThemeProvider>
+                </StoreProvider>
             </body>
         </html>
     );

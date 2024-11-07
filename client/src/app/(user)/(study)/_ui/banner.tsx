@@ -17,7 +17,7 @@ const Banner = ({
                     "linear-gradient(247deg,#BAEEF1 0.85%,#EFDBEE 89.91%)",
                 boxShadow: "0px 4px 154px 0px rgba(44, 21, 73, 0.25)",
             }}
-            className={twJoin("mx-auto", className)}
+            className={twJoin("mx-auto p-8", className)}
         >
             {children}
         </Flex>

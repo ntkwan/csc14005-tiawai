@@ -1,56 +1,109 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/app/lib/hooks/hook";
+import { useSignInMutation } from "@/lib/api/auth-api";
+import { setCredentials } from "@/app/lib/slices/auth-slice";
+import { Form, Input, Typography, notification } from "antd";
 import FormLayout from "@/ui/form/form-layout";
-import SubmitButton from "@/ui/form/submit-button";
-import Link from "next/link";
-import { Form, Input } from "antd";
+import { FormTitle } from "@/ui/common/title";
+import ButtonGradient from "@/ui/form/submit-button";
+const { Paragraph, Link } = Typography;
 
 export default function SignInPage() {
+    const dispatch = useAppDispatch();
+    const [SignIn, { data, error, isLoading }] = useSignInMutation();
+    const [form] = Form.useForm();
+    const router = useRouter();
+
+    const onFinish = async () => {
+        const formData = form.getFieldsValue();
+        await SignIn(formData);
+
+        if (error) {
+            notification.error({
+                message: "Đăng nhập thất bại",
+                description:
+                    "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
+            });
+        } else if (data?.accessToken && data?.refreshToken) {
+            dispatch(
+                setCredentials({
+                    accessToken: data.accessToken,
+                    refreshToken: data.refreshToken,
+                }),
+            );
+
+            notification.success({
+                message: "Đăng nhập thành công",
+                description: "Chào mừng bạn trở lại với Tiawai",
+            });
+
+            setTimeout(() => {
+                router.push("/");
+            }, 3000);
+        }
+    };
+
     return (
-        <FormLayout className="form__sign-in" title="Đăng nhập">
-            <Form.Item
-                name="email"
-                rules={[
-                    {
-                        required: true,
-                        message: "Tên đăng nhập/Email không được bỏ trống",
-                    },
-                ]}
+        <FormLayout>
+            <Form
+                form={form}
+                name="sign-in"
+                layout="vertical"
+                initialValues={{ remember: true }}
+                autoComplete="off"
+                size="large"
+                onFinish={onFinish}
             >
-                <Input
-                    className="form__input"
-                    placeholder="Email"
-                    style={{ boxShadow: "none" }}
-                />
-            </Form.Item>
+                <FormTitle>Đăng nhập</FormTitle>
 
-            <Form.Item
-                name="password"
-                rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}
-            >
-                <Input.Password
-                    className="form__input"
-                    placeholder="Mật khẩu"
-                    style={{ boxShadow: "none", placeContent: "black" }}
-                />
-            </Form.Item>
-
-            <p className="form__link--forgot-password mb-6 text-right hover:cursor-pointer hover:underline hover:underline-offset-2">
-                <Link className="inline" href="forgot-password">
-                    Quên mật khẩu?
-                </Link>
-            </p>
-
-            <SubmitButton />
-
-            <p className="form__nav text-center">
-                Bạn chưa có tài khoản ?{" "}
-                <Link
-                    className="form__link--sign-up inline hover:underline hover:underline-offset-2"
-                    href="/sign-up"
+                <Form.Item
+                    name="username"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Email không được bỏ trống",
+                        },
+                        {
+                            type: "email",
+                            message: "Vui lòng nhập địa chỉ email hợp lệ",
+                        },
+                    ]}
                 >
-                    <strong>Đăng ký</strong>
-                </Link>
-            </p>
+                    <Input className="form__input" placeholder="Email" />
+                </Form.Item>
+
+                <Form.Item
+                    name="password"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Mật khẩu không được bỏ trống",
+                        },
+                        { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
+                    ]}
+                >
+                    <Input.Password
+                        className="form__input"
+                        placeholder="Mật khẩu"
+                    />
+                </Form.Item>
+
+                <Paragraph className="!text-end">
+                    <Link href="forgot-password">Quên mật khẩu?</Link>
+                </Paragraph>
+
+                <Form.Item>
+                    <ButtonGradient loading={isLoading} />
+                </Form.Item>
+
+                <Paragraph className="!text-center">
+                    Bạn chưa có tài khoản?{" "}
+                    <Link href="sign-up">
+                        <strong>Đăng ký</strong>
+                    </Link>
+                </Paragraph>
+            </Form>
         </FormLayout>
     );
 }

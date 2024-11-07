@@ -1,9 +1,11 @@
-import { Col, Flex, Row } from "antd";
-import IconFrame from "./icon-frame";
+"use client";
+import { Flex, Typography } from "antd";
+import IconFrame from "../icon-frame";
 import Image from "next/image";
 import home7Svg from "@public/home-7.svg";
 import home7Png from "@public/home-7.png";
 import { twMerge } from "tailwind-merge";
+const { Title, Paragraph } = Typography;
 
 const mainFeatures = [
     {
@@ -52,42 +54,45 @@ const mainFeatures = [
 
 const FeaturesBox = ({ className = "" }: Readonly<{ className?: string }>) => {
     return (
-        <Flex className={twMerge("relative mb-36 justify-center", className)}>
+        <Flex
+            className={twMerge("relative mb-16 justify-center p-8", className)}
+        >
             <div className="max-h-[26.75rem] max-w-[89.5rem] rounded-xl bg-[rgba(83,105,161,0.7)] p-8">
                 <div className="relative mb-28 content-center text-center text-5xl font-black text-[#050C26]">
                     <div className="absolute left-[61%] top-[1.75rem] h-[3.75rem] w-[3.75rem] content-center rounded-full bg-[rgba(217,217,217,0.3)] text-white">
                         ?
                     </div>
-                    <div className="absolute left-[38%]">
-                        <span className="font-chango font-normal text-[#F5F6FC]">
+                    <Title className="!absolute !left-[38%]">
+                        <span className="!font-chango !font-normal !text-[#F5F6FC]">
                             tiawai
                         </span>{" "}
-                        có gì
-                    </div>
+                        <b>có gì</b>
+                    </Title>
                 </div>
-                <Row gutter={[4, 24]}>
+                <div className="grid grid-cols-3 grid-rows-2 gap-4">
                     {mainFeatures.map((feature, index) => (
-                        <Col span={8} key={index}>
-                            <Row>
-                                <Col span={6}>
-                                    <IconFrame
-                                        src={feature.src}
-                                        alt={feature.alt}
-                                        bgColor="rgba(255,255,255,0.2)"
-                                    />
-                                </Col>
-                                <Col span={16}>
-                                    <h3 className="mb-2 text-2xl font-bold text-white">
-                                        {feature.title}
-                                    </h3>
-                                    <p className="text-justify font-roboto text-sm font-medium text-white/60">
-                                        {feature.description}
-                                    </p>
-                                </Col>
-                            </Row>
-                        </Col>
+                        <div key={index} className="flex gap-4">
+                            <div className="content-center">
+                                <IconFrame
+                                    src={feature.src}
+                                    alt={feature.alt}
+                                    bgColor="rgba(255,255,255,0.2)"
+                                />
+                            </div>
+                            <div className="content-center">
+                                <Title
+                                    className="!font-bold !text-white"
+                                    level={4}
+                                >
+                                    {feature.title}
+                                </Title>
+                                <Paragraph className="!m-0 !text-justify !font-roboto !font-medium !text-white/60">
+                                    {feature.description}
+                                </Paragraph>
+                            </div>
+                        </div>
                     ))}
-                </Row>
+                </div>
             </div>
             <Image
                 src={home7Svg}

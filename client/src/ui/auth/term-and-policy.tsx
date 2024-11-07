@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Checkbox, Modal } from "antd";
+import { Button, Modal } from "antd";
 
 export default function TermAndPolicy() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,14 +19,15 @@ export default function TermAndPolicy() {
     };
 
     return (
-        <Checkbox>
+        <>
             Tôi đã đọc và chấp nhận{" "}
-            <button
-                className="inline text-[#0958d9] hover:underline hover:underline-offset-2"
+            <Button
+                className="!m-0 !inline !p-0"
+                type="link"
                 onClick={showModal}
             >
-                điều khoản và chính sách.
-            </button>
+                <span className="!font-medium">điều khoản và chính sách.</span>
+            </Button>
             <Modal
                 title="Điều khoản và chính sách"
                 open={isModalOpen}
@@ -35,7 +36,7 @@ export default function TermAndPolicy() {
             >
                 <TermAndPolicyContent />
             </Modal>
-        </Checkbox>
+        </>
     );
 }
 

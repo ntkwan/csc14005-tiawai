@@ -15,6 +15,7 @@ const config: Config = {
             fontFamily: {
                 chango: ["Chango", "sans-serif"],
                 roboto: ["var(--font-roboto)"],
+                instrument: ["Instrument Serif", "serif"],
             },
         },
     },
