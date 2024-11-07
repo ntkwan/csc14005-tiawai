@@ -1,26 +1,22 @@
 "use client";
-
-import Image from "next/image";
-import Heading from "@/ui/heading";
-import Banner from "@/app/(user)/(study)/_ui/banner";
-import bigTiawai from "@public/big-tiawai.svg";
-import { Tabs, Input, Button } from "antd";
 import { useState } from "react";
+import Image from "next/image";
+import Banner from "@/app/(user)/(study)/_ui/banner";
+import { BannerTitle } from "@/ui/common/title";
+import bigTiawai from "@public/big-tiawai.svg";
+import { Tabs, Input, Button, Typography } from "antd";
+const { Title } = Typography;
 const { TextArea } = Input;
-import "./page.css";
 
 export default function ParaphrasePage() {
     return (
-        <div className="paraphrase_page space-y-20">
-            <Banner className="mb-40">
-                <Heading className="pl-28">
-                    Luyện Thi Tiếng Anh THPT QG Hiệu Quả Mỗi Ngày Nhờ Test
-                    Practice
-                </Heading>
-                <Image src={bigTiawai} alt="big tiawai" />
+        <div className="paraphrase_page mb-10 space-y-20">
+            <Banner>
+                <BannerTitle>Công cụ Paraphrasing bằng AI</BannerTitle>
+                <Image className="max-w-lg" src={bigTiawai} alt="big tiawai" />
             </Banner>
 
-            <h2 className="paraphrase__description font-roboto text-[3.5rem] italic leading-[4.5rem] text-[#050C26]">
+            <Title level={3}>
                 <i>
                     Công cụ paraphrasing hoạt động cùng bạn để giúp bạn tạo ra
                     <b> những bài viết rõ ràng, mạch lạc và chuyên nghiệp </b>
@@ -33,7 +29,7 @@ export default function ParaphrasePage() {
                         mà không làm thay đổi ý nghĩa hay chất lượng của từ ngữ.
                     </b>
                 </i>
-            </h2>
+            </Title>
             <Paraphrasing />
         </div>
     );
@@ -54,40 +50,52 @@ const Paraphrasing = () => {
         { key: "academic", label: "Học thuật" },
         { key: "formal", label: "Trang trọng" },
     ];
+
     return (
-        <div className="m-auto w-4/5 rounded-xl border border-black">
+        <div className="m-auto rounded-xl border border-black">
             <div className="flex translate-y-4 items-start justify-center gap-4 px-4">
-                <p className="mt-3 min-w-max rounded-full bg-[#DAE3E9] px-4 py-1 text-2xl font-bold">
-                    Chế Độ:{" "}
-                </p>
+                <Title
+                    className="!mt-3 rounded-full bg-[#DAE3E9] px-4 py-1 !font-bold"
+                    level={5}
+                >
+                    Chế Độ:
+                </Title>
                 <Tabs
                     defaultActiveKey="standard"
-                    style={{ margin: "0", fontSize: "20px" }}
                     items={tabItems}
                     size="large"
                 />
             </div>
-            <div className="flex">
-                <div className="relative flex-1">
+            <div className="grid grid-cols-2">
+                <div className="relative">
                     <TextArea
-                        className="paraphrase__text-area rounded-none rounded-bl-xl border-black p-4 text-xl"
+                        className="!rounded-none !rounded-bl-xl"
                         placeholder="Để viết lại câu, viết hoặc sao chép vào đây, sau đó nhấn Paraphrase"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        autoSize={{ minRows: 16 }}
+                        autoSize={{ minRows: 20, maxRows: 20 }}
+                        size="large"
+                        showCount
+                        maxLength={1000}
                     />
                     <div className="absolute bottom-4 right-4 mt-4 flex justify-center">
                         <Button
-                            className="!rounded-full !border-none !bg-[#E9DAE9] !px-8 !py-6 !text-xl !font-bold !text-black"
+                            className="!z-50 !bg-[#E9DAE9] !font-bold"
                             onClick={handleParaphrase}
+                            shape="round"
+                            size="large"
                         >
                             Paraphrasing
                         </Button>
                     </div>
                 </div>
                 <TextArea
-                    className="paraphrase__text-area flex-1 rounded-none rounded-br-xl border-black p-4"
-                    autoSize={{ minRows: 16 }}
+                    className="!rounded-none !rounded-br-xl"
+                    autoSize={{ minRows: 20, maxRows: 20 }}
+                    rows={24}
+                    size="large"
+                    showCount
+                    maxLength={1000}
                 />
             </div>
         </div>

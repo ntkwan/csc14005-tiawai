@@ -5,9 +5,9 @@ const IconFrame = ({
     src,
     alt,
     bgColor = "#4D2C5E",
-    width = 54,
-    height = 54,
-    frameSize = "6.25rem",
+    width = 48,
+    height = 48,
+    frameSize = "6rem",
     className = "",
     lazy = false,
 }: Readonly<{

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card, Button, Progress, Typography } from "antd";
-const { Title } = Typography;
 import {
     LeftOutlined,
     RightOutlined,
@@ -10,6 +9,7 @@ import {
     DownOutlined,
 } from "@ant-design/icons";
 import { twMerge } from "tailwind-merge";
+const { Title } = Typography;
 
 export default function FlashcardSlider({
     flashcards,

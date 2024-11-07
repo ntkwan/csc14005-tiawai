@@ -1,10 +1,12 @@
+"use client";
 import Image from "next/image";
-import { Flex, Space } from "antd";
-import Heading from "@/ui/heading";
+import { Flex, Space, Typography } from "antd";
 import GenerateButton from "@/ui/generate-button";
 import Banner from "@/app/(user)/(study)/_ui/banner";
 import TestBox from "@/app/(user)/(study)/_ui/test-box";
 import bigTiawai2 from "@public/big-tiawai-2.svg";
+import { BannerTitle } from "@/ui/common/title";
+const { Title } = Typography;
 
 const testsData = [
     {
@@ -122,22 +124,23 @@ const testsData = [
 
 const Exam = () => {
     return (
-        <>
-            <Banner className="mb-40">
-                <Heading className="pl-28">
+        <div className="space-y-20">
+            <Banner>
+                <BannerTitle>
                     Luyện Thi Tiếng Anh THPT QG Hiệu Quả Mỗi Ngày Nhờ Test
                     Practice
-                </Heading>
+                </BannerTitle>
                 <Image src={bigTiawai2} alt="big tiawai 2" />
             </Banner>
+
             <Flex align="center" className="mb-24">
                 <Space size="large">
-                    <h2 className="font-roboto text-[3.5rem] italic leading-[4.5rem] text-[#050C26]">
-                        Trải nghiệm tạo ra{" "}
-                        <span className="font-bold">bộ đề riêng</span> dựa trên
-                        năng lực của bạn bằng{" "}
-                        <span className="font-bold">AI - Tia</span>
-                    </h2>
+                    <Title className="!font-normal" level={2}>
+                        <i>
+                            Trải nghiệm tạo ra <b>bộ đề riêng</b> dựa trên năng
+                            lực của bạn bằng <b>AI - Tia</b>
+                        </i>
+                    </Title>
                     <GenerateButton
                         className="mr-8 h-[6.5rem] min-w-[31.25rem]"
                         textStyle="text-3xl"
@@ -145,15 +148,19 @@ const Exam = () => {
                     />
                 </Space>
             </Flex>
-            <h3 className="mb-[4.5rem] font-roboto text-6xl font-bold capitalize">
+
+            <Title className="!mb-0 !font-roboto !capitalize">
                 Danh sách bộ đề
-            </h3>
-            <Space direction="vertical" size={144}>
-                {testsData.map((test, index) => (
-                    <TestBox key={index} {...test} />
-                ))}
-            </Space>
-        </>
+            </Title>
+
+            <div>
+                <Space direction="vertical" size={144}>
+                    {testsData.map((test, index) => (
+                        <TestBox key={index} {...test} />
+                    ))}
+                </Space>
+            </div>
+        </div>
     );
 };
 

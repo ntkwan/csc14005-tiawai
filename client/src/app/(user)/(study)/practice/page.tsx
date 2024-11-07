@@ -1,10 +1,12 @@
+"use client";
 import Image from "next/image";
-import { Flex, Space } from "antd";
-import Heading from "@/ui/heading";
+import { Flex, Space, Typography } from "antd";
 import GenerateButton from "@/ui/generate-button";
 import Banner from "@/app/(user)/(study)/_ui/banner";
 import TestBox from "@/app/(user)/(study)/_ui/test-box";
 import bigTiawai2 from "@public/big-tiawai-2.svg";
+import { BannerTitle } from "@/ui/common/title";
+const { Title } = Typography;
 
 const testsData = [
     {
@@ -193,28 +195,27 @@ const testsData = [
 
 const Practice = () => {
     return (
-        <>
-            <Banner className="mb-40 max-h-[434px]">
+        <div className="space-y-32">
+            <Banner className="max-h-[434px]">
                 <Image
                     src={bigTiawai2}
                     alt="big tiawai 2"
-                    className="ml-10 !h-[542px] overflow-visible"
+                    className="ml-10 overflow-visible"
                     height={542}
                 />
-                <Heading className="pl-14">
+                <BannerTitle>
                     Luyện Thi Tiếng Anh THPTQG qua các bài tập theo dạng
-                </Heading>
+                </BannerTitle>
             </Banner>
             <Flex align="center" className="mb-24">
                 <Space size="large">
-                    <h2 className="font-roboto text-[3.5rem] italic leading-[4.5rem] text-[#050C26]">
-                        Trải nghiệm tạo ra{" "}
-                        <span className="font-bold">
-                            bộ đề riêng theo dạng mà bạn mong muốn
-                        </span>{" "}
-                        dựa trên năng lực của bạn bằng{" "}
-                        <span className="font-bold">AI - Tia</span>
-                    </h2>
+                    <Title className="!font-normal" level={2}>
+                        <i>
+                            Trải nghiệm tạo ra{" "}
+                            <b>bộ đề riêng theo dạng mà bạn mong muốn</b> dựa
+                            trên năng lực của bạn bằng <b>AI - Tia</b>
+                        </i>
+                    </Title>
                     <GenerateButton
                         className="mr-8 h-[6.5rem] min-w-[31.25rem]"
                         textStyle="text-3xl"
@@ -227,7 +228,7 @@ const Practice = () => {
                     <TestBox key={index} theme="blue" {...test} />
                 ))}
             </Space>
-        </>
+        </div>
     );
 };
 

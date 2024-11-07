@@ -1,7 +1,8 @@
-import { Row, Col } from "antd";
+"use client";
+import { Row, Col, Typography } from "antd";
 import ExamFrame from "@/ui/exam-frame";
 import { twMerge } from "tailwind-merge";
-
+const { Title } = Typography;
 interface TestBoxProps {
     title: string;
     description?: string;
@@ -12,22 +13,23 @@ interface TestBoxProps {
 
 const TestBox = (props: Readonly<TestBoxProps>) => {
     return (
-        <div className="rounded-[80px] border-4 border-black px-24 pb-14 pt-6">
-            <h4 className="-ml-4 mb-2 font-roboto text-[3.125rem] font-medium text-[#050C26]">
+        <div className="rounded-[80px] border-2 border-black px-24 pb-14 pt-6">
+            <Title className="!font-roboto !font-medium">
                 {props.title}{" "}
                 <span className="text-xl font-light italic">{props.tag}</span>
-            </h4>
-            <p
+            </Title>
+            <Title
                 className={twMerge(
-                    "font-roboto text-3xl font-medium text-[#8A8A8A]",
-                    props.description ? "mb-12" : "invisible h-0",
+                    "!font-roboto !font-medium !text-[#8A8A8A]",
+                    props.description ? "!mb-12" : "!invisible !h-0",
                 )}
+                level={4}
             >
                 {props.description
                     ? props.description
                     : "Bộ đề THPT Quốc gia môn Anh minh họa của Bộ Giáo dục và Đào tạo các năm gần đây. Ôn luyện để nắm vững format đề thi, các dạng bài thường xuyên xuất hiện."}
-            </p>
-            <Row gutter={[136, 55]}>
+            </Title>
+            <Row gutter={[48, 40]}>
                 {props.examData.map((exam, index) => (
                     <Col span={8} key={index}>
                         <ExamFrame theme={props.theme} examData={exam} />

@@ -1,6 +1,8 @@
-import { Flex, Space } from "antd";
+"use client";
+import { Flex, Space, Button, Typography } from "antd";
 import IconFrame from "./icon-frame";
 import Image from "next/image";
+const { Text, Title } = Typography;
 
 const examInfo = [
     {
@@ -28,57 +30,52 @@ const ExamFrame = ({
     const { title, duration, totalAttempt } = examData;
     return (
         <Flex
-            className="rounded-xl p-4"
+            className="gap-3 !rounded-xl !py-4 px-3"
             style={{
                 backgroundColor: bgColor,
                 boxShadow: "0px 4px 25px 0px rgba(0,0,0,0.10)",
             }}
             align="center"
         >
-            <Space size={29}>
-                <IconFrame
-                    bgColor={objColor}
-                    src={iconSrc}
-                    alt={iconAlt}
-                    width={size}
-                    height={size}
-                    className="py-4"
-                />
-                <Flex vertical>
-                    <h3 className="mb-2 max-w-56 font-roboto text-xl font-medium">
-                        {title}
-                    </h3>
-                    <Flex className="mb-4">
-                        <Space size={32}>
-                            {examInfo.map((info, index) => (
-                                <Flex align="center" key={index}>
-                                    <Space>
-                                        <Image
-                                            src={info.src}
-                                            alt={info.alt}
-                                            width={18}
-                                            height={18}
-                                        ></Image>
-                                        <span className="font-roboto font-medium text-[#ACACAC]">
-                                            {info.alt === "clock"
-                                                ? `${duration} phút`
-                                                : `${totalAttempt} lượt làm`}
-                                        </span>
-                                    </Space>
-                                </Flex>
-                            ))}
-                        </Space>
-                    </Flex>
-                    <div>
-                        <span
-                            className="cursor-pointer rounded-full px-4 py-1 font-roboto text-sm font-medium text-white"
-                            style={{ backgroundColor: objColor }}
-                        >
-                            Xem bài test
-                        </span>
-                    </div>
+            <IconFrame
+                className="min-h-max min-w-max"
+                bgColor={objColor}
+                src={iconSrc}
+                alt={iconAlt}
+                width={size}
+                height={size}
+            />
+            <Flex vertical className="gap-4">
+                <Title className="!m-0 !font-roboto" level={5}>
+                    {title}
+                </Title>
+                <Flex justify="space-between">
+                    <Space size="large">
+                        {examInfo.map((info, index) => (
+                            <Flex align="center" key={index}>
+                                <Space>
+                                    <Image
+                                        src={info.src}
+                                        alt={info.alt}
+                                        width={18}
+                                        height={18}
+                                    />
+                                    <Text className="!text-nowrap !font-roboto !font-medium !text-[#ACACAC]">
+                                        {info.alt === "clock"
+                                            ? `${duration} phút`
+                                            : `${totalAttempt} lượt làm`}
+                                    </Text>
+                                </Space>
+                            </Flex>
+                        ))}
+                    </Space>
                 </Flex>
-            </Space>
+                <div>
+                    <Button shape="round" type="primary" size="small">
+                        Xem bài test
+                    </Button>
+                </div>
+            </Flex>
         </Flex>
     );
 };

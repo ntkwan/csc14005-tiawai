@@ -1,5 +1,5 @@
 "use client";
-import { Col, Flex, Row, Space } from "antd";
+import { Flex, Space, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import IconFrame from "@/ui/icon-frame";
@@ -10,6 +10,7 @@ import home7Svg from "@public/home-7.svg";
 import bigTiawai from "@public/big-tiawai.svg";
 import homeIconBg2 from "@public/home-icon-bg-2.svg";
 import home11 from "@public/home-11.png";
+const { Title } = Typography;
 
 const examData = [
     {
@@ -83,106 +84,113 @@ const mainHighlights = [
 ];
 
 import homeGradientBg from "@public/home-gradient-bg.svg";
-import Heading from "@/ui/heading";
-import FeaturesBox from "@/ui/features-box";
+import FeaturesBox from "@/ui/home/features-box";
 
 export default function Home() {
     return (
-        <main>
+        <main className="flex flex-col items-center justify-center gap-20">
             <Image
+                className="absolute bottom-0 left-0 right-0 top-0 -z-50 w-svw"
                 src={homeGradientBg}
                 alt="home gradient bg"
-                className="absolute bottom-0 left-0 right-0 top-0 -z-50"
             />
-            <Flex className="bg-[url('/home-icon-bg.svg')] px-28 py-[7.5rem]">
-                <Flex vertical>
-                    <Heading>
+
+            <div className="!flex bg-[url('/home-icon-bg.svg')] bg-cover py-20">
+                <div className="!flex-[1]">
+                    <Title className="!text-6xl !font-bold !leading-snug">
                         Nền tảng luyện thi THPTQG môn Tiếng Anh cùng với AI
-                    </Heading>
-                    <p className="pr-12 text-justify text-xl text-[#8A8A8A]">
-                        <span className="font-chango text-[1.375rem] leading-[2.375rem]">
-                            tiawai
-                        </span>{" "}
+                    </Title>
+                    <Title
+                        className="!pr-10 !font-normal !text-[#8A8A8A]"
+                        level={5}
+                    >
+                        <span className="!font-chango text-xl">tiawai</span>{" "}
                         cung cấp đầy đủ nội dung chất lượng gồm các đề luyện thi
                         có sẵn và tạo ra bởi công nghệ AI, các bài luyện tập
                         theo chủ đề, hỗ trợ paraphrase đoạn văn, flashcard mỗi
                         ngày cùng với đó là Tia
-                    </p>
-                </Flex>
-                <Image src={homeMainImg} alt="home main image" />
-            </Flex>
+                    </Title>
+                </div>
+                <Image
+                    className="h-96 flex-[1] object-cover"
+                    src={homeMainImg}
+                    alt="home main image"
+                />
+            </div>
+
             <FeaturesBox />
+
             <Flex className="mb-28" vertical>
                 <Space size={112} direction="vertical">
                     {examData.map((exam, index) => (
                         <div key={index}>
-                            <Space size={40}>
-                                <h2 className="pl-16 text-6xl font-bold">
-                                    {exam.type}
-                                </h2>
-                                <GenerateButton />
-                            </Space>
-                            <Flex align="end" justify="end">
+                            <Flex justify="space-between" align="center">
+                                <Flex align="center" className="!gap-4">
+                                    <Title className="!m-0 !font-bold leading-none">
+                                        {exam.type}
+                                    </Title>
+                                    <GenerateButton />
+                                </Flex>
                                 <Link
                                     href={`/${exam.key}`}
-                                    className="mb-8 flex justify-end rounded-full px-4 py-1 font-roboto text-xl font-medium text-black transition duration-500 ease-in-out hover:bg-slate-300 hover:text-black"
+                                    className="h-max rounded-full px-4 py-2 font-roboto text-xl font-medium leading-none text-black transition duration-500 ease-in-out hover:bg-slate-300 hover:text-black"
                                 >
                                     Xem thêm &gt;
                                 </Link>
                             </Flex>
-                            <Row justify="space-between">
+                            <div className="mt-8 grid grid-cols-4 gap-4">
                                 {exam.tests.map((test, index) => (
-                                    <Col span={5} key={index}>
-                                        <ExamFrame examData={test} />
-                                    </Col>
+                                    <ExamFrame key={index} examData={test} />
                                 ))}
-                            </Row>
+                            </div>
                         </div>
                     ))}
                 </Space>
             </Flex>
-            <Flex className="relative mb-52">
-                <Space size="large">
-                    <Image src={bigTiawai} alt="big tiawai" loading="lazy" />
-                    <Flex className="text-[#050C26]" vertical justify="center">
-                        <Space direction="vertical" size={46}>
-                            <h2 className="font-roboto text-7xl font-bold">
-                                Trải nghiệm học cùng Tia
-                            </h2>
-                            {mainHighlights.map((highlight, index) => (
-                                <Flex align="center" key={index}>
-                                    <Space size="large">
-                                        <IconFrame
-                                            bgColor="#0E0314"
-                                            src={highlight.src}
-                                            alt={highlight.alt}
-                                            width={52}
-                                            height={52}
-                                        />
-                                        <Flex
-                                            vertical
-                                            className="font-roboto font-medium"
-                                        >
-                                            <Space
-                                                direction="vertical"
-                                                size="middle"
-                                            >
-                                                <h3 className="text-3xl">
-                                                    {highlight.title}
-                                                </h3>
-                                                <p className="text-2xl text-[#8A8A8A]">
-                                                    {highlight.description}
-                                                </p>
-                                            </Space>
-                                        </Flex>
-                                    </Space>
-                                </Flex>
-                            ))}
-                        </Space>
-                    </Flex>
-                </Space>
+
+            <div className="relative flex items-center">
                 <Image
-                    className="absolute left-12 top-[43%]"
+                    className="max-w-lg"
+                    src={bigTiawai}
+                    alt="big tiawai"
+                    loading="lazy"
+                />
+                <div className="">
+                    <Space direction="vertical" size={46}>
+                        <Title className="!m-0 !font-roboto !text-6xl !font-bold">
+                            Trải nghiệm học cùng Tia
+                        </Title>
+                        {mainHighlights.map((highlight, index) => (
+                            <Flex align="center" key={index}>
+                                <Space size="large">
+                                    <IconFrame
+                                        bgColor="#0E0314"
+                                        src={highlight.src}
+                                        alt={highlight.alt}
+                                        width={52}
+                                        height={52}
+                                    />
+                                    <Flex vertical>
+                                        <Title
+                                            className="!m-0 !font-roboto"
+                                            level={2}
+                                        >
+                                            {highlight.title}
+                                        </Title>
+                                        <Title
+                                            className="!m-0 !font-roboto !font-medium !text-[#8A8A8A]"
+                                            level={4}
+                                        >
+                                            {highlight.description}
+                                        </Title>
+                                    </Flex>
+                                </Space>
+                            </Flex>
+                        ))}
+                    </Space>
+                </div>
+                <Image
+                    className="absolute"
                     loading="lazy"
                     src={homeIconBg2}
                     alt="home icon bg 2"
@@ -199,24 +207,23 @@ export default function Home() {
                     src={home11}
                     alt="home icon 11"
                 />
-            </Flex>
-            <Flex justify="center" className="">
+            </div>
+
+            <Flex justify="center">
                 <Space size={91}>
                     <Flex
-                        className="max-w-[650px] rounded-[2rem] bg-[#E9DAE9] px-56 py-5"
+                        className="min-w-[450px] rounded-[2rem] bg-[#E9DAE9] py-12"
                         justify="center"
                     >
                         <Space direction="vertical" size="large" align="center">
-                            <h3 className="font-roboto text-5xl font-bold">
+                            <Title className="!font-roboto" level={2}>
                                 Paraphasing
-                            </h3>
+                            </Title>
                             <IconFrame
                                 src="/home-3.svg"
                                 alt="home icon 3"
-                                width={90}
-                                height={90}
-                                frameSize="200px"
                                 bgColor="#FFFFFF80"
+                                frameSize="125px"
                                 lazy={true}
                             ></IconFrame>
                             <Link
@@ -228,20 +235,18 @@ export default function Home() {
                         </Space>
                     </Flex>
                     <Flex
-                        className="max-w-[650px] rounded-[2rem] bg-[#DAE3E9] px-56 py-5"
+                        className="min-w-[450px] rounded-[2rem] bg-[#DAE3E9] py-12"
                         justify="center"
                     >
                         <Space direction="vertical" align="center" size="large">
-                            <h3 className="font-roboto text-5xl font-bold">
+                            <Title className="!font-roboto" level={2}>
                                 Flashcard
-                            </h3>
+                            </Title>
                             <IconFrame
                                 src="/home-5.svg"
                                 alt="home icon 3"
-                                width={150}
-                                height={100}
-                                frameSize="200px"
                                 bgColor="#FFFFFF80"
+                                frameSize="125px"
                                 lazy={true}
                             ></IconFrame>
                             <Link
