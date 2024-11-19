@@ -18,6 +18,7 @@ import { TokensEntity } from './entities/tokens.entity';
 import { CredEntity } from './entities/creds.entity';
 import { AuthLoginDto } from './dtos/auth-login.dto';
 import { AuthSignUpDto } from './dtos/auth-signup.dto';
+import { ForgotPasswordDto, ResetPasswordDto } from './dtos/psw-recovery.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -121,6 +122,51 @@ export class AuthController {
         res.send({
             accessToken,
             message: 'Token has been refreshed successfully',
+        });
+    }
+
+    @ApiOperation({ summary: 'Password recovery' })
+    @Post('password-recovery')
+    @ApiBody({ type: ForgotPasswordDto })
+    @ApiResponse({
+        status: 200,
+        description: 'Send OTP successfully',
+    })
+    @HttpCode(200)
+    async forgotPassword(
+        @Request() req: any,
+        @Res() res: Response,
+    ): Promise<void> {
+        await this.authService.forgotPassword(req.body.email);
+        res.send({
+            message: 'Password recovery email has been sent successfully',
+        });
+    }
+
+    @ApiOperation({ summary: 'Reset password' })
+    @Post('reset-password')
+    @ApiBody({ type: ResetPasswordDto })
+    @ApiResponse({
+        status: 200,
+        description: 'Reset password successfully',
+    })
+    @HttpCode(200)
+    async resetPassword(
+        @Request() req: any,
+        @Res() res: Response,
+    ): Promise<void> {
+        const email = req.body.email;
+        const otp = req.body.otp;
+        const newPassword = req.body.newPassword;
+        const confirmPassword = req.body.confirmPassword;
+        await this.authService.resetPassword(
+            email,
+            otp,
+            newPassword,
+            confirmPassword,
+        );
+        res.send({
+            message: 'Password has been reset successfully',
         });
     }
 }

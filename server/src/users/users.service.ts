@@ -18,6 +18,34 @@ export class UsersService {
         return this.userModel.findAll();
     }
 
+    async findByOtp(
+        email: string,
+        otp: string,
+        otpExpiry: Date,
+    ): Promise<User> {
+        const project = await this.userModel.findOne<User>({
+            where: { email, otp, otpExpiry },
+        });
+        if (!project) {
+            throw new InternalServerErrorException(
+                `User ${email} with the OTP not found`,
+            );
+        }
+        return project.dataValues;
+    }
+
+    async findByOtpOnly(email: string, otp: string): Promise<User> {
+        const project = await this.userModel.findOne<User>({
+            where: { email, otp },
+        });
+        if (!project) {
+            throw new InternalServerErrorException(
+                `User ${email} with the OTP not found`,
+            );
+        }
+        return project.dataValues;
+    }
+
     async findByEmail(email: string): Promise<User> {
         const project = await this.userModel.findOne<User>({
             where: { email },
@@ -65,6 +93,8 @@ export class UsersService {
             username: username,
             email: email,
             password: hashedPassword,
+            otp: null,
+            otpExpiry: null,
         });
 
         if (!user) {
@@ -80,6 +110,32 @@ export class UsersService {
             await this.userModel.update(
                 { refreshToken: refreshToken },
                 { where: { id: id } },
+            );
+        } catch (error) {
+            throw new InternalServerErrorException(error.message);
+        }
+    }
+
+    async updateOtp(
+        email: string,
+        otp: string,
+        otpExpiry: Date,
+    ): Promise<void> {
+        try {
+            await this.userModel.update(
+                { otp: otp, otpExpiry: otpExpiry },
+                { where: { email: email } },
+            );
+        } catch (error) {
+            throw new InternalServerErrorException(error.message);
+        }
+    }
+
+    async updatePassword(email: string, password: string): Promise<void> {
+        try {
+            await this.userModel.update(
+                { password: password, otp: null, otpExpiry: null },
+                { where: { email: email } },
             );
         } catch (error) {
             throw new InternalServerErrorException(error.message);
