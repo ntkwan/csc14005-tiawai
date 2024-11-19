@@ -2,7 +2,7 @@ import { FormTitle } from "../common/title";
 import { Form, Input, Button } from "antd";
 const { TextArea } = Input;
 
-export default function ContactForm() {
+export const ContactForm = () => {
     return (
         <Form
             // form={form}
@@ -72,4 +72,4 @@ export default function ContactForm() {
             </Form.Item>
         </Form>
     );
-}
+};
