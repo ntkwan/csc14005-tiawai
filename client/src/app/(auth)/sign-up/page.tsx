@@ -2,10 +2,9 @@
 import { useRouter } from "next/navigation";
 import { useSignUpMutation } from "@/lib/api/auth-api";
 import { Form, Input, Checkbox, Typography, notification } from "antd";
-import FormLayout from "@/ui/form/form-layout";
+import { FormLayout, ButtonGradient } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
-import Button from "@/ui/common/button";
-import TermAndPolicy from "@/ui/auth/term-and-policy";
+import { TermAndPolicy } from "@/ui/auth";
 const { Paragraph, Link } = Typography;
 
 export default function SignUpPage() {
@@ -100,7 +99,7 @@ export default function SignUpPage() {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button component="form" loading={isLoading} />
+                    <ButtonGradient loading={isLoading} />
                 </Form.Item>
 
                 <Paragraph style={{ textAlign: "center" }}>

@@ -7,7 +7,7 @@ import pencil from "@public/auth-bg/pencil.png";
 import crayons from "@public/auth-bg/crayons.png";
 import "./auth-background.css";
 
-export default function AuthBackground() {
+export const AuthBackground = () => {
     return (
         <>
             <Image
@@ -54,4 +54,4 @@ export default function AuthBackground() {
             />
         </>
     );
-}
+};

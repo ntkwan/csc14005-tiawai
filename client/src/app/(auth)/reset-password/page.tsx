@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Form, Input, Button, notification } from "antd";
-import FormLayout from "@/ui/form/form-layout";
+import { FormLayout } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
 
 export default function ResetPasswordPage() {
