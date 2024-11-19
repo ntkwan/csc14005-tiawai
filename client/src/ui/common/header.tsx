@@ -14,27 +14,51 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
     {
-        label: <Link href="/">Trang chủ</Link>,
+        label: (
+            <Link prefetch={true} href="/">
+                Trang chủ
+            </Link>
+        ),
         key: "home",
     },
     {
-        label: <Link href="/exam">Đề luyện thi</Link>,
+        label: (
+            <Link prefetch={true} href="/exam">
+                Đề luyện thi
+            </Link>
+        ),
         key: "exam",
     },
     {
-        label: <Link href="/practice">Luyện tập</Link>,
+        label: (
+            <Link prefetch={true} href="/practice">
+                Luyện tập
+            </Link>
+        ),
         key: "practice",
     },
     {
-        label: <Link href="/flashcard">Flashcard</Link>,
+        label: (
+            <Link prefetch={true} href="/flashcard">
+                Flashcard
+            </Link>
+        ),
         key: "flashcard",
     },
     {
-        label: <Link href="/paraphrase">Paraphrase</Link>,
+        label: (
+            <Link prefetch={true} href="/paraphrase">
+                Paraphrase
+            </Link>
+        ),
         key: "paraphrase",
     },
     {
-        label: <Link href="/contact">Liên hệ</Link>,
+        label: (
+            <Link prefetch={true} href="/contact">
+                Liên hệ
+            </Link>
+        ),
         key: "contact",
     },
 ];
@@ -55,6 +79,11 @@ const Header = () => {
         setCurrent(currentPath);
     }, [currentPath]);
 
+    useEffect(() => {
+        router.prefetch("/sign-in");
+        router.prefetch("/sign-up");
+    }, [router]);
+
     const onClick: MenuProps["onClick"] = ({ key }) => {
         setCurrent(key);
     };
@@ -66,7 +95,7 @@ const Header = () => {
     };
 
     return (
-        <header className="flex w-full items-center justify-between">
+        <header className="fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-8 pt-4 backdrop-blur-md">
             <div className="flex items-center gap-2">
                 <div className="min-h-max min-w-max items-center rounded-full bg-[#5369A1] px-[9px] py-[3px]">
                     <Image src={logo} alt="logo" />

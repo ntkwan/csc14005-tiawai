@@ -196,13 +196,8 @@ const testsData = [
 const Practice = () => {
     return (
         <div className="space-y-32">
-            <Banner className="max-h-[434px]">
-                <Image
-                    src={bigTiawai2}
-                    alt="big tiawai 2"
-                    className="ml-10 overflow-visible"
-                    height={542}
-                />
+            <Banner>
+                <Image src={bigTiawai2} alt="big tiawai 2" height={400} />
                 <BannerTitle>
                     Luyện Thi Tiếng Anh THPTQG qua các bài tập theo dạng
                 </BannerTitle>

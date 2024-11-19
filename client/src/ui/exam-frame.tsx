@@ -38,7 +38,7 @@ const ExamFrame = ({
             align="center"
         >
             <IconFrame
-                className="min-h-max min-w-max"
+                className="aspect-square min-h-max min-w-max"
                 bgColor={objColor}
                 src={iconSrc}
                 alt={iconAlt}
@@ -71,7 +71,12 @@ const ExamFrame = ({
                     </Space>
                 </Flex>
                 <div>
-                    <Button shape="round" type="primary" size="small">
+                    <Button
+                        shape="round"
+                        type="primary"
+                        size="small"
+                        href="exam/1"
+                    >
                         Xem bài test
                     </Button>
                 </div>
