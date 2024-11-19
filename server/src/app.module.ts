@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import pg from 'pg';
 import { AuthModule } from './auth/auth.module';
+import { VectorStoreModule } from './vector-store/vector-store.module';
+import { ChatModule } from './chat/chat.module';
 import { User } from './users/entities/user.entity';
 @Module({
     imports: [
@@ -35,6 +37,8 @@ import { User } from './users/entities/user.entity';
             inject: [ConfigService],
         }),
         AuthModule,
+        ChatModule,
+        VectorStoreModule,
     ],
     controllers: [AppController],
     providers: [AppService],
