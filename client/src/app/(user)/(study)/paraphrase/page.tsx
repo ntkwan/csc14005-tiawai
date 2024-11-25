@@ -13,7 +13,12 @@ export default function ParaphrasePage() {
         <div className="paraphrase_page mb-10 space-y-20">
             <Banner>
                 <BannerTitle>Công cụ Paraphrasing bằng AI</BannerTitle>
-                <Image className="max-w-lg" src={bigTiawai} alt="big tiawai" />
+                <Image
+                    className="scale-150"
+                    src={bigTiawai}
+                    alt="big tiawai"
+                    height={350}
+                />
             </Banner>
 
             <Title level={3}>

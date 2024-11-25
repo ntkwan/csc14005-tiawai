@@ -1,3 +1,4 @@
+"use client";
 import { configureStore, combineReducers, Reducer } from "@reduxjs/toolkit";
 import {
     persistStore,
