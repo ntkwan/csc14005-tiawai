@@ -20,6 +20,7 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
+        "@nestjs-modules/mailer": "^2.0.2",
         "@langchain/community": "^0.3.13",
         "@langchain/core": "^0.3.18",
         "@langchain/openai": "^0.3.13",

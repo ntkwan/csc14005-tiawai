@@ -53,4 +53,16 @@ export class User extends Model {
     @UpdatedAt
     @Column({ field: 'updated_at' })
     updatedAt: Date;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    otp: string;
+
+    @Column({
+        type: DataType.DATE,
+        allowNull: true,
+    })
+    otpExpiry: Date;
 }
