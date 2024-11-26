@@ -3,7 +3,7 @@ import { Button, Form } from "antd";
 import { backgroundGradient } from "./btn-bg-gradient";
 import { RightOutlined } from "@ant-design/icons";
 
-export default function ButtonGradient({ loading }: { loading?: boolean }) {
+export const ButtonGradient = ({ loading }: { loading?: boolean }) => {
     const { styles } = backgroundGradient();
 
     return (
@@ -19,4 +19,4 @@ export default function ButtonGradient({ loading }: { loading?: boolean }) {
             />
         </Form.Item>
     );
-}
+};

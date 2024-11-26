@@ -5,8 +5,8 @@ import {
     TiawaiIntroduction,
     TiawaiDescription,
 } from "@/ui/contact/tiawai-introduction";
-import FormLayout from "@/ui/form/form-layout";
-import ContactForm from "@/ui/contact/contact-form";
+import { FormLayout } from "@/ui/form";
+import { ContactForm } from "@/ui/contact/contact-form";
 import Image from "next/image";
 import FeaturesBox from "@/ui/home/features-box";
 import SectionBgGradient from "@public/section-bg-gradient.png";

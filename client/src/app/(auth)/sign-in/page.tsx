@@ -4,9 +4,8 @@ import { useAppDispatch } from "@/app/lib/hooks/hook";
 import { useSignInMutation } from "@/lib/api/auth-api";
 import { setCredentials } from "@/app/lib/slices/auth-slice";
 import { Form, Input, Typography, notification } from "antd";
-import FormLayout from "@/ui/form/form-layout";
+import { FormLayout, ButtonGradient } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
-import ButtonGradient from "@/ui/form/submit-button";
 const { Paragraph, Link } = Typography;
 
 export default function SignInPage() {

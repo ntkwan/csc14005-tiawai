@@ -88,9 +88,9 @@ import FeaturesBox from "@/ui/home/features-box";
 
 export default function Home() {
     return (
-        <main className="flex flex-col items-center justify-center gap-20">
+        <main className="flex flex-col items-center justify-center">
             <Image
-                className="absolute bottom-0 left-0 right-0 top-0 -z-50 w-svw"
+                className="absolute bottom-0 left-0 right-0 top-0 -z-50 max-h-[3100px] w-svw"
                 src={homeGradientBg}
                 alt="home gradient bg"
             />
@@ -120,8 +120,8 @@ export default function Home() {
 
             <FeaturesBox />
 
-            <Flex className="mb-28" vertical>
-                <Space size={112} direction="vertical">
+            <Flex className="!mb-20" vertical>
+                <Space size={80} direction="vertical">
                     {examData.map((exam, index) => (
                         <div key={index}>
                             <Flex justify="space-between" align="center">
@@ -148,7 +148,7 @@ export default function Home() {
                 </Space>
             </Flex>
 
-            <div className="relative flex items-center">
+            <div className="relative mb-20 flex items-center">
                 <Image
                     className="max-w-lg"
                     src={bigTiawai}

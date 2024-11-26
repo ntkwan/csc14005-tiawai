@@ -1,9 +1,8 @@
 "use client";
-
 import { useState } from "react";
 import { Button, Modal } from "antd";
 
-export default function TermAndPolicy() {
+export const TermAndPolicy = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -38,7 +37,7 @@ export default function TermAndPolicy() {
             </Modal>
         </>
     );
-}
+};
 
 const TermAndPolicyContent = () => {
     return (

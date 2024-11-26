@@ -4,13 +4,13 @@ import circle2 from "./circle-2.png";
 import TiawaiMascot from "@/ui/tiawai-mascot";
 import { twMerge } from "tailwind-merge";
 
-export default function FormLayout({
+export const FormLayout = ({
     className,
     children,
 }: {
     className?: string;
     children: React.ReactNode;
-}) {
+}) => {
     return (
         <>
             <div
@@ -27,7 +27,7 @@ export default function FormLayout({
             </div>
         </>
     );
-}
+};
 
 const FormBackground = () => {
     return (

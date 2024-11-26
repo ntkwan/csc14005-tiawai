@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Form, Input, Button, Typography, notification } from "antd";
-import FormLayout from "@/ui/form/form-layout";
+import { FormLayout } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
 const { Paragraph } = Typography;
 

@@ -10,7 +10,7 @@ export default function Userlayout({
         <div className="m-auto max-w-[1440px] items-center space-y-12 p-4">
             <Header />
             <ChatButton />
-            <div className="m-auto max-w-[1320px]">{children}</div>
+            <div className="m-auto !mt-20 max-w-[1320px]">{children}</div>
         </div>
     );
 }
