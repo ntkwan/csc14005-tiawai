@@ -1,45 +1,52 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Form, Input, Button, notification } from "antd";
 import { FormLayout } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
+import { useResetPasswordMutation } from "@/lib/api/auth-api";
 
 export default function ResetPasswordPage() {
+    const params = useSearchParams();
     const router = useRouter();
     const [form] = Form.useForm();
+    const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
     const onFinish = async () => {
-        const { password, confirmPassword } = form.getFieldsValue();
+        const { otp, newPassword, confirmPassword } = form.getFieldsValue();
+        const email = params.get("email") || "";
 
-        if (password !== confirmPassword) {
+        if (email == "" || !(btoa(atob(email)) === email)) {
             notification.error({
-                message: "Lỗi xác nhận mật khẩu",
-                description: "Mật khẩu xác nhận không khớp với mật khẩu.",
+                message: "Khôi phục mật khẩu thất bại",
+                description: "URL không hợp lệ.",
             });
             return;
         }
 
-        try {
-            const response = { success: true };
+        const res = await resetPassword({
+            email: atob(email),
+            otp: otp,
+            newPassword,
+            confirmPassword,
+        });
 
-            if (response.success) {
-                notification.success({
-                    message: "Khôi phục mật khẩu thành công",
-                    description:
-                        "Mật khẩu của bạn đã được thay đổi. Hãy đăng nhập lại.",
-                });
+        if (!res.error) {
+            setTimeout(() => {
                 router.push("/sign-in");
-            } else {
-                notification.error({
-                    message: "Khôi phục mật khẩu thất bại",
-                    description: "Có lỗi xảy ra.",
-                });
-            }
-        } catch (error) {
-            console.error("Error resetting password:", error);
+            }, 3000);
+            notification.success({
+                message: "Khôi phục mật khẩu thành công",
+                description: (
+                    <>
+                        Mật khẩu của bạn đã được cập nhật. <br />
+                        Đang chuyển hướng đến trang đăng nhập...
+                    </>
+                ),
+            });
+        } else {
             notification.error({
-                message: "Lỗi khôi phục mật khẩu",
-                description: "Có lỗi xảy ra khi đặt lại mật khẩu.",
+                message: "Khôi phục mật khẩu thất bại",
+                description: "Có lỗi xảy ra.",
             });
         }
     };
@@ -58,7 +65,23 @@ export default function ResetPasswordPage() {
                 <FormTitle>Khôi phục mật khẩu</FormTitle>
 
                 <Form.Item
-                    name="password"
+                    name="otp"
+                    rules={[
+                        {
+                            required: true,
+                            message: "OTP không được bỏ trống",
+                        },
+                        {
+                            len: 6,
+                            message: "OTP phải gồm 6 chữ số",
+                        },
+                    ]}
+                >
+                    <Input.OTP length={6} disabled={isLoading} />
+                </Form.Item>
+
+                <Form.Item
+                    name="newPassword"
                     rules={[
                         { required: true, message: "Vui lòng nhập mật khẩu" },
                         {
@@ -85,7 +108,7 @@ export default function ResetPasswordPage() {
                             validator(_, value) {
                                 if (
                                     !value ||
-                                    getFieldValue("password") === value
+                                    getFieldValue("newPassword") === value
                                 ) {
                                     return Promise.resolve();
                                 }
@@ -105,8 +128,10 @@ export default function ResetPasswordPage() {
                 <Form.Item>
                     <Button
                         className="!m-auto !block"
+                        shape="round"
                         type="primary"
                         htmlType="submit"
+                        loading={isLoading}
                     >
                         Xác nhận
                     </Button>

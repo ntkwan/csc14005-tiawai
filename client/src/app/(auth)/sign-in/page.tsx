@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/app/lib/hooks/hook";
 import { useSignInMutation } from "@/lib/api/auth-api";
@@ -6,29 +7,23 @@ import { setCredentials } from "@/app/lib/slices/auth-slice";
 import { Form, Input, Typography, notification } from "antd";
 import { FormLayout, ButtonGradient } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
-const { Paragraph, Link } = Typography;
+const { Paragraph } = Typography;
 
 export default function SignInPage() {
     const dispatch = useAppDispatch();
-    const [SignIn, { data, error, isLoading }] = useSignInMutation();
+    const [SignIn, { isLoading }] = useSignInMutation();
     const [form] = Form.useForm();
     const router = useRouter();
 
     const onFinish = async () => {
         const formData = form.getFieldsValue();
-        await SignIn(formData);
+        const res = await SignIn(formData);
 
-        if (error) {
-            notification.error({
-                message: "Đăng nhập thất bại",
-                description:
-                    "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
-            });
-        } else if (data?.accessToken && data?.refreshToken) {
+        if (!res.error) {
             dispatch(
                 setCredentials({
-                    accessToken: data.accessToken,
-                    refreshToken: data.refreshToken,
+                    accessToken: res.data.accessToken,
+                    refreshToken: res.data.refreshToken,
                 }),
             );
 
@@ -40,6 +35,12 @@ export default function SignInPage() {
             setTimeout(() => {
                 router.push("/");
             }, 3000);
+        } else {
+            notification.error({
+                message: "Đăng nhập thất bại",
+                description:
+                    "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
+            });
         }
     };
 
@@ -89,7 +90,9 @@ export default function SignInPage() {
                 </Form.Item>
 
                 <Paragraph className="!text-end">
-                    <Link href="forgot-password">Quên mật khẩu?</Link>
+                    <Link href="forgot-password">
+                        <strong>Quên mật khẩu?</strong>
+                    </Link>
                 </Paragraph>
 
                 <Form.Item>

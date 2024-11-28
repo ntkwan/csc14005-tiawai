@@ -1,3 +1,4 @@
+"use client";
 import { appApi } from "./api-config";
 
 const authApi = appApi.injectEndpoints({
@@ -34,10 +35,34 @@ const authApi = appApi.injectEndpoints({
         }),
 
         refreshToken: builder.mutation({
-            query: () => ({
-                url: "/auth/refresh-token",
-                method: "GET",
+            query: () => "/auth/refresh-token",
+        }),
+
+        passwordRecovery: builder.mutation({
+            query: ({ email }) => ({
+                url: "/auth/password-recovery",
+                method: "POST",
+                body: {
+                    email,
+                },
             }),
+        }),
+
+        resetPassword: builder.mutation({
+            query: ({ email, otp, newPassword, confirmPassword }) => ({
+                url: "/auth/reset-password",
+                method: "POST",
+                body: {
+                    email,
+                    otp,
+                    newPassword,
+                    confirmPassword,
+                },
+            }),
+        }),
+
+        getMyProfile: builder.query<void, void>({
+            query: () => "/auth/get-my-profile",
         }),
     }),
 });
@@ -47,4 +72,7 @@ export const {
     useSignInMutation,
     useSignOutMutation,
     useRefreshTokenMutation,
+    usePasswordRecoveryMutation,
+    useResetPasswordMutation,
+    useGetMyProfileQuery,
 } = authApi;

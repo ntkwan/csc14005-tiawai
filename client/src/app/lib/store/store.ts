@@ -1,5 +1,13 @@
 "use client";
-import { configureStore, combineReducers, Reducer } from "@reduxjs/toolkit";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import {
+    configureStore,
+    combineReducers,
+    Reducer,
+    Action,
+} from "@reduxjs/toolkit";
 import {
     persistStore,
     persistReducer,
@@ -10,12 +18,27 @@ import {
     PURGE,
     REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
-import { appApi } from "../api/api-config";
 import authReducer, { AuthState } from "@/lib/slices/auth-slice";
-import { setupListeners } from "@reduxjs/toolkit/query";
-import { Action } from "@reduxjs/toolkit";
+import { appApi } from "../api/api-config";
+
+const createNoopStorage = () => {
+    return {
+        getItem(): Promise<null> {
+            return Promise.resolve(null);
+        },
+        setItem(value: string): Promise<string> {
+            return Promise.resolve(value);
+        },
+        removeItem(): Promise<void> {
+            return Promise.resolve();
+        },
+    };
+};
+
+const storage =
+    typeof window !== "undefined"
+        ? createWebStorage("local")
+        : createNoopStorage();
 
 export type RootState = {
     [appApi.reducerPath]: ReturnType<typeof appApi.reducer>;

@@ -1,5 +1,4 @@
 "use client";
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type User = {
@@ -13,8 +12,8 @@ type RefreshToken = {
 };
 
 export type AuthState = User & AccessToken & RefreshToken;
-type CredentialsProps = AccessToken & RefreshToken;
-type RefreshTokenProps = RefreshToken;
+export type CredentialsProps = AccessToken & RefreshToken;
+export type AccessTokenProps = AccessToken;
 
 const authSlice = createSlice({
     name: "auth",
@@ -32,14 +31,14 @@ const authSlice = createSlice({
             state.refreshToken = action.payload.refreshToken;
         },
 
-        setRefreshToken: (
+        setAccessToken: (
             state,
-            action: PayloadAction<RefreshTokenProps>,
+            action: PayloadAction<AccessTokenProps>,
         ): void => {
-            state.refreshToken = action.payload.refreshToken;
+            state.accessToken = action.payload.accessToken;
         },
 
-        setLogOut: (state): void => {
+        setSignOut: (state): void => {
             state.user = null;
             state.accessToken = null;
             state.refreshToken = null;
@@ -49,4 +48,4 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 
-export const { setCredentials, setLogOut, setRefreshToken } = authSlice.actions;
+export const { setCredentials, setSignOut, setAccessToken } = authSlice.actions;

@@ -3,6 +3,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Roboto } from "next/font/google";
 import ThemeProvider from "./theme";
 import StoreProvider from "@/lib/store/store-provider";
+import ProtetedRoutes from "@/ui/auth/protected-routes";
 import "@/app/globals.css";
 
 const roboto = Roboto({
@@ -27,7 +28,9 @@ export default function RootLayout({
             <body className={`${roboto.variable}bg-white antialiased`}>
                 <StoreProvider>
                     <ThemeProvider>
-                        <AntdRegistry>{children}</AntdRegistry>
+                        <AntdRegistry>
+                            <ProtetedRoutes>{children}</ProtetedRoutes>
+                        </AntdRegistry>
                     </ThemeProvider>
                 </StoreProvider>
             </body>
