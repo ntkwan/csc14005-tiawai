@@ -1,74 +1,70 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/app/lib/hooks/hook";
-import { Menu, Space, Button, Typography, Avatar, Dropdown } from "antd";
+import { usePathname, useRouter } from "next/navigation";
+import { useAppSelector, useAppDispatch } from "@/app/lib/hooks/hook";
+import { setSignOut } from "@/app/lib/slices/auth-slice";
+import { Flex, Menu, Space, Button, Typography, Avatar, Dropdown } from "antd";
 import { MenuProps } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import {
+    DownOutlined,
+    UserOutlined,
+    HistoryOutlined,
+    LogoutOutlined,
+} from "@ant-design/icons";
 import logo from "@public/logo.svg";
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
     {
-        label: (
-            <Link prefetch={true} href="/">
-                Trang chủ
-            </Link>
-        ),
+        label: <Link href="/">Trang chủ</Link>,
         key: "home",
     },
     {
-        label: (
-            <Link prefetch={true} href="/exam">
-                Đề luyện thi
-            </Link>
-        ),
+        label: <Link href="/exam">Đề luyện thi</Link>,
         key: "exam",
     },
     {
-        label: (
-            <Link prefetch={true} href="/practice">
-                Luyện tập
-            </Link>
-        ),
+        label: <Link href="/practice">Luyện tập</Link>,
         key: "practice",
     },
     {
-        label: (
-            <Link prefetch={true} href="/flashcard">
-                Flashcard
-            </Link>
-        ),
+        label: <Link href="/flashcard">Flashcard</Link>,
         key: "flashcard",
     },
     {
-        label: (
-            <Link prefetch={true} href="/paraphrase">
-                Paraphrase
-            </Link>
-        ),
+        label: <Link href="/paraphrase">Paraphrase</Link>,
         key: "paraphrase",
     },
     {
-        label: (
-            <Link prefetch={true} href="/contact">
-                Liên hệ
-            </Link>
-        ),
+        label: <Link href="/contact">Liên hệ</Link>,
         key: "contact",
     },
 ];
 
 const itemsDropdown: MenuProps["items"] = [
-    { key: "profile", label: "Trang cá nhân" },
-    { key: "logout", label: "Đăng xuất" },
+    {
+        key: "profile",
+        label: <Link href="/profile">Hồ sơ cá nhân</Link>,
+        icon: <UserOutlined className="!text-base" />,
+    },
+    {
+        key: "history",
+        label: <Link href="/exam-history">Lịch sử làm đề</Link>,
+        icon: <HistoryOutlined className="!text-base" />,
+    },
+    {
+        key: "signout",
+        label: "Đăng xuất",
+        icon: <LogoutOutlined className="!text-base" />,
+    },
 ];
 
 const Header = () => {
+    const dispatch = useAppDispatch();
     const accessToken = useAppSelector((state) => state.auth.accessToken);
     const pathname = usePathname();
     const currentPath = pathname === "/" ? "home" : pathname?.split("/")[1];
@@ -79,11 +75,6 @@ const Header = () => {
         setCurrent(currentPath);
     }, [currentPath]);
 
-    useEffect(() => {
-        router.prefetch("/sign-in");
-        router.prefetch("/sign-up");
-    }, [router]);
-
     const onClick: MenuProps["onClick"] = ({ key }) => {
         setCurrent(key);
     };
@@ -92,6 +83,13 @@ const Header = () => {
     };
     const onRegisterClick = () => {
         router.push("/sign-up");
+    };
+
+    const handleDropdownClick: MenuProps["onClick"] = ({ key }) => {
+        if (key === "signout") {
+            dispatch(setSignOut());
+            router.push("/sign-in");
+        }
     };
 
     return (
@@ -122,18 +120,31 @@ const Header = () => {
 
             {accessToken ? (
                 <Dropdown
-                    menu={{ items: itemsDropdown }}
-                    placement="bottomRight"
-                    arrow
+                    className="!cursor-pointer"
+                    menu={{
+                        items: itemsDropdown,
+                        onClick: handleDropdownClick,
+                    }}
+                    trigger={["click"]}
+                    // placement="bottomRight"
                 >
-                    <Avatar
-                        size="large"
-                        icon={<UserOutlined />}
-                        style={{
-                            backgroundColor: "#4D2C5E",
-                            cursor: "pointer",
-                        }}
-                    />
+                    <Flex justify="center" align="center" gap={8}>
+                        <Avatar
+                            size="large"
+                            icon={<UserOutlined />}
+                            style={{
+                                backgroundColor: "#4D2C5E",
+                                cursor: "pointer",
+                            }}
+                        />
+                        <Flex className="!mr-4" vertical>
+                            <Title className="!m-0" level={5}>
+                                Pttvi
+                            </Title>
+                            <Paragraph className="!m-0">Admin</Paragraph>
+                        </Flex>
+                        <DownOutlined />
+                    </Flex>
                 </Dropdown>
             ) : (
                 <Space size="large">

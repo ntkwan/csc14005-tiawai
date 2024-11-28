@@ -6,7 +6,6 @@ notification.config({
     placement: "topRight",
     showProgress: true,
     duration: 3,
-    rtl: true,
 });
 
 export const theme = {

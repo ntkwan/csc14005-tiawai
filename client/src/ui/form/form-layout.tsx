@@ -38,6 +38,7 @@ const FormBackground = () => {
                 alt="circle1"
                 width={225}
                 height={225}
+                style={{ height: "auto", width: "auto" }}
             />
 
             <Image
@@ -46,6 +47,7 @@ const FormBackground = () => {
                 alt="circle2"
                 width={150}
                 height={150}
+                style={{ height: "auto", width: "auto" }}
             />
         </>
     );
