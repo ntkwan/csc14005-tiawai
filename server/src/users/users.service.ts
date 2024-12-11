@@ -5,6 +5,7 @@ import { CreateDto } from './dtos/user-signup.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { Role } from '../auth/enums/roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -88,6 +89,7 @@ export class UsersService {
     async create(CreateDto: CreateDto): Promise<User> {
         const { username, email, password } = CreateDto;
         const hashedPassword = await this.hashPassword(password);
+
         const user = await this.userModel.create({
             id: uuidv4(),
             username: username,
@@ -95,8 +97,8 @@ export class UsersService {
             password: hashedPassword,
             otp: null,
             otpExpiry: null,
+            role: Role.USER,
         });
-
         if (!user) {
             throw new InternalServerErrorException(
                 'This email or username is already in use',
@@ -150,5 +152,23 @@ export class UsersService {
             );
         }
         await user.destroy();
+    }
+
+    async updateRole(id: string, role: string): Promise<void> {
+        try {
+            const user = await this.userModel.findOne<User>({
+                where: { id },
+            });
+
+            if (user.role === role) {
+                throw new InternalServerErrorException(
+                    'User already has this role',
+                );
+            }
+
+            await this.userModel.update({ role: role }, { where: { id: id } });
+        } catch (error) {
+            throw new InternalServerErrorException(error.message);
+        }
     }
 }
