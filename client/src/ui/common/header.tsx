@@ -3,8 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useAppSelector, useAppDispatch } from "@/app/lib/hooks/hook";
-import { setSignOut } from "@/app/lib/slices/auth-slice";
 import { Flex, Menu, Space, Button, Typography, Avatar, Dropdown } from "antd";
 import { MenuProps } from "antd";
 import {
@@ -15,6 +13,9 @@ import {
 } from "@ant-design/icons";
 import logo from "@public/logo.svg";
 const { Title, Paragraph } = Typography;
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useSignOutMutation } from "@/lib/api/auth-api";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -64,31 +65,26 @@ const itemsDropdown: MenuProps["items"] = [
 ];
 
 const Header = () => {
-    const dispatch = useAppDispatch();
-    const accessToken = useAppSelector((state) => state.auth.accessToken);
+    const [signOutMutation] = useSignOutMutation();
     const pathname = usePathname();
+    const router = useRouter();
+    const session = useSession();
+
     const currentPath = pathname === "/" ? "home" : pathname?.split("/")[1];
     const [current, setCurrent] = useState(currentPath);
-    const router = useRouter();
 
     useEffect(() => {
         setCurrent(currentPath);
-    }, [currentPath]);
+    }, [currentPath, session]);
 
     const onClick: MenuProps["onClick"] = ({ key }) => {
         setCurrent(key);
     };
-    const onLoginClick = () => {
-        router.push("/sign-in");
-    };
-    const onRegisterClick = () => {
-        router.push("/sign-up");
-    };
 
-    const handleDropdownClick: MenuProps["onClick"] = ({ key }) => {
+    const handleDropdownClick: MenuProps["onClick"] = async ({ key }) => {
         if (key === "signout") {
-            dispatch(setSignOut());
-            router.push("/sign-in");
+            await signOutMutation(undefined);
+            await signOut();
         }
     };
 
@@ -118,7 +114,7 @@ const Header = () => {
                 }}
             />
 
-            {accessToken ? (
+            {session.data?.accessToken ? (
                 <Dropdown
                     className="!cursor-pointer"
                     menu={{
@@ -126,7 +122,6 @@ const Header = () => {
                         onClick: handleDropdownClick,
                     }}
                     trigger={["click"]}
-                    // placement="bottomRight"
                 >
                     <Flex justify="center" align="center" gap={8}>
                         <Avatar
@@ -139,9 +134,16 @@ const Header = () => {
                         />
                         <Flex className="!mr-4" vertical>
                             <Title className="!m-0" level={5}>
-                                Pttvi
+                                {session.data.user.email}
                             </Title>
-                            <Paragraph className="!m-0">Admin</Paragraph>
+                            <Paragraph className="!m-0">
+                                {session?.data?.user?.role
+                                    ? session.data.user.role
+                                          .charAt(0)
+                                          .toUpperCase() +
+                                      session.data.user.role.slice(1)
+                                    : "User"}
+                            </Paragraph>
                         </Flex>
                         <DownOutlined />
                     </Flex>
@@ -152,14 +154,14 @@ const Header = () => {
                         type="primary"
                         size="large"
                         shape="round"
-                        onClick={onLoginClick}
+                        onClick={() => router.push("/sign-in")}
                     >
                         Đăng nhập
                     </Button>
                     <Button
                         size="large"
                         shape="round"
-                        onClick={onRegisterClick}
+                        onClick={() => router.push("/sign-up")}
                     >
                         Đăng ký
                     </Button>

@@ -31,18 +31,12 @@ export default function ResetPasswordPage() {
         });
 
         if (!res.error) {
-            setTimeout(() => {
-                router.push("/sign-in");
-            }, 3000);
             notification.success({
                 message: "Khôi phục mật khẩu thành công",
-                description: (
-                    <>
-                        Mật khẩu của bạn đã được cập nhật. <br />
-                        Đang chuyển hướng đến trang đăng nhập...
-                    </>
-                ),
+                description:
+                    "Mật khẩu của bạn đã được cập nhật.\nĐang chuyển hướng đến trang đăng nhập...",
             });
+            router.push("/sign-in");
         } else {
             notification.error({
                 message: "Khôi phục mật khẩu thất bại",

@@ -1,5 +1,7 @@
 "use client";
 import { appApi } from "./api-config";
+import { setSignOut } from "@/app/lib/slices/auth-slice";
+import { store } from "@/lib/store/store";
 
 const authApi = appApi.injectEndpoints({
     overrideExisting: false,
@@ -32,6 +34,10 @@ const authApi = appApi.injectEndpoints({
                 url: "/auth/sign-out",
                 method: "POST",
             }),
+            async onQueryStarted(_, { queryFulfilled }) {
+                await queryFulfilled;
+                store.dispatch(setSignOut());
+            },
         }),
 
         refreshToken: builder.mutation({

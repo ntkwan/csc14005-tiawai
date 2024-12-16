@@ -17,18 +17,12 @@ export default function ForgotPasswordPage() {
         const res = await passwordRecovery({ email });
 
         if (!res.error) {
-            setTimeout(() => {
-                router.push("/reset-password?email=" + btoa(email));
-            }, 3000);
             notification.success({
                 message: "Gửi OTP thành công",
-                description: (
-                    <>
-                        Mã OTP đã được gửi đến email của bạn. <br />
-                        Đang chuyển hướng...
-                    </>
-                ),
+                description:
+                    "Mã OTP đã được gửi đến email của bạn.\nĐang chuyển hướng...",
             });
+            router.push("/reset-password?email=" + btoa(email));
         } else {
             notification.error({
                 message: "Gửi OTP thất bại",

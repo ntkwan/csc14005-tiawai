@@ -20,12 +20,9 @@ export default function SignUpPage() {
         if (res.error) {
             notification.success({
                 message: "Đăng ký thành công",
-                description:
-                    "Đăng ký thành công. Đang chuyển sang trang đăng nhập...",
+                description: "Vui lòng đăng nhập để tiếp tục.",
             });
-            setTimeout(() => {
-                router.push("/sign-in");
-            }, 3000);
+            router.push("/sign-in");
         } else {
             notification.error({
                 message: "Đăng ký thất bại",
