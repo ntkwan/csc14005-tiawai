@@ -8,6 +8,7 @@ import {
     UpdatedAt,
     IsEmail,
 } from 'sequelize-typescript';
+import { Role } from '../../auth/enums/roles.enum';
 
 @Table({
     tableName: 'accounts',
@@ -32,6 +33,7 @@ export class User extends Model {
     @IsEmail
     @Column({
         type: DataType.STRING,
+        unique: true,
     })
     email: string;
 
@@ -41,17 +43,25 @@ export class User extends Model {
     password: string;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(500),
         field: 'refresh_token',
     })
     refreshToken: string;
 
     @CreatedAt
-    @Column({ field: 'created_at' })
+    @Column({
+        field: 'created_at',
+        type: DataType.DATE,
+        defaultValue: DataType.NOW,
+    })
     createdAt: Date;
 
     @UpdatedAt
-    @Column({ field: 'updated_at' })
+    @Column({
+        field: 'updated_at',
+        type: DataType.DATE,
+        allowNull: true,
+    })
     updatedAt: Date;
 
     @Column({
@@ -65,4 +75,9 @@ export class User extends Model {
         allowNull: true,
     })
     otpExpiry: Date;
+
+    @Column({
+        type: DataType.STRING,
+    })
+    role: Role;
 }

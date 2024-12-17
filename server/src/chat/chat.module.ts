@@ -7,6 +7,8 @@ import { MessageService } from './message/message.service.js';
 import { ChatSessionController } from './session/chat-session.controller.js';
 import { MessageController } from './message/message.controller.js';
 import { VectorStoreModule } from '../vector-store/vector-store.module.js';
+import { AccessControlService } from 'src/shared/shared.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
     imports: [
@@ -14,7 +16,12 @@ import { VectorStoreModule } from '../vector-store/vector-store.module.js';
         VectorStoreModule,
     ],
     controllers: [ChatSessionController, MessageController],
-    providers: [ChatSessionService, MessageService],
+    providers: [
+        ChatSessionService,
+        MessageService,
+        AccessControlService,
+        JwtService,
+    ],
     exports: [ChatSessionService, MessageService],
 })
 export class ChatModule {}

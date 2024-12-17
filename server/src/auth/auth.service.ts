@@ -41,6 +41,26 @@ export class AuthService {
         return user;
     }
 
+    public async getMyProfile(profileUser: User): Promise<any> {
+        try {
+            const { id } = profileUser;
+            const user = await this.usersService.findById(id);
+
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+
+            const newUser = {
+                email: user.email,
+                username: user.username,
+                id: user.id,
+            }
+            return newUser;
+        } catch (error) {
+            throw new InternalServerErrorException('Error getting profile', error.message);
+        }
+    }
+
     public async signIn(user: UserLoginDto): Promise<any> {
         try {
             const payloadAccessToken = {
@@ -83,6 +103,7 @@ export class AuthService {
             const newUser = await this.usersService.create(user);
             return newUser;
         } catch (error) {
+            console.log(error.message);
             throw new InternalServerErrorException('Error signing up', {
                 cause: error.message,
             });
@@ -111,14 +132,16 @@ export class AuthService {
             }
             const payloadAccessToken = {
                 id: user.id,
-                email: user.email,
+                email: user.username,
+                role: user.role,
             };
 
             const newAT = await this.jwtService.signAsync(payloadAccessToken);
 
             const payloadRefreshToken = {
                 sub: user.id,
-                username: user.username,
+                username: user.email,
+                role: user.role,
             };
 
             const newRT = await this.jwtService.signAsync(payloadRefreshToken, {
@@ -200,6 +223,19 @@ export class AuthService {
             throw new InternalServerErrorException(error.message, {
                 cause: error.message,
             });
+        }
+    }
+
+    async changeRole(user: User, id: string, role: string): Promise<void> {
+        try {
+            if (user.id === id) {
+                throw new BadRequestException('Cannot change your own role');
+            }
+
+            await this.usersService.updateRole(id, role);
+        } catch (error) {
+            console.log(error.message);
+            throw new InternalServerErrorException(error.message);
         }
     }
 }

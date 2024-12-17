@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { VectorStoreModule } from './vector-store/vector-store.module';
 import { ChatModule } from './chat/chat.module';
 import { AIModule } from './ai/ai.module';
+import { SharedModule } from './shared/shared.module';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 @Module({
@@ -36,30 +37,33 @@ import { MailerModule } from '@nestjs-modules/mailer';
 
         SequelizeModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-                dialect: 'postgres',
-                dialectModule: pg,
-                host: configService.get('DATABASE'),
-                port: configService.get('PORT'),
-                username: configService.get('DB_USERNAME'),
-                password: configService.get('DB_PASSWORD'),
-                database: configService.get('DB_NAME'),
-                autoLoadModels: true,
-                synchronize: true,
-                models: [User],
-                dialectOptions: {
-                    ssl: {
-                        require: true,
-                        rejectUnauthorized: false,
-                    },
-                },
-            }),
+            useFactory: (configService: ConfigService) => {
+                const isDevelopment =
+                    configService.get('ENV') === 'development';
+
+                return {
+                    dialect: 'postgres',
+                    dialectModule: pg,
+                    host: configService.get('DATABASE'),
+                    port: configService.get('DB_PORT'),
+                    username: configService.get('DB_USERNAME'),
+                    password: configService.get('DB_PASSWORD'),
+                    database: configService.get('DB_NAME'),
+                    autoLoadModels: true,
+                    synchronize: true,
+                    models: [User],
+                    dialectOptions: isDevelopment
+                        ? { ssl: { require: true, rejectUnauthorized: false } }
+                        : { ssl: false },
+                };
+            },
             inject: [ConfigService],
         }),
         AuthModule,
         ChatModule,
         VectorStoreModule,
         AIModule,
+        SharedModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -7,24 +7,40 @@ import {
     Request,
     Res,
     Get,
+    Param,
+    Put,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { ATAuthGuard } from './guards/at-auth.guard';
 import { RTAuthGuard } from './guards/rt-auth.guard';
-import { ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
+import {
+    ApiResponse,
+    ApiOperation,
+    ApiBody,
+    ApiBearerAuth,
+} from '@nestjs/swagger';
 import { TokensEntity } from './entities/tokens.entity';
 import { CredEntity } from './entities/creds.entity';
 import { AuthLoginDto } from './dtos/auth-login.dto';
 import { AuthSignUpDto } from './dtos/auth-signup.dto';
-import { ForgotPasswordDto, ResetPasswordDto } from './dtos/psw-recovery.dto';
+import {
+    ForgotPasswordDto,
+    ResetPasswordDto,
+} from './dtos/auth-psw-recovery.dto';
+import { ChangeRoleDto } from './dtos/change-role.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from './enums/roles.enum';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    @ApiOperation({ summary: 'Login using credentials' })
+    @ApiOperation({
+        summary: 'Login using credentials. Provide email in username field',
+    })
     @ApiBody({ type: AuthLoginDto })
     @ApiResponse({
         status: 200,
@@ -47,6 +63,7 @@ export class AuthController {
     }
 
     @ApiOperation({ summary: 'Get profile with credentials' })
+    @ApiBearerAuth('access-token')
     @Get('get-my-profile')
     @ApiResponse({
         status: 200,
@@ -55,8 +72,9 @@ export class AuthController {
     })
     @UseGuards(ATAuthGuard)
     async getMyProfile(@Request() req: any, @Res() res: Response) {
+        const foundUser = await this.authService.getMyProfile(req.user);
         res.send({
-            user: req.user,
+            user: foundUser
         });
     }
 
@@ -80,6 +98,7 @@ export class AuthController {
         });
     }
 
+    @ApiBearerAuth('access-token')
     @ApiOperation({ summary: 'Sign-out and clear credentials' })
     @ApiResponse({
         status: 200,
@@ -96,7 +115,11 @@ export class AuthController {
         });
     }
 
-    @ApiOperation({ summary: 'Refresh tokens with credentials' })
+    @ApiBearerAuth('refresh-token')
+    @ApiOperation({
+        summary:
+            'Refresh tokens with credentials. Provide refresh token, not access token to the field',
+    })
     @Get('refresh-token')
     @UseGuards(RTAuthGuard)
     @ApiResponse({
@@ -167,6 +190,47 @@ export class AuthController {
         );
         res.send({
             message: 'Password has been reset successfully',
+        });
+    }
+
+    @ApiBearerAuth('access-token')
+    @ApiOperation({
+        summary:
+            'Change user role by ID [ADMIN]. There are 2 roles: administrator (ADMIN), user (USER). Cannot change role to ADMIN',
+    })
+    @Put('change-role/:id')
+    @ApiBody({ type: ChangeRoleDto })
+    @ApiResponse({
+        status: 200,
+        description: 'User role changed successfully',
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @Roles(Role.ADMIN)
+    async changeRole(
+        @Param('id') id: string,
+        @Request() req: any,
+        @Res() res: Response,
+    ): Promise<void> {
+        const role = req.body.role;
+        if (role !== Role.ADMIN && role !== Role.USER) {
+            res.send({
+                statusCode: 404,
+                message: 'Role is not valid',
+            });
+        }
+
+        if (role === Role.ADMIN) {
+            res.send({
+                statusCode: 404,
+                message: 'Cannot change role to ADMIN',
+            });
+        }
+
+        await this.authService.changeRole(req.user, id, role);
+        res.send({
+            statusCode: 200,
+            message: 'User role has been changed successfully',
         });
     }
 }
