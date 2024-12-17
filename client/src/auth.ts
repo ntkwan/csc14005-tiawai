@@ -50,7 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     iat: decoded.iat,
                     exp: decoded.exp,
                     user: {
-                        email: decoded?.email,
+                        email: decoded?.sub,
                         role: "user",
                     },
                 };
