@@ -11,6 +11,8 @@ import { AIModule } from './ai/ai.module';
 import { SharedModule } from './shared/shared.module';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ExamModule } from './exam/exam.module';
+import { UsersModule } from './users/users.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -64,6 +66,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
         VectorStoreModule,
         AIModule,
         SharedModule,
+        ExamModule,
+        UsersModule,
     ],
     controllers: [AppController],
     providers: [AppService],

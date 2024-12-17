@@ -9,6 +9,9 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import * as morgan from 'morgan';
+import { SpelunkerModule } from 'nestjs-spelunker';
+import * as fs from 'fs';
+import { INestApplication } from '@nestjs/common';
 
 const setMiddleware = (app: NestExpressApplication) => {
     app.use(helmet());
@@ -24,6 +27,25 @@ const setMiddleware = (app: NestExpressApplication) => {
 
     app.use(cookieParser());
 };
+
+async function generateDependencyGraph(app: INestApplication) {
+    const tree = SpelunkerModule.explore(app);
+    const root = SpelunkerModule.graph(tree);
+    const edges = SpelunkerModule.findGraphEdges(root);
+    const mermaidEdges = edges
+        .map(({ from, to }) => `  ${from.module.name}-->${to.module.name}`)
+        .filter(
+            (edge) =>
+                !edge.includes('FilteredModule') &&
+                !edge.includes('OtherExample'),
+        )
+        .sort();
+    fs.writeFileSync(
+        'deps.mermaid',
+        `graph LR
+  ${mermaidEdges.join('\n')}`,
+    );
+}
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -47,6 +69,11 @@ async function bootstrap() {
     app.use(urlencoded({ extended: true }));
 
     app.enableCors({ credentials: true, origin: true });
+
+    if (process.env.ENV === 'development') {
+        console.log('Generating dependency graph...');
+        void generateDependencyGraph(app);
+    }
 
     const config = new DocumentBuilder()
         .setTitle('tiawai')
