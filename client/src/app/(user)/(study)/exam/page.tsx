@@ -130,7 +130,13 @@ const Exam = () => {
                     Luyện Thi Tiếng Anh THPT QG Hiệu Quả Mỗi Ngày Nhờ Test
                     Practice
                 </BannerTitle>
-                <Image src={bigTiawai2} alt="big tiawai 2" height={400} />
+                <Image
+                    src={bigTiawai2}
+                    alt="big tiawai 2"
+                    height={400}
+                    width={400}
+                    style={{ width: "auto", height: "100%" }}
+                />
             </Banner>
 
             <Flex align="center" className="mb-24">

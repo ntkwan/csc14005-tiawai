@@ -1,97 +1,91 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/app/lib/hooks/hook";
-import { Menu, Space, Button, Typography, Avatar, Dropdown } from "antd";
+import { usePathname, useRouter } from "next/navigation";
+import { Flex, Menu, Space, Button, Typography, Avatar, Dropdown } from "antd";
 import { MenuProps } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import {
+    DownOutlined,
+    UserOutlined,
+    HistoryOutlined,
+    LogoutOutlined,
+} from "@ant-design/icons";
 import logo from "@public/logo.svg";
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useSignOutMutation } from "@/lib/api/auth-api";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
     {
-        label: (
-            <Link prefetch={true} href="/">
-                Trang chủ
-            </Link>
-        ),
+        label: <Link href="/">Trang chủ</Link>,
         key: "home",
     },
     {
-        label: (
-            <Link prefetch={true} href="/exam">
-                Đề luyện thi
-            </Link>
-        ),
+        label: <Link href="/exam">Đề luyện thi</Link>,
         key: "exam",
     },
     {
-        label: (
-            <Link prefetch={true} href="/practice">
-                Luyện tập
-            </Link>
-        ),
+        label: <Link href="/practice">Luyện tập</Link>,
         key: "practice",
     },
     {
-        label: (
-            <Link prefetch={true} href="/flashcard">
-                Flashcard
-            </Link>
-        ),
+        label: <Link href="/flashcard">Flashcard</Link>,
         key: "flashcard",
     },
     {
-        label: (
-            <Link prefetch={true} href="/paraphrase">
-                Paraphrase
-            </Link>
-        ),
+        label: <Link href="/paraphrase">Paraphrase</Link>,
         key: "paraphrase",
     },
     {
-        label: (
-            <Link prefetch={true} href="/contact">
-                Liên hệ
-            </Link>
-        ),
+        label: <Link href="/contact">Liên hệ</Link>,
         key: "contact",
     },
 ];
 
 const itemsDropdown: MenuProps["items"] = [
-    { key: "profile", label: "Trang cá nhân" },
-    { key: "logout", label: "Đăng xuất" },
+    {
+        key: "profile",
+        label: <Link href="/profile">Hồ sơ cá nhân</Link>,
+        icon: <UserOutlined className="!text-base" />,
+    },
+    {
+        key: "history",
+        label: <Link href="/exam-history">Lịch sử làm đề</Link>,
+        icon: <HistoryOutlined className="!text-base" />,
+    },
+    {
+        key: "signout",
+        label: "Đăng xuất",
+        icon: <LogoutOutlined className="!text-base" />,
+    },
 ];
 
 const Header = () => {
-    const accessToken = useAppSelector((state) => state.auth.accessToken);
+    const [signOutMutation] = useSignOutMutation();
     const pathname = usePathname();
+    const router = useRouter();
+    const session = useSession();
+
     const currentPath = pathname === "/" ? "home" : pathname?.split("/")[1];
     const [current, setCurrent] = useState(currentPath);
-    const router = useRouter();
 
     useEffect(() => {
         setCurrent(currentPath);
-    }, [currentPath]);
-
-    useEffect(() => {
-        router.prefetch("/sign-in");
-        router.prefetch("/sign-up");
-    }, [router]);
+    }, [currentPath, session]);
 
     const onClick: MenuProps["onClick"] = ({ key }) => {
         setCurrent(key);
     };
-    const onLoginClick = () => {
-        router.push("/sign-in");
-    };
-    const onRegisterClick = () => {
-        router.push("/sign-up");
+
+    const handleDropdownClick: MenuProps["onClick"] = async ({ key }) => {
+        if (key === "signout") {
+            await signOutMutation(undefined);
+            await signOut();
+        }
     };
 
     return (
@@ -120,20 +114,39 @@ const Header = () => {
                 }}
             />
 
-            {accessToken ? (
+            {session.data?.accessToken ? (
                 <Dropdown
-                    menu={{ items: itemsDropdown }}
-                    placement="bottomRight"
-                    arrow
+                    className="!cursor-pointer"
+                    menu={{
+                        items: itemsDropdown,
+                        onClick: handleDropdownClick,
+                    }}
+                    trigger={["click"]}
                 >
-                    <Avatar
-                        size="large"
-                        icon={<UserOutlined />}
-                        style={{
-                            backgroundColor: "#4D2C5E",
-                            cursor: "pointer",
-                        }}
-                    />
+                    <Flex justify="center" align="center" gap={8}>
+                        <Avatar
+                            size="large"
+                            icon={<UserOutlined />}
+                            style={{
+                                backgroundColor: "#4D2C5E",
+                                cursor: "pointer",
+                            }}
+                        />
+                        <Flex className="!mr-4" vertical>
+                            <Title className="!m-0" level={5}>
+                                {session.data.user.email}
+                            </Title>
+                            <Paragraph className="!m-0">
+                                {session?.data?.user?.role
+                                    ? session.data.user.role
+                                          .charAt(0)
+                                          .toUpperCase() +
+                                      session.data.user.role.slice(1)
+                                    : "User"}
+                            </Paragraph>
+                        </Flex>
+                        <DownOutlined />
+                    </Flex>
                 </Dropdown>
             ) : (
                 <Space size="large">
@@ -141,14 +154,14 @@ const Header = () => {
                         type="primary"
                         size="large"
                         shape="round"
-                        onClick={onLoginClick}
+                        onClick={() => router.push("/sign-in")}
                     >
                         Đăng nhập
                     </Button>
                     <Button
                         size="large"
                         shape="round"
-                        onClick={onRegisterClick}
+                        onClick={() => router.push("/sign-up")}
                     >
                         Đăng ký
                     </Button>

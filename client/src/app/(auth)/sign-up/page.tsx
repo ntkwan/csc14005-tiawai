@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSignUpMutation } from "@/lib/api/auth-api";
 import { Form, Input, Checkbox, Typography, notification } from "antd";
 import { FormLayout, ButtonGradient } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
 import { TermAndPolicy } from "@/ui/auth";
-const { Paragraph, Link } = Typography;
+const { Paragraph } = Typography;
 
 export default function SignUpPage() {
     const [form] = Form.useForm();
@@ -14,16 +15,20 @@ export default function SignUpPage() {
 
     const onFinish = async () => {
         const formData = form.getFieldsValue();
-        await SignUp(formData);
+        const res = await SignUp(formData);
 
-        notification.success({
-            message: "Đăng ký thành công",
-            description:
-                "Đăng ký thành công. Đang chuyển sang trang đăng nhập...",
-        });
-        setTimeout(() => {
+        if (res.error) {
+            notification.success({
+                message: "Đăng ký thành công",
+                description: "Vui lòng đăng nhập để tiếp tục.",
+            });
             router.push("/sign-in");
-        }, 3000);
+        } else {
+            notification.error({
+                message: "Đăng ký thất bại",
+                description: "Email đã tồn tại. Vui lòng thử lại.",
+            });
+        }
     };
 
     return (

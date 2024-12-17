@@ -7,6 +7,7 @@ import pg from 'pg';
 import { AuthModule } from './auth/auth.module';
 import { VectorStoreModule } from './vector-store/vector-store.module';
 import { ChatModule } from './chat/chat.module';
+import { AIModule } from './ai/ai.module';
 import { SharedModule } from './shared/shared.module';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -61,6 +62,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         AuthModule,
         ChatModule,
         VectorStoreModule,
+        AIModule,
         SharedModule,
     ],
     controllers: [AppController],

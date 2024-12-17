@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Roboto } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
+import NextAuthWrapper from "@/next-auth-wrapper";
 import ThemeProvider from "./theme";
 import StoreProvider from "@/lib/store/store-provider";
 import "@/app/globals.css";
@@ -26,9 +27,11 @@ export default function RootLayout({
         <html lang="vn">
             <body className={`${roboto.variable}bg-white antialiased`}>
                 <StoreProvider>
-                    <ThemeProvider>
-                        <AntdRegistry>{children}</AntdRegistry>
-                    </ThemeProvider>
+                    <SessionProvider>
+                        <NextAuthWrapper>
+                            <ThemeProvider>{children}</ThemeProvider>
+                        </NextAuthWrapper>
+                    </SessionProvider>
                 </StoreProvider>
             </body>
         </html>

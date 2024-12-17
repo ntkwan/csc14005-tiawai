@@ -1,108 +1,111 @@
 "use client";
+import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/app/lib/hooks/hook";
-import { useSignInMutation } from "@/lib/api/auth-api";
-import { setCredentials } from "@/app/lib/slices/auth-slice";
 import { Form, Input, Typography, notification } from "antd";
 import { FormLayout, ButtonGradient } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
-const { Paragraph, Link } = Typography;
+const { Paragraph } = Typography;
+import { signIn } from "next-auth/react";
 
 export default function SignInPage() {
-    const dispatch = useAppDispatch();
-    const [SignIn, { data, error, isLoading }] = useSignInMutation();
     const [form] = Form.useForm();
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const onFinish = async () => {
         const formData = form.getFieldsValue();
-        await SignIn(formData);
 
-        if (error) {
+        setIsLoading(true);
+        const res = await signIn("credentials", {
+            username: formData.username,
+            password: formData.password,
+            redirect: false,
+        });
+        setIsLoading(false);
+
+        if (res !== undefined && !res?.error) {
+            notification.success({
+                message: "Đăng nhập thành công",
+                description: "Chào mừng bạn trở lại với Tiawai",
+            });
+            router.push("/");
+        } else {
             notification.error({
                 message: "Đăng nhập thất bại",
                 description:
                     "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
             });
-        } else if (data?.accessToken && data?.refreshToken) {
-            dispatch(
-                setCredentials({
-                    accessToken: data.accessToken,
-                    refreshToken: data.refreshToken,
-                }),
-            );
-
-            notification.success({
-                message: "Đăng nhập thành công",
-                description: "Chào mừng bạn trở lại với Tiawai",
-            });
-
-            setTimeout(() => {
-                router.push("/");
-            }, 3000);
         }
     };
 
     return (
-        <FormLayout>
-            <Form
-                form={form}
-                name="sign-in"
-                layout="vertical"
-                initialValues={{ remember: true }}
-                autoComplete="off"
-                size="large"
-                onFinish={onFinish}
-            >
-                <FormTitle>Đăng nhập</FormTitle>
-
-                <Form.Item
-                    name="username"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Email không được bỏ trống",
-                        },
-                        {
-                            type: "email",
-                            message: "Vui lòng nhập địa chỉ email hợp lệ",
-                        },
-                    ]}
+        <>
+            <FormLayout>
+                <Form
+                    form={form}
+                    name="sign-in"
+                    layout="vertical"
+                    initialValues={{ remember: true }}
+                    autoComplete="off"
+                    size="large"
+                    onFinish={onFinish}
                 >
-                    <Input className="form__input" placeholder="Email" />
-                </Form.Item>
+                    <FormTitle>Đăng nhập</FormTitle>
 
-                <Form.Item
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Mật khẩu không được bỏ trống",
-                        },
-                        { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
-                    ]}
-                >
-                    <Input.Password
-                        className="form__input"
-                        placeholder="Mật khẩu"
-                    />
-                </Form.Item>
+                    <Form.Item
+                        name="username"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Email không được bỏ trống",
+                            },
+                            {
+                                type: "email",
+                                message: "Vui lòng nhập địa chỉ email hợp lệ",
+                            },
+                        ]}
+                    >
+                        <Input className="form__input" placeholder="Email" />
+                    </Form.Item>
 
-                <Paragraph className="!text-end">
-                    <Link href="forgot-password">Quên mật khẩu?</Link>
-                </Paragraph>
+                    <Form.Item
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Mật khẩu không được bỏ trống",
+                            },
+                            {
+                                min: 6,
+                                message: "Mật khẩu phải có ít nhất 6 ký tự",
+                            },
+                        ]}
+                    >
+                        <Input.Password
+                            className="form__input"
+                            placeholder="Mật khẩu"
+                        />
+                    </Form.Item>
 
-                <Form.Item>
-                    <ButtonGradient loading={isLoading} />
-                </Form.Item>
+                    <Paragraph className="!text-end">
+                        <Link href="forgot-password">
+                            <strong>Quên mật khẩu?</strong>
+                        </Link>
+                    </Paragraph>
 
-                <Paragraph className="!text-center">
-                    Bạn chưa có tài khoản?{" "}
-                    <Link href="sign-up">
-                        <strong>Đăng ký</strong>
-                    </Link>
-                </Paragraph>
-            </Form>
-        </FormLayout>
+                    <Form.Item>
+                        <ButtonGradient loading={isLoading} />
+                    </Form.Item>
+
+                    <Paragraph className="!text-center">
+                        Bạn chưa có tài khoản?{" "}
+                        <Link href="sign-up">
+                            <strong>Đăng ký</strong>
+                        </Link>
+                    </Paragraph>
+                </Form>
+            </FormLayout>
+        </>
     );
 }

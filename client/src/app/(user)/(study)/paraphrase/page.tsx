@@ -1,60 +1,82 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
-import Banner from "@/app/(user)/(study)/_ui/banner";
-import { BannerTitle } from "@/ui/common/title";
-import bigTiawai from "@public/big-tiawai.svg";
-import { Tabs, Input, Button, Typography } from "antd";
-const { Title } = Typography;
+import { Input, Button, Typography, Tabs, notification } from "antd";
+import type { TabsProps } from "antd";
+import { useParaphraseMutation } from "@/lib/api/ai-api";
+
 const { TextArea } = Input;
+const { Title } = Typography;
+const tabItems: TabsProps["items"] = [
+    { key: "Paraphrase", label: "Tiêu chuẩn" },
+    { key: "Fluency", label: "Trôi chảy" },
+    { key: "Coherence", label: "Mạch lạc" },
+    { key: "Simplification", label: "Thu gọn" },
+    { key: "Formalize", label: "Trang trọng" },
+    { key: "Neutralize", label: "Trung lập" },
+];
 
-export default function ParaphrasePage() {
-    return (
-        <div className="paraphrase_page mb-10 space-y-20">
-            <Banner>
-                <BannerTitle>Công cụ Paraphrasing bằng AI</BannerTitle>
-                <Image
-                    className="scale-150"
-                    src={bigTiawai}
-                    alt="big tiawai"
-                    height={350}
-                />
-            </Banner>
+export default function Paraphrasing() {
+    const [inputText, setInputText] = useState<string>("");
+    const [outputText, setOutputText] = useState<string>("");
+    const [tabItem, setTabItem] = useState<string>("Paraphrase");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [paraphrase] = useParaphraseMutation();
 
-            <Title level={3}>
-                <i>
-                    Công cụ paraphrasing hoạt động cùng bạn để giúp bạn tạo ra
-                    <b> những bài viết rõ ràng, mạch lạc và chuyên nghiệp </b>
-                    trong một khoảng
-                    <b> thời gian ngắn. </b>
-                    Tia - AI của chúng tôi ngay lập tức diễn đạt lại đoạn văn
-                    của bạn
-                    <b>
-                        {" "}
-                        mà không làm thay đổi ý nghĩa hay chất lượng của từ ngữ.
-                    </b>
-                </i>
-            </Title>
-            <Paraphrasing />
-        </div>
-    );
-}
-
-const Paraphrasing = () => {
-    const [inputText, setInputText] = useState("");
-
-    const handleParaphrase = () => {
-        console.log("Paraphrasing text:", inputText);
+    const onChangeTab = (key: string) => {
+        setTabItem(key);
     };
 
-    const tabItems = [
-        { key: "standard", label: "Tiêu chuẩn" },
-        { key: "concise", label: "Thu gọn" },
-        { key: "natural", label: "Tự nhiên" },
-        { key: "fluent", label: "Trôi chảy" },
-        { key: "academic", label: "Học thuật" },
-        { key: "formal", label: "Trang trọng" },
-    ];
+    const isEnglish = (inputText: string) => {
+        const regex = /[^\w\s~!$@#$%^&*(){}\[\]_+-=:;"'’<>.,?/ ]+/;
+        return regex.test(inputText);
+    };
+
+    const splitInputText = (inputText: string) => {
+        const textArr = inputText.split(".");
+        const half = Math.ceil(textArr.length / 2);
+        const firstHalf = textArr.slice(0, half).join(" ");
+        const secondHalf = textArr.slice(half).join(" ");
+        return [firstHalf, secondHalf];
+    };
+
+    const handleParaphrase = async () => {
+        const [firstHalf, secondHalf] = splitInputText(inputText);
+        const [res1, res2] = await Promise.all([
+            paraphrase(`${tabItem} this: ${firstHalf}`),
+            paraphrase(`${tabItem} this: ${secondHalf}`),
+        ]);
+
+        if (!res1.error && !res2.error) {
+            setOutputText(`${res1.data?.data} ${res2.data?.data}`);
+            return false;
+        }
+        return true;
+    };
+
+    const handleParaphraseWithRetry = async () => {
+        if (isEnglish(inputText)) {
+            notification.error({
+                message: "Chỉ hỗ trợ tiếng Anh",
+                description: "Vui lòng nhập hoặc sao chép văn bản tiếng Anh",
+            });
+            return;
+        }
+
+        setIsLoading(true);
+        for (let i = 0; i < 5; i++) {
+            const failed = await handleParaphrase();
+            if (failed) {
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                continue;
+            }
+            return setIsLoading(false);
+        }
+        setIsLoading(false);
+        notification.error({
+            message: "Đã xảy ra lỗi",
+            description: "Vui lòng thử lại sau",
+        });
+    };
 
     return (
         <div className="m-auto rounded-xl border border-black">
@@ -69,6 +91,7 @@ const Paraphrasing = () => {
                     defaultActiveKey="standard"
                     items={tabItems}
                     size="large"
+                    onChange={onChangeTab}
                 />
             </div>
             <div className="grid grid-cols-2">
@@ -81,14 +104,16 @@ const Paraphrasing = () => {
                         autoSize={{ minRows: 20, maxRows: 20 }}
                         size="large"
                         showCount
+                        minLength={200}
                         maxLength={1000}
                     />
                     <div className="absolute bottom-4 right-4 mt-4 flex justify-center">
                         <Button
                             className="!z-50 !bg-[#E9DAE9] !font-bold"
-                            onClick={handleParaphrase}
+                            onClick={handleParaphraseWithRetry}
                             shape="round"
                             size="large"
+                            loading={isLoading}
                         >
                             Paraphrasing
                         </Button>
@@ -96,13 +121,15 @@ const Paraphrasing = () => {
                 </div>
                 <TextArea
                     className="!rounded-none !rounded-br-xl"
+                    value={outputText}
                     autoSize={{ minRows: 20, maxRows: 20 }}
                     rows={24}
                     size="large"
                     showCount
                     maxLength={1000}
+                    readOnly
                 />
             </div>
         </div>
     );
-};
+}

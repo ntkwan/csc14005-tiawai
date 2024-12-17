@@ -1,4 +1,7 @@
+"use client";
 import { appApi } from "./api-config";
+import { setSignOut } from "@/app/lib/slices/auth-slice";
+import { store } from "@/lib/store/store";
 
 const authApi = appApi.injectEndpoints({
     overrideExisting: false,
@@ -31,13 +34,41 @@ const authApi = appApi.injectEndpoints({
                 url: "/auth/sign-out",
                 method: "POST",
             }),
+            async onQueryStarted(_, { queryFulfilled }) {
+                await queryFulfilled;
+                store.dispatch(setSignOut());
+            },
         }),
 
         refreshToken: builder.mutation({
-            query: () => ({
-                url: "/auth/refresh-token",
-                method: "GET",
+            query: () => "/auth/refresh-token",
+        }),
+
+        passwordRecovery: builder.mutation({
+            query: ({ email }) => ({
+                url: "/auth/password-recovery",
+                method: "POST",
+                body: {
+                    email,
+                },
             }),
+        }),
+
+        resetPassword: builder.mutation({
+            query: ({ email, otp, newPassword, confirmPassword }) => ({
+                url: "/auth/reset-password",
+                method: "POST",
+                body: {
+                    email,
+                    otp,
+                    newPassword,
+                    confirmPassword,
+                },
+            }),
+        }),
+
+        getMyProfile: builder.query<void, void>({
+            query: () => "/auth/get-my-profile",
         }),
     }),
 });
@@ -47,4 +78,7 @@ export const {
     useSignInMutation,
     useSignOutMutation,
     useRefreshTokenMutation,
+    usePasswordRecoveryMutation,
+    useResetPasswordMutation,
+    useGetMyProfileQuery,
 } = authApi;
