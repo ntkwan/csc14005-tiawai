@@ -10,6 +10,8 @@ import { ChatModule } from './chat/chat.module';
 import { SharedModule } from './shared/shared.module';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ExamModule } from './exam/exam.module';
+import { UsersModule } from './users/users.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -62,6 +64,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
         ChatModule,
         VectorStoreModule,
         SharedModule,
+        ExamModule,
+        UsersModule,
     ],
     controllers: [AppController],
     providers: [AppService],

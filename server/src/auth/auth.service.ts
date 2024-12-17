@@ -41,26 +41,6 @@ export class AuthService {
         return user;
     }
 
-    public async getMyProfile(profileUser: User): Promise<any> {
-        try {
-            const { id } = profileUser;
-            const user = await this.usersService.findById(id);
-
-            if (!user) {
-                throw new NotFoundException('User not found');
-            }
-
-            const newUser = {
-                email: user.email,
-                username: user.username,
-                id: user.id,
-            }
-            return newUser;
-        } catch (error) {
-            throw new InternalServerErrorException('Error getting profile', error.message);
-        }
-    }
-
     public async signIn(user: UserLoginDto): Promise<any> {
         try {
             const payloadAccessToken = {

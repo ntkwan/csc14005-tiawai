@@ -62,22 +62,6 @@ export class AuthController {
         });
     }
 
-    @ApiOperation({ summary: 'Get profile with credentials' })
-    @ApiBearerAuth('access-token')
-    @Get('get-my-profile')
-    @ApiResponse({
-        status: 200,
-        description: 'Get profile successfully',
-        type: CredEntity,
-    })
-    @UseGuards(ATAuthGuard)
-    async getMyProfile(@Request() req: any, @Res() res: Response) {
-        const foundUser = await this.authService.getMyProfile(req.user);
-        res.send({
-            user: foundUser
-        });
-    }
-
     @ApiOperation({ summary: 'Sign-up to login' })
     @ApiBody({ type: AuthSignUpDto })
     @ApiResponse({
@@ -153,7 +137,7 @@ export class AuthController {
     @ApiBody({ type: ForgotPasswordDto })
     @ApiResponse({
         status: 200,
-        description: 'Send OTP successfully',
+        description: 'Send OTP successfully via email',
     })
     @HttpCode(200)
     async forgotPassword(

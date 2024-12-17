@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
 import { CreateDto } from './dtos/user-signup.dto';
@@ -6,14 +10,67 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { Role } from '../auth/enums/roles.enum';
+import { SubmissionService } from 'src/exam/submission/submission.service';
+import { UserStatsDto } from './dtos/user-stat.dto';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User)
         private readonly userModel: typeof User,
+        private submissionService: SubmissionService,
         private configService: ConfigService,
     ) {}
+
+    async getProfileStudyStats(profileUser: User): Promise<UserStatsDto> {
+        try {
+            const { id } = profileUser;
+            const submissions = await this.submissionService.findAll();
+            const userSubmissions = submissions.filter(
+                (submission) => submission.userId === id,
+            );
+
+            const uniqueUserSubmissions = Array.from(
+                new Map(
+                    userSubmissions.map((item) => [item['submissionId'], item]),
+                ).values(),
+            );
+
+            return {
+                examPracticeCount: uniqueUserSubmissions.length,
+                specializedExamPracticeCount: -1,
+                vocabsPracticeCount: -1,
+            };
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Error getting profile study stats',
+                error.message,
+            );
+        }
+    }
+
+    async getMyProfile(profileUser: User): Promise<any> {
+        try {
+            const { id } = profileUser;
+            const user = await this.userModel.findByPk(id);
+
+            if (!user) {
+                throw new BadRequestException('User not found');
+            }
+
+            const newUser = {
+                email: user.email,
+                username: user.username,
+                id: user.id,
+            };
+            return newUser;
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Error getting profile',
+                error.message,
+            );
+        }
+    }
 
     async findAll(): Promise<User[]> {
         return this.userModel.findAll();
