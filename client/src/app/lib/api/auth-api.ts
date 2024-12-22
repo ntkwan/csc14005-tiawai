@@ -66,10 +66,6 @@ const authApi = appApi.injectEndpoints({
                 },
             }),
         }),
-
-        getMyProfile: builder.query<void, void>({
-            query: () => "/auth/get-my-profile",
-        }),
     }),
 });
 
@@ -80,5 +76,4 @@ export const {
     useRefreshTokenMutation,
     usePasswordRecoveryMutation,
     useResetPasswordMutation,
-    useGetMyProfileQuery,
 } = authApi;
