@@ -1,4 +1,4 @@
-name: Build Packages
+name: lint
 on:
     push:
         branches: ["main", "dev"]
