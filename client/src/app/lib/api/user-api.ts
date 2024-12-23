@@ -5,11 +5,17 @@ const userApi = appApi.injectEndpoints({
     endpoints: (builder) => ({
         getMyProfile: builder.query({
             query: () => ({
-                url: "/auth/get-my-profile",
+                url: "/user",
+                method: "GET",
+            }),
+        }),
+        getMyStatistics: builder.query({
+            query: () => ({
+                url: "/user/exam",
                 method: "GET",
             }),
         }),
     }),
 });
 
-export const { useGetMyProfileQuery } = userApi;
+export const { useGetMyProfileQuery, useGetMyStatisticsQuery } = userApi;

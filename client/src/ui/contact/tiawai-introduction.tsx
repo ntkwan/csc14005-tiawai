@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Row, Col, Typography } from "antd";
 import chatbotIcon from "@public/mascot/chatbot-icon.png";
-import mascot from "@public/mascot/full.png";
+import mascot from "@public/mascot/full.webp";
 import mascotBgBlur from "@public/mascot/bg-blur.png";
 import bigTiawai from "@public/big-tiawai.svg";
 const { Title } = Typography;

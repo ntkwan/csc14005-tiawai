@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="vn">
-            <body className={`${roboto.variable}bg-white antialiased`}>
+            <body className={`${roboto.variable} bg-white antialiased`}>
                 <StoreProvider>
                     <SessionProvider>
                         <NextAuthWrapper>
