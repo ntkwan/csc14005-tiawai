@@ -28,6 +28,7 @@ import { AuthSignUpDto } from './dtos/auth-signup.dto';
 import {
     ForgotPasswordDto,
     ResetPasswordDto,
+    VerifyOtpDto,
 } from './dtos/auth-psw-recovery.dto';
 import { ChangeRoleDto } from './dtos/change-role.dto';
 import { RolesGuard } from './guards/roles.guard';
@@ -129,6 +130,23 @@ export class AuthController {
         res.send({
             accessToken,
             message: 'Token has been refreshed successfully',
+        });
+    }
+
+    @ApiOperation({ summary: 'Verify OTP' })
+    @Post('verify-otp')
+    @ApiBody({ type: VerifyOtpDto })
+    @ApiResponse({
+        status: 200,
+        description: 'OTP verified successfully',
+    })
+    @HttpCode(200)
+    async verifyOtp(@Request() req: any, @Res() res: Response): Promise<void> {
+        const email = req.body.email;
+        const otp = req.body.otp;
+        await this.authService.verifyOtp(email, otp);
+        res.send({
+            message: 'OTP has been verified successfully',
         });
     }
 

@@ -8,7 +8,7 @@ import {
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
-import { CreateDto } from '../users/dtos/user-signup.dto';
+import { UserSignUpDto } from '../users/dtos/user-signup.dto';
 import { UserLoginDto } from '../users/dtos/user-login.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -46,14 +46,23 @@ export class AuthService {
             const payloadAccessToken = {
                 id: user.id,
                 email: user.email,
+                role: user.role,
             };
 
-            const accessToken =
-                await this.jwtService.signAsync(payloadAccessToken);
+            const accessToken = await this.jwtService.signAsync(
+                payloadAccessToken,
+
+                {
+                    secret: this.configService.get('AT_SECRET'),
+
+                    expiresIn: '1h',
+                },
+            );
 
             const payloadRefreshToken = {
                 sub: user.id,
                 username: user.username,
+                role: user.role,
             };
 
             const refreshToken = await this.jwtService.signAsync(
@@ -72,13 +81,11 @@ export class AuthService {
                 accessToken,
             };
         } catch (error) {
-            throw new BadRequestException('Error signing in', {
-                cause: error.message,
-            });
+            throw new BadRequestException(error.message);
         }
     }
 
-    public async signUp(user: CreateDto): Promise<User> {
+    public async signUp(user: UserSignUpDto): Promise<User> {
         try {
             const newUser = await this.usersService.create(user);
             return newUser;
@@ -142,6 +149,26 @@ export class AuthService {
         }
     }
 
+    async verifyOtp(email: string, otp: string): Promise<void> {
+        try {
+            const user = await this.usersService.findByOtpOnly(email, otp);
+
+            if (!user) throw new BadRequestException('Invalid OTP');
+
+            const currentTime = new Date();
+
+            if (currentTime > user.otpExpiry) {
+                throw new BadRequestException('OTP expired');
+            }
+
+            return;
+        } catch (error) {
+            throw new InternalServerErrorException(error.message, {
+                cause: error.message,
+            });
+        }
+    }
+
     public async forgotPassword(email: string): Promise<void> {
         try {
             const user = await this.usersService.findByEmail(email);
@@ -168,8 +195,13 @@ export class AuthService {
 
     async hashPassword(password: string): Promise<string> {
         try {
-            const salt = await bcrypt.genSalt(+this.configService.get('SALT'));
-            return await bcrypt.hash(password, salt);
+            const salt: number = await bcrypt.genSalt(
+                parseInt(this.configService.get('SALT'), 10),
+            );
+
+            const hashedPassword: string = await bcrypt.hash(password, salt);
+
+            return hashedPassword;
         } catch (error) {
             throw new InternalServerErrorException(error.message);
         }
@@ -182,22 +214,20 @@ export class AuthService {
         confirmPassword: string,
     ): Promise<void> {
         try {
+            const user = await this.usersService.findByOtpOnly(email, otp);
+
+            if (!user) throw new BadRequestException('Invalid OTP');
+
             if (newPassword !== confirmPassword) {
                 throw new BadRequestException('Passwords do not match');
             }
-
-            const user = await this.usersService.findByOtpOnly(email, otp);
-
-            if (!user) throw new BadRequestException('Invalid or expired OTP');
 
             const currentTime = new Date();
             if (currentTime > user.otpExpiry) {
                 throw new BadRequestException('OTP expired');
             }
 
-            const hashedPassword = await this.hashPassword(newPassword);
-            await this.usersService.updateOtp(email, null, null); // Clear OTP
-            await this.usersService.updatePassword(email, hashedPassword);
+            await this.usersService.updatePassword(email, newPassword);
             return;
         } catch (error) {
             throw new InternalServerErrorException(error.message, {

@@ -8,6 +8,18 @@ export class ForgotPasswordDto {
     email: string;
 }
 
+export class VerifyOtpDto {
+    @ApiProperty()
+    @IsEmail()
+    @IsString()
+    email: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    otp: string;
+}
+
 export class ResetPasswordDto {
     @ApiProperty()
     @IsEmail()

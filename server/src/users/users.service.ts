@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
-import { CreateDto } from './dtos/user-signup.dto';
+import { UserSignUpDto } from './dtos/user-signup.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -136,14 +136,19 @@ export class UsersService {
 
     async hashPassword(password: string): Promise<string> {
         try {
-            const salt = await bcrypt.genSalt(+this.configService.get('SALT'));
-            return await bcrypt.hash(password, salt);
+            const salt: number = await bcrypt.genSalt(
+                parseInt(this.configService.get('SALT'), 10),
+            );
+
+            const hashedPassword: string = await bcrypt.hash(password, salt);
+
+            return hashedPassword;
         } catch (error) {
             throw new InternalServerErrorException(error.message);
         }
     }
 
-    async create(CreateDto: CreateDto): Promise<User> {
+    async create(CreateDto: UserSignUpDto): Promise<User> {
         const { username, email, password } = CreateDto;
         const hashedPassword = await this.hashPassword(password);
 
