@@ -46,6 +46,29 @@ const items: MenuItem[] = [
     },
 ];
 
+const adminItems: MenuItem[] = [
+    {
+        label: <Link href="/admin">Thống kê</Link>,
+        key: "dashboard",
+    },
+    {
+        label: <Link href="/admin/users">Quản lý người dùng</Link>,
+        key: "users",
+    },
+    {
+        label: <Link href="/admin/exams">Kho đề thi</Link>,
+        key: "exams",
+    },
+    {
+        label: <Link href="/admin/practices">Kho đề luyện tập</Link>,
+        key: "practices",
+    },
+    {
+        label: <Link href="/admin/reports">Quản lý báo cáo</Link>,
+        key: "reports",
+    },
+];
+
 const itemsDropdown: MenuProps["items"] = [
     {
         key: "profile",
@@ -101,7 +124,7 @@ const Header = () => {
 
             <Menu
                 className="!border-none !bg-transparent"
-                items={items}
+                items={adminItems}
                 mode="horizontal"
                 onSelect={onClick}
                 selectedKeys={[current]}
