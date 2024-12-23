@@ -19,7 +19,7 @@ export class VectorStoreService {
             database: this.configService.get('DB_NAME'),
             user: this.configService.get('DB_USERNAME'),
             password: this.configService.get('DB_PASSWORD'),
-            port: this.configService.get('PORT'),
+            port: this.configService.get('DB_PORT'),
             ssl: {
                 rejectUnauthorized: false,
             },
