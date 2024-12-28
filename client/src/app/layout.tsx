@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Roboto, Nunito_Sans } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import NextAuthWrapper from "@/next-auth-wrapper";
 import ThemeProvider from "./theme";
@@ -11,6 +11,13 @@ const roboto = Roboto({
     display: "swap",
     weight: ["400", "500", "700", "900"],
     variable: "--font-roboto",
+});
+
+const nunitoSans = Nunito_Sans({
+    subsets: ["latin"],
+    display: "swap",
+    weight: ["400", "700"],
+    variable: "--font-nunito-sans",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +32,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="vn">
-            <body className={`${roboto.variable} bg-white antialiased`}>
+            <body
+                className={`${roboto.variable} ${nunitoSans.variable} bg-white antialiased`}
+            >
                 <StoreProvider>
                     <SessionProvider>
                         <NextAuthWrapper>

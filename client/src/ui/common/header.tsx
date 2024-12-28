@@ -19,30 +19,26 @@ import { useSignOutMutation } from "@/lib/api/auth-api";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = [
+const adminItems: MenuItem[] = [
     {
-        label: <Link href="/">Trang chủ</Link>,
-        key: "home",
+        label: <Link href="/admin">Thống kê</Link>,
+        key: "dashboard",
     },
     {
-        label: <Link href="/exam">Đề luyện thi</Link>,
-        key: "exam",
+        label: <Link href="/admin/users">Quản lý người dùng</Link>,
+        key: "users",
     },
     {
-        label: <Link href="/practice">Luyện tập</Link>,
-        key: "practice",
+        label: <Link href="/admin/exams">Kho đề thi</Link>,
+        key: "exams",
     },
     {
-        label: <Link href="/flashcard">Flashcard</Link>,
-        key: "flashcard",
+        label: <Link href="/admin/practices">Kho đề luyện tập</Link>,
+        key: "practices",
     },
     {
-        label: <Link href="/paraphrase">Paraphrase</Link>,
-        key: "paraphrase",
-    },
-    {
-        label: <Link href="/contact">Liên hệ</Link>,
-        key: "contact",
+        label: <Link href="/admin/reports">Quản lý báo cáo</Link>,
+        key: "reports",
     },
 ];
 
@@ -101,7 +97,7 @@ const Header = () => {
 
             <Menu
                 className="!border-none !bg-transparent"
-                items={items}
+                items={adminItems}
                 mode="horizontal"
                 onSelect={onClick}
                 selectedKeys={[current]}

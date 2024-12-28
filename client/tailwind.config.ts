@@ -16,6 +16,7 @@ const config: Config = {
                 chango: ["Chango", "sans-serif"],
                 roboto: ["var(--font-roboto)"],
                 instrument: ["Instrument Serif", "serif"],
+                nunitosans: ["var(--font-nunito-sans)"],
             },
         },
     },
