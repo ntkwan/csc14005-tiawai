@@ -19,33 +19,6 @@ import { useSignOutMutation } from "@/lib/api/auth-api";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = [
-    {
-        label: <Link href="/">Trang chủ</Link>,
-        key: "home",
-    },
-    {
-        label: <Link href="/exam">Đề luyện thi</Link>,
-        key: "exam",
-    },
-    {
-        label: <Link href="/practice">Luyện tập</Link>,
-        key: "practice",
-    },
-    {
-        label: <Link href="/flashcard">Flashcard</Link>,
-        key: "flashcard",
-    },
-    {
-        label: <Link href="/paraphrase">Paraphrase</Link>,
-        key: "paraphrase",
-    },
-    {
-        label: <Link href="/contact">Liên hệ</Link>,
-        key: "contact",
-    },
-];
-
 const adminItems: MenuItem[] = [
     {
         label: <Link href="/admin">Thống kê</Link>,
