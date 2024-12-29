@@ -227,7 +227,8 @@ export class AuthService {
                 throw new BadRequestException('OTP expired');
             }
 
-            await this.usersService.updatePassword(email, newPassword);
+            const hashedPassword = await this.hashPassword(newPassword);
+            await this.usersService.updatePassword(email, hashedPassword);
             return;
         } catch (error) {
             throw new InternalServerErrorException(error.message, {
