@@ -2,6 +2,7 @@
 import { Flex, Space, Button, Typography } from "antd";
 import IconFrame from "./icon-frame";
 import Image from "next/image";
+import { Exam } from "@/types/exam";
 const { Text, Title } = Typography;
 
 const examInfo = [
