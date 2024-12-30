@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, memo, useEffect } from "react";
 import { Typography, Form, Button, Input, Checkbox, notification } from "antd";
-import { ChoicesTypes, Question, Exam } from "@/types/exam";
+import { ChoicesTypes, Question, Exam } from "@/types/exam.d";
 import { useCreateExamMutation } from "@/lib/api/admin-api";
 import Banner from "@/ui/admin/banner";
 import clsx from "clsx";
