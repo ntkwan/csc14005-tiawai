@@ -27,6 +27,7 @@ export class ExamService {
                         totalQuestions: test.totalQuestions,
                         uploadedAt: test.uploadAt,
                         duration: test.duration,
+                        totalAttempts: test.submissions.length,
                     };
                 },
             );

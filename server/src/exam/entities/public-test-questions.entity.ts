@@ -15,4 +15,7 @@ export class PublicTestQuestionsEntity {
 
     @ApiProperty()
     duration: number;
+
+    @ApiProperty()
+    totalAttempts: number;
 }

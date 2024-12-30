@@ -27,7 +27,7 @@ const ExamFrame = ({
     const bgColor = theme === "pink" ? "#E9DAE9" : "#DAE3E9";
     const objColor = theme === "pink" ? "#4D2C5E" : "#2C2F5E";
     const size = theme === "pink" ? 100 : 62;
-    const { title, duration, totalAttempt } = examData;
+    const { title, duration, totalAttempts } = examData;
     return (
         <Flex
             className="gap-3 !rounded-xl !py-4 px-3"
@@ -63,7 +63,7 @@ const ExamFrame = ({
                                     <Text className="!text-nowrap !font-roboto !font-medium !text-[#ACACAC]">
                                         {info.alt === "clock"
                                             ? `${duration} phút`
-                                            : `${totalAttempt} lượt làm`}
+                                            : `${totalAttempts} lượt làm`}
                                     </Text>
                                 </Space>
                             </Flex>
