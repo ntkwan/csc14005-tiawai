@@ -110,14 +110,14 @@ const Profile = () => {
     };
     if (isLoading || isLoadingStat) return null;
     const user = {
-        name: userInfo.username,
-        email: userInfo.email,
+        name: userInfo?.username || "",
+        email: userInfo?.email || "",
         ...testInfo,
     };
     const stats = {
-        examTaken: userStat.examPracticeCount,
-        examGenByAI: userStat.specializedExamPracticeCount,
-        vocabularies: userStat.vocabsPracticeCount,
+        examTaken: userStat?.examPracticeCount || 0,
+        examGenByAI: userStat?.specializedExamPracticeCount || 0,
+        vocabularies: userStat?.vocabsPracticeCount || 0,
         ...tiawaiInfo,
     };
 

@@ -12,61 +12,6 @@ import homeIconBg2 from "@public/home-icon-bg-2.svg";
 import home11 from "@public/home-11.png";
 const { Title } = Typography;
 
-const examData = [
-    {
-        key: "exam",
-        type: "Bộ đề Thi THPTQG",
-        tests: [
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-        ],
-    },
-    {
-        key: "practice",
-        type: "Bài luyện tập",
-        tests: [
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-            {
-                title: "Đề thi minh họa THPT Quốc Gia 2023",
-                duration: 0,
-                totalAttempt: 0,
-            },
-        ],
-    },
-];
-
 const mainHighlights = [
     {
         src: "/home-9.png",
@@ -85,8 +30,101 @@ const mainHighlights = [
 
 import homeGradientBg from "@public/home-gradient-bg.svg";
 import FeaturesBox from "@/ui/home/features-box";
+import { useEffect, useState } from "react";
+
+export interface Test {
+    duration: number;
+    id: number;
+    title: string;
+    totalQuestions: number;
+    uploadedAt: Date;
+    totalAttempts: number;
+}
+export interface ExamData {
+    key: string;
+    type: string;
+    tests: Test[];
+}
 
 export default function Home() {
+    const [examData, setExamData] = useState<ExamData[]>();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string>('');
+
+    const fetchExamData = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/exam`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch exam data");
+            }
+            const data: Test[] = await response.json();
+            const formattedData = [{
+                key: "exam",
+                type: "Đề thi thử THPTQG",
+                tests: data,
+            },
+            {
+                key: "practice",
+                type: "Bài luyện tập",
+                tests: [
+                    {
+                        id: 0,
+                        title: "Đề thi minh họa THPT Quốc Gia 2023",
+                        duration: 0,
+                        totalQuestions: 0,
+                        uploadedAt: new Date(),
+                        totalAttempts: 0,
+                        totalAttempt: 0,
+                    },
+                    {
+                        id: 1,
+                        title: "Đề thi minh họa THPT Quốc Gia 2023",
+                        duration: 0,
+                        totalAttempt: 0,
+                        uploadedAt: new Date(),
+                        totalQuestions: 0,
+                        totalAttempts: 0,
+                    },
+                    {
+                        id: 2,
+                        title: "Đề thi minh họa THPT Quốc Gia 2023",
+                        duration: 0,
+                        totalAttempt: 0,
+                        uploadedAt: new Date(),
+                        totalQuestions: 0,
+                        totalAttempts: 0,
+                    },
+                    {
+                        id: 3,
+                        title: "Đề thi minh họa THPT Quốc Gia 2023",
+                        duration: 0,
+                        totalAttempt: 0,
+                        uploadedAt: new Date(),
+                        totalQuestions: 0,
+                        totalAttempts: 0,
+                    },
+                ],
+            },
+            ];
+            setExamData(formattedData);
+            console.log(formattedData);
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unknown error occurred");
+            }
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        if (loading) return;
+        fetchExamData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [examData, loading]);
+
     return (
         <main className="flex flex-col items-center justify-center">
             <Image
@@ -122,7 +160,7 @@ export default function Home() {
 
             <Flex className="!mb-20" vertical>
                 <Space size={80} direction="vertical">
-                    {examData.map((exam, index) => (
+                    {examData && examData.map((exam : ExamData, index) => (
                         <div key={index}>
                             <Flex justify="space-between" align="center">
                                 <Flex align="center" className="!gap-4">
