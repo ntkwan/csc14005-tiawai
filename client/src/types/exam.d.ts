@@ -11,9 +11,10 @@ export interface Question {
 }
 
 export interface Exam {
-    title?: string;
+    title: string;
     totalQuestions?: number;
     questions?: Question[];
-    duration?: number;
-    totalAttempt?: number;
+    duration: number;
+    totalAttempts: number;
 }
+
