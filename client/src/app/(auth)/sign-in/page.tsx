@@ -77,8 +77,8 @@ export default function SignInPage() {
                                 message: "Mật khẩu không được bỏ trống",
                             },
                             {
-                                min: 6,
-                                message: "Mật khẩu phải có ít nhất 6 ký tự",
+                                min: 5,
+                                message: "Mật khẩu phải có ít nhất 5 ký tự",
                             },
                         ]}
                     >
