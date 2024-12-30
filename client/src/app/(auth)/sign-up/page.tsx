@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSignUpMutation } from "@/lib/api/auth-api";
+import { useSignUpMutation } from "@/services/auth";
 import { Form, Input, Checkbox, Typography, notification } from "antd";
 import { FormLayout, ButtonGradient } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";

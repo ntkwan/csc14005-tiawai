@@ -7,10 +7,7 @@ import profileTiawai from "@public/profile-tiawai.webp";
 import UserCard from "@/ui/profile/user-card";
 import InfoCard from "@/ui/profile/info-card";
 import { useEffect, useState } from "react";
-import {
-    useGetMyProfileQuery,
-    useGetMyStatisticsQuery,
-} from "@/app/lib/api/user-api";
+import { useGetMyProfileQuery, useGetMyStatisticsQuery } from "@/services/user";
 
 const testInfo = {
     title: "Thông tin của bạn",

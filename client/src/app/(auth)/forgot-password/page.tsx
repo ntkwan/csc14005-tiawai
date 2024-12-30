@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Form, Input, Button, Typography, notification } from "antd";
 import { FormLayout } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
-import { usePasswordRecoveryMutation } from "@/app/lib/api/auth-api";
+import { usePasswordRecoveryMutation } from "@/services/auth";
 const { Paragraph } = Typography;
 
 export default function ForgotPasswordPage() {

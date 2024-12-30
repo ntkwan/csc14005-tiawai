@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Input, Button, Typography, Tabs, notification } from "antd";
 import type { TabsProps } from "antd";
-import { useParaphraseMutation } from "@/lib/api/ai-api";
+import { useParaphraseMutation } from "@/services/ai";
 
 const { TextArea } = Input;
 const { Title } = Typography;

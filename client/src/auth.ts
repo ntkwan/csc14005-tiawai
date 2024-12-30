@@ -3,8 +3,9 @@ import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import type { Provider } from "next-auth/providers";
 import { jwtDecode } from "jwt-decode";
-import { User } from "next-auth";
-import { handleSignIn } from "@/lib/api/auth-server-api";
+import { User, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
+import { handleSignIn } from "@/services/auth-server";
 
 const providers: Provider[] = [
     Credentials({
@@ -40,7 +41,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         signOut: "/sign-in",
     },
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user }: { token: JWT; user: User }) {
             if (user) {
                 const decoded = jwtDecode(user.accessToken);
                 return {
@@ -50,8 +51,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     iat: decoded.iat,
                     exp: decoded.exp,
                     user: {
-                        email: decoded?.sub,
-                        role: "user",
+                        id: decoded?.id,
+                        email: decoded?.email,
+                        role: decoded?.role,
                     },
                 };
             } else if (Date.now() < (token?.exp || 0) * 1000 - 300) {
@@ -84,7 +86,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             }
             return token;
         },
-        async session({ session, token }) {
+        async session({ session, token }: { session: Session; token: JWT }) {
             const decoded = jwtDecode(token.refreshToken);
             return {
                 ...session,
@@ -93,10 +95,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 expires: decoded.exp
                     ? new Date(decoded.exp * 1000).toISOString()
                     : "",
-                user: {
-                    email: token.user.email,
-                    role: token.user.role,
-                },
+                user: token.user,
                 error: token.error,
             };
         },

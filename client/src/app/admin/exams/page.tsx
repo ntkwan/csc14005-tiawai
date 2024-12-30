@@ -2,7 +2,7 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { Typography, Form, Button, Input, Checkbox, notification } from "antd";
 import { ChoicesTypes, Question, Exam } from "@/types/exam.d";
-import { useCreateExamMutation } from "@/lib/api/admin-api";
+import { useCreateExamMutation } from "@/services/admin";
 import Banner from "@/ui/admin/banner";
 import clsx from "clsx";
 

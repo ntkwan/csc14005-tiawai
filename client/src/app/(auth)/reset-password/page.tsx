@@ -3,7 +3,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Form, Input, Button, notification } from "antd";
 import { FormLayout } from "@/ui/form";
 import { FormTitle } from "@/ui/common/title";
-import { useResetPasswordMutation } from "@/lib/api/auth-api";
+import { useResetPasswordMutation } from "@/services/auth";
 
 export default function ResetPasswordPage() {
     const params = useSearchParams();

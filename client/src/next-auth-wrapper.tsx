@@ -2,8 +2,8 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "@/lib/hooks/hook";
 import { useSession, signOut } from "next-auth/react";
-import { setCredentials } from "@/app/lib/slices/auth-slice";
-import { useSignOutMutation } from "./app/lib/api/auth-api";
+import { setAuthState } from "@/lib/slices/auth";
+import { useSignOutMutation } from "./services/auth";
 
 export default function NextAuthWrapper({
     children,
@@ -20,7 +20,8 @@ export default function NextAuthWrapper({
             signOut();
         } else {
             dispatch(
-                setCredentials({
+                setAuthState({
+                    user: session?.user,
                     accessToken: session?.accessToken,
                     refreshToken: session?.refreshToken,
                 }),
