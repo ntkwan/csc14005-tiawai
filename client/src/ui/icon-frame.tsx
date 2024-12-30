@@ -37,7 +37,7 @@ const IconFrame = ({
                 alt={alt}
                 width={width}
                 height={height}
-                className="self-center"
+                className="h-auto w-auto self-center"
                 loading={lazy ? "lazy" : "eager"}
             />
         </div>

@@ -2,6 +2,7 @@
 import { Row, Col, Typography } from "antd";
 import ExamFrame from "@/ui/exam-frame";
 import { twMerge } from "tailwind-merge";
+import { Exam } from "@/types/exam";
 const { Title } = Typography;
 interface TestBoxProps {
     title: string;

@@ -97,13 +97,13 @@ const FeaturesBox = ({ className = "" }: Readonly<{ className?: string }>) => {
             <Image
                 src={home7Svg}
                 alt="home icon 7"
-                className="absolute -bottom-8 -right-8"
-            ></Image>
+                className="absolute -bottom-8 -right-8 h-auto"
+            />
             <Image
                 src={home7Png}
                 alt="home icon 7"
-                className="absolute -bottom-8 left-0"
-            ></Image>
+                className="absolute -bottom-8 left-0 h-auto"
+            />
         </Flex>
     );
 };
