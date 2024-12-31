@@ -2,10 +2,37 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import type { Provider } from "next-auth/providers";
-import { jwtDecode } from "jwt-decode";
 import { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { handleSignIn } from "@/services/auth-server";
+
+export interface JwtDecodeOptions {
+    header?: boolean;
+}
+export interface JwtHeader {
+    typ?: string;
+    alg?: string;
+    kid?: string;
+}
+export interface JwtPayload {
+    iss?: string;
+    sub?: string;
+    aud?: string[] | string;
+    exp?: number;
+    nbf?: number;
+    iat?: number;
+    jti?: string;
+    id?: string;
+    email?: string;
+    role?: string | null;
+}
+export declare class InvalidTokenError extends Error {
+}
+export declare function jwtDecode<T = JwtHeader>(token: string, options: JwtDecodeOptions & {
+    header: true;
+}): T;
+export declare function jwtDecode<T = JwtPayload>(token: string, options?: JwtDecodeOptions): T;
+
 
 const providers: Provider[] = [
     Credentials({
