@@ -24,8 +24,8 @@ export class ExamService {
     async findAll(): Promise<PublicTestQuestionsEntity[]> {
         try {
             const tests = await this.testModel.findAll();
-            const publicTests: PublicTestQuestionsEntity[] = tests.map(
-                (test) => {
+            const publicTests: PublicTestQuestionsEntity[] = tests
+                .map((test) => {
                     return {
                         id: test.id,
                         title: test.title,
@@ -34,8 +34,10 @@ export class ExamService {
                         duration: test.duration,
                         totalAttempts: test.submissions?.length || 0,
                     };
-                },
-            );
+                })
+                .sort((a, b) => {
+                    return a.uploadedAt.getTime() - b.uploadedAt.getTime();
+                });
             return publicTests;
         } catch (error) {
             console.log(error.message);
@@ -133,11 +135,14 @@ export class ExamService {
                             await this.messageService.findBySessionId(
                                 submissionId,
                             );
-                        const lastMessage = message[0];
-                        return {
-                            ...question,
-                            explanation: lastMessage.content,
-                        };
+                        for (let i = 0; i < message.length; i++) {
+                            if (message[i].isBot) {
+                                return {
+                                    ...question,
+                                    explanation: message[i].content,
+                                };
+                            }
+                        }
                     }
                 } else {
                     const formattedQuestion =
