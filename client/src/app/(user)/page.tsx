@@ -108,7 +108,6 @@ export default function Home() {
             },
             ];
             setExamData(formattedData);
-            console.log(formattedData);
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);

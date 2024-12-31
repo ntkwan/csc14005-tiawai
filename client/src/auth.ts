@@ -60,8 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 return token;
             } else {
                 try {
-                    const res = await fetch(
-                        process.env.BACKEND_BASE_URL + "auth/refresh-token",
+                    const res = await fetch(process.env.BACKEND_BASE_URL + "/auth/refresh-token",
                         {
                             method: "POST",
                             headers: {
