@@ -1,12 +1,11 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Message } from './entities/message.entity.js';
-import { CreateMessageDto } from './dtos/create-message.dto.js';
-import { MessageResponseDto } from './dtos/message-response.dto.js';
-import { TEMPLATES } from '../template.constants.js';
+import { Message } from './entities/message.entity';
+import { CreateMessageDto } from './dtos/create-message.dto';
+import { MessageResponseDto } from './dtos/message-response.dto';
 import { ConfigService } from '@nestjs/config';
-import { ChatSession } from '../session/entities/chat-session.entity.js';
-import { VectorStoreService } from '../../vector-store/vector-store.service.js';
+import { ChatSession } from '../session/entities/chat-session.entity';
+import { VectorStoreService } from '../../vector-store/vector-store.service';
 import {
     ChatPromptTemplate,
     MessagesPlaceholder,
@@ -18,6 +17,7 @@ import { ChatMessageHistory } from 'langchain/memory';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
+import { CreateChatSessionDto } from '../session/dtos/create-chat-session.dto';
 
 @Injectable()
 export class MessageService {
@@ -28,8 +28,23 @@ export class MessageService {
         private configService: ConfigService,
     ) {}
 
+    async createChatSession(
+        createChatSessionDto: CreateChatSessionDto,
+    ): Promise<void> {
+        await this.chatSessionModel.create(createChatSessionDto);
+    }
+
+    async findChatSessionById(id: string): Promise<ChatSession | null> {
+        const session = await this.chatSessionModel.findByPk(id);
+        if (!session) {
+            return null;
+        }
+        return session;
+    }
+
     async receiveAndReply(
         createMessageDto: CreateMessageDto,
+        TEMPLATES: any,
     ): Promise<MessageResponseDto> {
         try {
             const sessionId = createMessageDto.sessionId;
@@ -55,7 +70,7 @@ export class MessageService {
             await this.messageModel.create(createMessageDto);
 
             const userInput = createMessageDto.content;
-            const chain = this.loadRagChain(chatHistory);
+            const chain = this.loadRagChain(chatHistory, TEMPLATES);
             const answer = await (
                 await chain
             ).invoke(
@@ -75,7 +90,10 @@ export class MessageService {
         }
     }
 
-    private async loadRagChain(chatHistory: BaseChatMessageHistory) {
+    private async loadRagChain(
+        chatHistory: BaseChatMessageHistory,
+        TEMPLATES: any,
+    ) {
         const retriever = this.vectorStoreService.asRetriever();
         const gpt4omini = new ChatOpenAI({
             model: this.configService.get('OPENAI_MODEL'),

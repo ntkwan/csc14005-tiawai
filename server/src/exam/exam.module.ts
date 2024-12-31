@@ -6,9 +6,10 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { SubmissionController } from './submission/submission.controller';
 import { SubmissionService } from './submission/submission.service';
 import { AccessControlService } from 'src/shared/shared.service';
+import { ChatModule } from 'src/chat/chat.module';
 
 @Module({
-    imports: [SequelizeModule.forFeature([TestEntity, Submission])],
+    imports: [SequelizeModule.forFeature([TestEntity, Submission]), ChatModule],
     controllers: [ExamController, SubmissionController],
     providers: [ExamService, SubmissionService, AccessControlService],
     exports: [SubmissionService],

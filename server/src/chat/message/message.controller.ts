@@ -20,6 +20,7 @@ import { ATAuthGuard } from '../../auth/guards/at-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { Role } from '../../auth/enums/roles.enum';
+import { TEMPLATES } from '../template.constants.js';
 
 @ApiTags('Messages')
 @Controller('messages')
@@ -36,7 +37,7 @@ export class MessageController {
     async receiveAndReply(
         @Body() createMessageDto: CreateMessageDto,
     ): Promise<MessageResponseDto> {
-        return this.messageService.receiveAndReply(createMessageDto);
+        return this.messageService.receiveAndReply(createMessageDto, TEMPLATES);
     }
 
     @ApiBearerAuth('access-token')

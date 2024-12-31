@@ -9,6 +9,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../../users/entities/user.entity.js';
 import { Message } from '../../message/entities/message.entity.js';
+import { IsOptional } from 'class-validator';
 
 @Table({ tableName: 'chat_sessions' })
 export class ChatSession extends Model<ChatSession> {
@@ -44,5 +45,6 @@ export class ChatSession extends Model<ChatSession> {
     updatedAt: Date;
 
     @HasMany(() => Message)
+    @IsOptional()
     messages: Message[];
 }

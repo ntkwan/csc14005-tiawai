@@ -7,6 +7,10 @@ import { PublicTestQuestionsEntity } from './entities/public-test-questions.enti
 import { TestDetailsEntity } from './entities/test-details.entity';
 import { TestQuestionDetailsDto } from './dtos/test-question-details.dto';
 import { TestResultDetailsDto } from './dtos/test-result-details.dto';
+import { MessageService } from 'src/chat/message/message.service';
+import { TEMPLATES } from './template.constant';
+import { CreateMessageDto } from 'src/chat/message/dtos/create-message.dto';
+import { MessageResponseDto } from 'src/chat/message/dtos/message-response.dto';
 
 @Injectable()
 export class ExamService {
@@ -14,6 +18,7 @@ export class ExamService {
         @InjectModel(TestEntity)
         private readonly testModel: typeof TestEntity,
         private readonly submissionService: SubmissionService,
+        private readonly messageService: MessageService,
     ) {}
 
     async findAll(): Promise<PublicTestQuestionsEntity[]> {
@@ -73,6 +78,123 @@ export class ExamService {
         }
     }
 
+    async judger(
+        testResult: TestResultDetailsDto[],
+        submissionId: string,
+        userId: string,
+    ): Promise<TestResultDetailsDto[]> {
+        const newTestResult: TestResultDetailsDto[] = await Promise.all(
+            testResult.map(async (question) => {
+                const sampleExplanation = question.explanation || '';
+                const formattedChoices = `
+                A. ${question.choices.A}\n
+                B. ${question.choices.B}\n
+                C. ${question.choices.C}\n
+                D. ${question.choices.D}\n`;
+                if (question.hasParagraph == false) {
+                    const formattedQuestion =
+                        sampleExplanation.length > 0
+                            ? `Câu hỏi: ${question.question}
+                    Các đáp án: ${formattedChoices}
+                    Đáp án đúng: ${question.correctAnswer}
+                    Tham khảo giải thích mẫu: ${sampleExplanation}`
+                            : `Câu hỏi: ${question.question}
+                    Các đáp án: ${formattedChoices}
+                    Đáp án đúng: ${question.correctAnswer}`;
+
+                    const session =
+                        await this.messageService.findChatSessionById(
+                            submissionId,
+                        );
+                    if (session === null) {
+                        await this.messageService.createChatSession({
+                            id: submissionId,
+                            userId: userId,
+                            isActive: true,
+                            topic: `explanation ${submissionId}`,
+                        });
+
+                        const message: CreateMessageDto = {
+                            sessionId: submissionId,
+                            content: formattedQuestion,
+                            isBot: false,
+                        };
+                        const explanation: Partial<MessageResponseDto> =
+                            await this.messageService.receiveAndReply(
+                                message,
+                                TEMPLATES,
+                            );
+                        return {
+                            ...question,
+                            explanation: explanation.content,
+                        };
+                    } else {
+                        const message =
+                            await this.messageService.findBySessionId(
+                                submissionId,
+                            );
+                        const lastMessage = message[0];
+                        return {
+                            ...question,
+                            explanation: lastMessage.content,
+                        };
+                    }
+                } else {
+                    const formattedQuestion =
+                        sampleExplanation.length > 0
+                            ? `Đoạn văn: ${question.paragraph}
+                    Câu hỏi: ${question.question}
+                    Các đáp án: ${formattedChoices}}
+                    Đáp án đúng: ${question.correctAnswer}
+                    Tham khảo giải thích mẫu: ${sampleExplanation}`
+                            : `Đoạn văn: ${question.paragraph}
+                    Câu hỏi: ${question.question}
+                    Các đáp án: ${formattedChoices}
+                    Đáp án đúng: ${question.correctAnswer}`;
+
+                    const session =
+                        await this.messageService.findChatSessionById(
+                            submissionId,
+                        );
+                    if (session === null) {
+                        await this.messageService.createChatSession({
+                            id: submissionId,
+                            userId: userId,
+                            isActive: true,
+                            topic: `explanation ${submissionId}`,
+                        });
+
+                        const message: CreateMessageDto = {
+                            sessionId: submissionId,
+                            content: formattedQuestion,
+                            isBot: false,
+                        };
+                        const explanation: Partial<MessageResponseDto> =
+                            await this.messageService.receiveAndReply(
+                                message,
+                                TEMPLATES,
+                            );
+                        return {
+                            ...question,
+                            explanation: explanation.content,
+                        };
+                    } else {
+                        const message =
+                            await this.messageService.findBySessionId(
+                                submissionId,
+                            );
+                        const lastMessage = message[0];
+                        return {
+                            ...question,
+                            explanation: lastMessage.content,
+                        };
+                    }
+                }
+            }),
+        );
+        return newTestResult;
+    }
+
     async getSubmissionResult(
         testId: number,
         submissionId: string,
@@ -114,12 +236,16 @@ export class ExamService {
                     correctAnswer: question.correctAnswer,
                     answer: answer.answer,
                     isCorrect: question.correctAnswer === answer.answer,
-                    points: question.points,
                     explanation: question.explanation,
+                    points: question.points,
                     isAnswered: answer.answer.length > 0,
                 });
             });
-
+            const newTestResult = await this.judger(
+                testQuestions,
+                submissionId,
+                submission.userId,
+            );
             let isUpdated: boolean = false;
             let submissions: string[] = test.submissions;
             if (submissions === null) {
@@ -142,7 +268,7 @@ export class ExamService {
             return {
                 score: score,
                 totalQuestions: test.totalQuestions,
-                questions: testQuestions,
+                questions: newTestResult,
                 correctAnswers: cntCorrect,
                 incorrectAnswers: cntIncorrect,
                 skippedQuestions:
