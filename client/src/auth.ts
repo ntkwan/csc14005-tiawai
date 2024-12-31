@@ -5,7 +5,7 @@ import type { Provider } from "next-auth/providers";
 import { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { handleSignIn } from "@/services/auth-server";
-
+import { jwtDecode } from "jwt-decode";
 export interface JwtDecodeOptions {
     header?: boolean;
 }
@@ -26,12 +26,6 @@ export interface JwtPayload {
     email?: string;
     role?: string | null;
 }
-export declare class InvalidTokenError extends Error {
-}
-export declare function jwtDecode<T = JwtHeader>(token: string, options: JwtDecodeOptions & {
-    header: true;
-}): T;
-export declare function jwtDecode<T = JwtPayload>(token: string, options?: JwtDecodeOptions): T;
 
 
 const providers: Provider[] = [
@@ -70,7 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async jwt({ token, user }: { token: JWT; user: User }) {
             if (user) {
-                const decoded = jwtDecode(user.accessToken);
+                const decoded = jwtDecode<JwtPayload>(user.accessToken);
                 return {
                     ...token,
                     accessToken: user.accessToken,
