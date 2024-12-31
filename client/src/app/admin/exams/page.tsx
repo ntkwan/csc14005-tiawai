@@ -376,7 +376,6 @@ const QuestionForm = memo(
                     </div>
 
                     <Form.Item
-                        className="!mb-0"
                         label={<FormLabel>Hãy chọn đáp án đúng</FormLabel>}
                     >
                         <Checkbox.Group
@@ -396,6 +395,28 @@ const QuestionForm = memo(
                                 </Checkbox>
                             ))}
                         </Checkbox.Group>
+                    </Form.Item>
+
+                    <Form.Item
+                        label={<FormLabel>Giải thích đáp án</FormLabel>}
+                        className="!mb-0"
+                    >
+                        <Input.TextArea
+                            className="!rounded-3xl"
+                            placeholder="Ghi giải thích tại đây"
+                            autoSize={{ minRows: 1 }}
+                            value={question.explanation}
+                            onChange={(e) =>
+                                changeQuestion("explanation", e.target.value)
+                            }
+                            onBlur={() =>
+                                updateQuestion(
+                                    questionIndex,
+                                    "explanation",
+                                    question.explanation,
+                                )
+                            }
+                        />
                     </Form.Item>
                 </div>
             </div>
