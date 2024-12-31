@@ -62,12 +62,14 @@ export default function AdminExamsPage() {
     );
 
     const onFinish = async () => {
+        const values = form.getFieldsValue();
         const exam: Exam = {
-            ...form.getFieldsValue(),
+            title: values.title,
+            totalQuestions: +values.totalQuestions,
+            duration: +values.duration,
             questions: Object.values(questions),
         };
 
-        console.log("Exam:", exam);
         const res = await createExam(exam);
 
         if (!res.error) {

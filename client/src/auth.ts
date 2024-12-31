@@ -6,27 +6,6 @@ import { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { handleSignIn } from "@/services/auth-server";
 import { jwtDecode } from "jwt-decode";
-export interface JwtDecodeOptions {
-    header?: boolean;
-}
-export interface JwtHeader {
-    typ?: string;
-    alg?: string;
-    kid?: string;
-}
-export interface JwtPayload {
-    iss?: string;
-    sub?: string;
-    aud?: string[] | string;
-    exp?: number;
-    nbf?: number;
-    iat?: number;
-    jti?: string;
-    id?: string;
-    email?: string;
-    role?: string | null;
-}
-
 
 const providers: Provider[] = [
     Credentials({
@@ -64,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async jwt({ token, user }: { token: JWT; user: User }) {
             if (user) {
-                const decoded = jwtDecode<JwtPayload>(user.accessToken);
+                const decoded = jwtDecode(user.accessToken);
                 return {
                     ...token,
                     accessToken: user.accessToken,
@@ -81,7 +60,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 return token;
             } else {
                 try {
-                    const res = await fetch(process.env.BACKEND_BASE_URL + "/auth/refresh-token",
+                    const res = await fetch(
+                        process.env.BACKEND_BASE_URL + "/auth/refresh-token",
                         {
                             method: "POST",
                             headers: {

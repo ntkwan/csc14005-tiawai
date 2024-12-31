@@ -15,6 +15,5 @@ export interface Exam {
     totalQuestions?: number;
     questions?: Question[];
     duration: number;
-    totalAttempts: number;
+    totalAttempts?: number;
 }
-
