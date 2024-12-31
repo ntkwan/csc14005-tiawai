@@ -27,12 +27,13 @@ export class ExamService {
                         totalQuestions: test.totalQuestions,
                         uploadedAt: test.uploadAt,
                         duration: test.duration,
-                        totalAttempts: test.submissions.length || 0,
+                        totalAttempts: test.submissions?.length || 0,
                     };
                 },
             );
             return publicTests;
         } catch (error) {
+            console.log(error.message);
             throw new InternalServerErrorException(
                 'Failed to get all tests',
                 error.message,
