@@ -6,7 +6,7 @@ export const handleSignIn = async ({
     password: string | unknown;
 }) => {
     try {
-        const res = await fetch(process.env.BACKEND_BASE_URL + "auth/sign-in", {
+        const res = await fetch(process.env.BACKEND_BASE_URL + "/auth/sign-in", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
