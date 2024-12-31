@@ -13,7 +13,6 @@ const initialQuestion: Question = {
     hasParagraph: false,
     choices: { A: "", B: "", C: "", D: "" },
     correctChoices: null,
-    explanation: "",
 };
 
 export default function AdminExamsPage() {
@@ -67,7 +66,12 @@ export default function AdminExamsPage() {
             title: values.title,
             totalQuestions: +values.totalQuestions,
             duration: +values.duration,
-            questions: Object.values(questions),
+            questions: Object.values(questions).map((question) => {
+                if (!question.hasParagraph && question.paragraph) {
+                    delete question.paragraph;
+                }
+                return question;
+            }),
         };
 
         const res = await createExam(exam);
@@ -287,15 +291,15 @@ const QuestionForm = memo(
                         <Input
                             className="!grow !rounded-3xl"
                             placeholder="Ghi đoạn văn vào đây nếu đây là câu hỏi Đọc - Hiểu"
-                            value={question.explanation}
+                            value={question.paragraph}
                             disabled={!question.hasParagraph}
                             onChange={(e) =>
-                                changeQuestion("explanation", e.target.value)
+                                changeQuestion("paragraph", e.target.value)
                             }
                             onBlur={(e) =>
                                 updateQuestion(
                                     questionIndex,
-                                    "explanation",
+                                    "paragraph",
                                     e.target.value,
                                 )
                             }
