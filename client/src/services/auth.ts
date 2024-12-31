@@ -1,6 +1,6 @@
 "use client";
-import { appApi } from "./api-config";
-import { setSignOut } from "@/app/lib/slices/auth-slice";
+import { appApi } from "@/services/config";
+import { setSignOut } from "@/lib/slices/auth";
 import { store } from "@/lib/store/store";
 
 const authApi = appApi.injectEndpoints({

@@ -14,8 +14,8 @@ import {
 import logo from "@public/logo.svg";
 const { Title, Paragraph } = Typography;
 import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import { useSignOutMutation } from "@/lib/api/auth-api";
+import { useSignOutMutation } from "@/services/auth";
+import { useAppSelector } from "@/lib/hooks/hook";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -42,6 +42,37 @@ const adminItems: MenuItem[] = [
     },
 ];
 
+const userItems: MenuItem[] = [
+    {
+        label: <Link href="/">Trang chủ</Link>,
+        key: "home",
+    },
+    {
+        label: <Link href="/exam">Đề luyện thi</Link>,
+        key: "exam",
+    },
+    {
+        label: <Link href="/practice">Luyện tập</Link>,
+        key: "practice",
+    },
+    {
+        label: <Link href="/flashcard">Flashcard</Link>,
+        key: "flashcard",
+    },
+    {
+        label: <Link href="/paraphrase">Paraphrase</Link>,
+        key: "paraphrase",
+    },
+    {
+        label: <Link href="/translate">Dịch</Link>,
+        key: "translate",
+    },
+    {
+        label: <Link href="/contact">Liên hệ</Link>,
+        key: "contact",
+    },
+];
+
 const itemsDropdown: MenuProps["items"] = [
     {
         key: "profile",
@@ -64,14 +95,14 @@ const Header = () => {
     const [signOutMutation] = useSignOutMutation();
     const pathname = usePathname();
     const router = useRouter();
-    const session = useSession();
+    const user = useAppSelector((state) => state.auth.user);
 
     const currentPath = pathname === "/" ? "home" : pathname?.split("/")[1];
     const [current, setCurrent] = useState(currentPath);
 
     useEffect(() => {
         setCurrent(currentPath);
-    }, [currentPath, session]);
+    }, [currentPath]);
 
     const onClick: MenuProps["onClick"] = ({ key }) => {
         setCurrent(key);
@@ -79,8 +110,8 @@ const Header = () => {
 
     const handleDropdownClick: MenuProps["onClick"] = async ({ key }) => {
         if (key === "signout") {
+            await signOut({ callbackUrl: "/sign-in" });
             await signOutMutation(undefined);
-            await signOut();
         }
     };
 
@@ -88,7 +119,7 @@ const Header = () => {
         <header className="fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-8 pt-4 backdrop-blur-md">
             <div className="flex items-center gap-2">
                 <div className="min-h-max min-w-max items-center rounded-full bg-[#5369A1] px-[9px] py-[3px]">
-                    <Image src={logo} alt="logo" />
+                    <Image className="h-auto w-auto" src={logo} alt="logo" />
                 </div>
                 <Title className="!font-chango !font-normal" level={4}>
                     tiawai
@@ -97,7 +128,7 @@ const Header = () => {
 
             <Menu
                 className="!border-none !bg-transparent"
-                items={adminItems}
+                items={user?.role === "administrator" ? adminItems : userItems}
                 mode="horizontal"
                 onSelect={onClick}
                 selectedKeys={[current]}
@@ -110,7 +141,7 @@ const Header = () => {
                 }}
             />
 
-            {session.data?.accessToken ? (
+            {user ? (
                 <Dropdown
                     className="!cursor-pointer"
                     menu={{
@@ -130,15 +161,12 @@ const Header = () => {
                         />
                         <Flex className="!mr-4" vertical>
                             <Title className="!m-0" level={5}>
-                                {session.data.user.email}
+                                {user?.email?.split("@")[0]}
                             </Title>
                             <Paragraph className="!m-0">
-                                {session?.data?.user?.role
-                                    ? session.data.user.role
-                                          .charAt(0)
-                                          .toUpperCase() +
-                                      session.data.user.role.slice(1)
-                                    : "User"}
+                                {user?.role &&
+                                    user.role.charAt(0).toUpperCase() +
+                                        user.role.slice(1)}
                             </Paragraph>
                         </Flex>
                         <DownOutlined />

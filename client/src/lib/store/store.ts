@@ -18,8 +18,8 @@ import {
     PURGE,
     REGISTER,
 } from "redux-persist";
-import authReducer, { AuthState } from "@/lib/slices/auth-slice";
-import { appApi } from "../api/api-config";
+import authReducer, { AuthState } from "@/lib/slices/auth";
+import { appApi } from "@/services/config";
 
 const createNoopStorage = () => {
     return {

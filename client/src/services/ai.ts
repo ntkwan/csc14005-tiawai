@@ -1,4 +1,4 @@
-import { appApi } from "./api-config";
+import { appApi } from "@/services/config";
 
 const aiApi = appApi.injectEndpoints({
     overrideExisting: false,
