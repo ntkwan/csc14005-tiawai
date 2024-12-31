@@ -9,7 +9,7 @@ const userRoutes = ["/profile"];
 const adminRoutes = ["/admin"];
 
 export default auth((req: any) => {
-    const user = req.auth;
+    const user = req.auth?.user;
 
     const isUserRoute = userRoutes.some((route) =>
         req.nextUrl.pathname.startsWith(route),
