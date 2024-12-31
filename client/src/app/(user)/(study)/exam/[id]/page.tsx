@@ -1,6 +1,6 @@
 "use client";
 import { useState, useContext } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
     Button,
     Card,
@@ -20,7 +20,8 @@ import { exam_1 } from "./test";
 
 const { Title } = Typography;
 
-export default function ExamPage() {
+export default function ExamPage({ params }: { params: { id: number } }) {
+    const router = useRouter();
     const exam = useContext(ExamContext);
     const [mode, setMode] = useState<"1" | "2">("1");
 
@@ -85,10 +86,13 @@ export default function ExamPage() {
                                             type="primary"
                                             shape="round"
                                             size="large"
+                                            onClick={() =>
+                                                router.push(
+                                                    `${params.id}/start`,
+                                                )
+                                            }
                                         >
-                                            <Link href="1/start">
-                                                Luyện tập
-                                            </Link>
+                                            Luyện tập
                                         </Button>
                                     </Col>
                                 </Row>
@@ -116,10 +120,13 @@ export default function ExamPage() {
                                             type="primary"
                                             shape="round"
                                             size="large"
+                                            onClick={() =>
+                                                router.push(
+                                                    `${params.id}/start`,
+                                                )
+                                            }
                                         >
-                                            <Link href="1/start">
-                                                Bắt đầu thi
-                                            </Link>
+                                            Bắt đầu thi
                                         </Button>
                                     </Col>
                                 </Row>
