@@ -342,6 +342,7 @@ export class ExamService {
                 totalQuestions: totalQuestions,
                 uploadAt: new Date(),
                 duration: duration,
+                isGenerated: false,
             });
 
             if (!test) {

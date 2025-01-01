@@ -100,6 +100,13 @@ export class TestEntity extends Model {
         type: DataType.INTEGER,
     })
     duration: number;
+
+    @ApiProperty()
+    @Column({
+        allowNull: false,
+        type: DataType.BOOLEAN,
+    })
+    isGenerated: boolean;
 }
 
 @Table({

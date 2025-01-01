@@ -22,7 +22,7 @@ export class PracticeService {
             const response = await axios.post(
                 `${this.configService.get('OPENAI_ENDPOINT')}`,
                 {
-                    model: this.configService.get('OPENAI_MODEL'),
+                    model: this.configService.get('OPENAI_ADVANCED_MODEL'),
                     messages: [
                         {
                             role: 'system',
@@ -116,7 +116,7 @@ export class PracticeService {
                 const response = await axios.post(
                     `${this.configService.get('OPENAI_ENDPOINT')}`,
                     {
-                        model: this.configService.get('OPENAI_MODEL'),
+                        model: this.configService.get('OPENAI_ADVANCED_MODEL'),
                         messages: [
                             {
                                 role: 'system',
@@ -163,6 +163,7 @@ export class PracticeService {
                 totalQuestions: 10,
                 uploadAt: new Date(),
                 duration: 15,
+                isGenerated: true,
             });
             test.title = `[${new Date().toLocaleDateString()}] Chuyên đề  ${category} #${test.id}`;
             await test.save();
