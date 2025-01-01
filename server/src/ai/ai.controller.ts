@@ -1,8 +1,24 @@
-import { Controller, HttpCode, Post, Request, Res } from '@nestjs/common';
+import {
+    Controller,
+    HttpCode,
+    Post,
+    Request,
+    Res,
+    UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AIService } from './ai.service';
 import { ParaphraseDto } from './dto/paraphrase.dto';
-import { ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
+import {
+    ApiResponse,
+    ApiOperation,
+    ApiBody,
+    ApiBearerAuth,
+} from '@nestjs/swagger';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/roles.enum';
+import { ATAuthGuard } from 'src/auth/guards/at-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('ai')
 export class AIController {
