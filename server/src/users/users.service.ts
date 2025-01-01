@@ -48,7 +48,26 @@ export class UsersService {
             );
         }
     }
-
+    async getAllProfiles(): Promise<
+        { email: string; username: string; id: string }[]
+    > {
+        try {
+            const users = await this.userModel.findAll();
+            const newUsers = users.map((user) => {
+                return {
+                    email: user.email,
+                    username: user.username,
+                    id: user.id,
+                };
+            });
+            return newUsers;
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Error getting all profiles',
+                error.message,
+            );
+        }
+    }
     async getMyProfile(profileUser: User): Promise<any> {
         try {
             const { id } = profileUser;

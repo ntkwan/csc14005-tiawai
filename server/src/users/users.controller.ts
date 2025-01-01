@@ -1,4 +1,11 @@
-import { Controller, UseGuards, Request, Res, Get } from '@nestjs/common';
+import {
+    Controller,
+    UseGuards,
+    Request,
+    Res,
+    Get,
+    HttpCode,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { ATAuthGuard } from '../auth/guards/at-auth.guard';
 import { ApiResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
@@ -6,10 +13,34 @@ import { ProfileEntity } from '../auth/entities/creds.entity';
 import { UsersService } from './users.service';
 import { UserStatsEntity } from './entities/user-stats.entity';
 import { UserStatsDto } from './dtos/user-stat.dto';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/roles.enum';
 
 @Controller('user')
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
+
+    @ApiOperation({ summary: 'Get all profiles [ADMIN]' })
+    @ApiBearerAuth('access-token')
+    @Get('users')
+    @ApiResponse({
+        status: 200,
+        description: 'Get all profiles successfully',
+        type: [ProfileEntity],
+    })
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.ADMIN)
+    @HttpCode(200)
+    async getAllProfiles(@Request() req: any, @Res() res: Response) {
+        const foundUsers: {
+            email: string;
+            username: string;
+            id: string;
+        }[] = await this.userService.getAllProfiles();
+        res.send(foundUsers);
+    }
 
     @ApiOperation({ summary: 'Get profile with credentials [USER]' })
     @ApiBearerAuth('access-token')

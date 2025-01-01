@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PublicTestQuestionsEntity {
+export class PrivateTestQuestionsEntity {
     @ApiProperty()
     id: number;
 
@@ -9,6 +9,9 @@ export class PublicTestQuestionsEntity {
 
     @ApiProperty()
     totalQuestions: number;
+
+    @ApiProperty()
+    uploadedAt: Date;
 
     @ApiProperty()
     duration: number;
