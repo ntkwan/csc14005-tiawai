@@ -17,6 +17,7 @@ import { ChatMessageHistory } from 'langchain/memory';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
+import { CreateChatSessionDto } from '../session/dtos/create-chat-session.dto';
 
 @Injectable()
 export class MessageService {
@@ -26,6 +27,20 @@ export class MessageService {
         private vectorStoreService: VectorStoreService,
         private configService: ConfigService,
     ) {}
+
+    async createChatSession(
+        createChatSessionDto: CreateChatSessionDto,
+    ): Promise<void> {
+        await this.chatSessionModel.create(createChatSessionDto);
+    }
+
+    async findChatSessionById(id: string): Promise<ChatSession | null> {
+        const session = await this.chatSessionModel.findByPk(id);
+        if (!session) {
+            return null;
+        }
+        return session;
+    }
 
     async receiveAndReply(
         createMessageDto: CreateMessageDto,
@@ -130,14 +145,14 @@ export class MessageService {
         return conversationalRagChain;
     }
 
-    async findBySessionId(sessionId: string): Promise<MessageResponseDto[]> {
+    async findBySessionId(
+        sessionId: string,
+    ): Promise<MessageResponseDto[] | null> {
         const messages = await this.messageModel.findAll({
             where: { sessionId },
         });
         if (messages.length === 0) {
-            throw new NotFoundException(
-                'No messages found for the specified session',
-            );
+            return null;
         }
         return messages.map((message) => this.toMessageResponseDto(message));
     }

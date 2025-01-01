@@ -51,7 +51,6 @@ export class FlashcardService {
                     'Failed to extract vocabulary',
                 );
             }
-
             const topic = msg.split('\n')[0];
             const vocabularies: {
                 word: string;

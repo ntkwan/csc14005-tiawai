@@ -25,7 +25,7 @@ export class FlashcardController {
     constructor(private readonly flashcardService: FlashcardService) {}
 
     @ApiOperation({
-        summary: 'Extract flashcards from a text',
+        summary: 'Extract flashcards from a text [USER]',
     })
     @ApiBody({
         type: ExtractFlashcardDto,

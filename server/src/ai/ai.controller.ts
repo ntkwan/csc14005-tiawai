@@ -8,15 +8,18 @@ import { ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
 export class AIController {
     constructor(private readonly aiService: AIService) {}
 
-    @ApiOperation({ summary: 'Paraphrase text' })
+    @ApiOperation({ summary: 'Paraphrase text [USER]' })
     @ApiBody({ type: ParaphraseDto })
     @ApiResponse({
         status: 200,
         description: 'Paraphrased text',
         type: ParaphraseDto,
     })
-    // @UseGuards(LocalAuthGuard)
     @HttpCode(200)
+    @HttpCode(201)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.ADMIN)
     @Post('paraphrase')
     async paraphrase(@Request() req: any, @Res() res: Response): Promise<void> {
         const regex = /[^\w\s~!$@#$%^&*(){}\[\]_+-=:;"'’<>.,?/ ]+/;
