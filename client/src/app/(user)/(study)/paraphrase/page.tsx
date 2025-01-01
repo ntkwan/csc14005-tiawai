@@ -34,7 +34,7 @@ export default function Paraphrasing() {
     const handleParaphrase = async () => {
         const [result] = await Promise.all([
             paraphrase(
-                `paraphrase the following text with style ${tabItem}: ${inputText}`,
+                `paraphrase with style ${tabItem} the following text: ${inputText}`,
             ),
         ]);
 
