@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MessageResponseDto } from '../../message/dtos/message-response.dto.js';
 
 export class ChatSessionResponseDto {
     @ApiProperty({ description: 'UUID of the chat session' })
@@ -21,10 +20,4 @@ export class ChatSessionResponseDto {
         description: 'Timestamp when the chat session was last updated',
     })
     updatedAt: Date;
-
-    @ApiProperty({
-        type: [MessageResponseDto],
-        description: 'Messages in the chat session',
-    })
-    messages: MessageResponseDto[];
 }

@@ -1,23 +1,63 @@
-"use client";
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Form, Input, Typography, notification } from "antd";
-import { FormLayout, ButtonGradient } from "@/ui/form";
-import { FormTitle } from "@/ui/common/title";
+'use client';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Form, Input, Typography, notification } from 'antd';
+import { FormLayout, ButtonGradient } from '@/ui/form';
+import { FormTitle } from '@/ui/common/title';
+import { signIn, useSession } from 'next-auth/react';
+import { useCreateSessionMutation } from '@/services/chat';
+import { setAuthState, setChatSessionId } from '@/lib/slices/auth';
+import { useAppDispatch } from '@/lib/hooks/hook';
 const { Paragraph } = Typography;
-import { signIn } from "next-auth/react";
 
 export default function SignInPage() {
     const [form] = Form.useForm();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const { data: session } = useSession();
+
+    const dispatch = useAppDispatch();
+    const [createSession] = useCreateSessionMutation();
+
+    useEffect(() => {
+        const createNewChat = async (userId: string) => {
+            try {
+                const res = await createSession({
+                    userId,
+                    topic: 'chat ' + userId,
+                    isActive: true,
+                }).unwrap();
+                dispatch(setChatSessionId(res.id));
+            } catch (error) {
+                console.error('Failed to create chat session', error);
+            }
+        };
+        if (session) {
+            dispatch(
+                setAuthState({
+                    user: session.user.id,
+                    accessToken: session.accessToken as string,
+                    refreshToken: session.refreshToken as string,
+                }),
+            );
+            const role = session?.user?.role;
+            if (role === 'administrator') {
+                router.push('/admin');
+            } else {
+                if (session.user.id) {
+                    createNewChat(session.user.id);
+                }
+                router.push('/');
+            }
+        }
+    }, [session, router, createSession, dispatch]);
 
     const onFinish = async () => {
         const formData = form.getFieldsValue();
 
         setIsLoading(true);
-        const res = await signIn("credentials", {
+        const res = await signIn('credentials', {
             username: formData.username,
             password: formData.password,
             redirect: false,
@@ -26,15 +66,14 @@ export default function SignInPage() {
 
         if (res !== undefined && !res?.error) {
             notification.success({
-                message: "Đăng nhập thành công",
-                description: "Chào mừng bạn trở lại với Tiawai",
+                message: 'Đăng nhập thành công',
+                description: 'Chào mừng bạn trở lại với Tiawai',
             });
-            router.push("/");
         } else {
             notification.error({
-                message: "Đăng nhập thất bại",
+                message: 'Đăng nhập thất bại',
                 description:
-                    "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
+                    'Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.',
             });
         }
     };
@@ -58,11 +97,11 @@ export default function SignInPage() {
                         rules={[
                             {
                                 required: true,
-                                message: "Email không được bỏ trống",
+                                message: 'Email không được bỏ trống',
                             },
                             {
-                                type: "email",
-                                message: "Vui lòng nhập địa chỉ email hợp lệ",
+                                type: 'email',
+                                message: 'Vui lòng nhập địa chỉ email hợp lệ',
                             },
                         ]}
                     >
@@ -74,11 +113,11 @@ export default function SignInPage() {
                         rules={[
                             {
                                 required: true,
-                                message: "Mật khẩu không được bỏ trống",
+                                message: 'Mật khẩu không được bỏ trống',
                             },
                             {
                                 min: 5,
-                                message: "Mật khẩu phải có ít nhất 5 ký tự",
+                                message: 'Mật khẩu phải có ít nhất 5 ký tự',
                             },
                         ]}
                     >
@@ -99,7 +138,7 @@ export default function SignInPage() {
                     </Form.Item>
 
                     <Paragraph className="!text-center">
-                        Bạn chưa có tài khoản?{" "}
+                        Bạn chưa có tài khoản?{' '}
                         <Link href="sign-up">
                             <strong>Đăng ký</strong>
                         </Link>

@@ -48,7 +48,7 @@ export class MessageController {
         summary: 'Retrieve messages for a specific chat session by session ID',
     })
     @ApiResponse({ type: [MessageResponseDto] })
-    @Get('session/:sessionId')
+    @Get(':sessionId')
     async findBySessionId(
         @Param('sessionId') sessionId: string,
     ): Promise<MessageResponseDto[]> {

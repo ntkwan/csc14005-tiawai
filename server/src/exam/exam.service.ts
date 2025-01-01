@@ -11,6 +11,7 @@ import { MessageService } from 'src/chat/message/message.service';
 import { TEMPLATES } from './template.constants';
 import { CreateMessageDto } from 'src/chat/message/dtos/create-message.dto';
 import { MessageResponseDto } from 'src/chat/message/dtos/message-response.dto';
+import { ChatSessionService } from 'src/chat/session/chat-session.service';
 
 @Injectable()
 export class ExamService {
@@ -18,6 +19,7 @@ export class ExamService {
         @InjectModel(TestEntity)
         private readonly testModel: typeof TestEntity,
         private readonly submissionService: SubmissionService,
+        private readonly chatSessionService: ChatSessionService,
         private readonly messageService: MessageService,
     ) {}
 
@@ -105,11 +107,9 @@ export class ExamService {
                     Đáp án đúng: ${question.correctAnswer}`;
 
                     const session =
-                        await this.messageService.findChatSessionById(
-                            submissionId,
-                        );
+                        await this.chatSessionService.findById(submissionId);
                     if (session === null) {
-                        await this.messageService.createChatSession({
+                        await this.chatSessionService.create({
                             id: submissionId,
                             userId: userId,
                             isActive: true,
@@ -162,11 +162,9 @@ export class ExamService {
                     Đáp án đúng: ${question.correctAnswer}`;
 
                     const session =
-                        await this.messageService.findChatSessionById(
-                            submissionId,
-                        );
+                        await this.chatSessionService.findById(submissionId);
                     if (session === null) {
-                        await this.messageService.createChatSession({
+                        await this.chatSessionService.create({
                             id: submissionId,
                             userId: userId,
                             isActive: true,

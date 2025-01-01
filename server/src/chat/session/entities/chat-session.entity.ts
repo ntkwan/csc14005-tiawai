@@ -2,14 +2,11 @@ import {
     Column,
     DataType,
     ForeignKey,
-    HasMany,
     Model,
     Table,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../../users/entities/user.entity.js';
-import { Message } from '../../message/entities/message.entity.js';
-import { IsOptional } from 'class-validator';
 
 @Table({ tableName: 'chat_sessions' })
 export class ChatSession extends Model<ChatSession> {
@@ -43,8 +40,4 @@ export class ChatSession extends Model<ChatSession> {
     })
     @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
     updatedAt: Date;
-
-    @HasMany(() => Message)
-    @IsOptional()
-    messages: Message[];
 }

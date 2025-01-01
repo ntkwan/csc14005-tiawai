@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { ChatSession } from './entities/chat-session.entity.js';
 import { CreateChatSessionDto } from './dtos/create-chat-session.dto.js';
 import { ChatSessionResponseDto } from './dtos/chat-session-response.dto.js';
-import { MessageResponseDto } from '../message/dtos/message-response.dto.js';
 import { Message } from '../message/entities/message.entity.js';
 import { Sequelize } from 'sequelize-typescript';
 
@@ -67,6 +66,21 @@ export class ChatSessionService {
         }
     }
 
+    async disable(id: string): Promise<ChatSessionResponseDto> {
+        try {
+            const session = await this.chatSessionModel.findByPk(id);
+
+            if (!session) {
+                throw new NotFoundException('Chat session not found');
+            }
+            session.isActive = false;
+            await session.save();
+            return this.toChatSessionResponseDto(session);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     private toChatSessionResponseDto(
         session: ChatSession,
     ): ChatSessionResponseDto {
@@ -77,13 +91,6 @@ export class ChatSessionService {
             isActive: session.isActive,
             createdAt: session.createdAt,
             updatedAt: session.updatedAt,
-            messages: session.messages?.map((message) => ({
-                id: message.id,
-                sessionId: message.sessionId,
-                content: message.content,
-                isBot: message.isBot,
-                timestamp: message.timestamp,
-            })) as MessageResponseDto[],
         };
     }
 }

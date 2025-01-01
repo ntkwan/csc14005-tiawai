@@ -17,7 +17,6 @@ import { ChatMessageHistory } from 'langchain/memory';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
-import { CreateChatSessionDto } from '../session/dtos/create-chat-session.dto';
 
 @Injectable()
 export class MessageService {
@@ -27,20 +26,6 @@ export class MessageService {
         private vectorStoreService: VectorStoreService,
         private configService: ConfigService,
     ) {}
-
-    async createChatSession(
-        createChatSessionDto: CreateChatSessionDto,
-    ): Promise<void> {
-        await this.chatSessionModel.create(createChatSessionDto);
-    }
-
-    async findChatSessionById(id: string): Promise<ChatSession | null> {
-        const session = await this.chatSessionModel.findByPk(id);
-        if (!session) {
-            return null;
-        }
-        return session;
-    }
 
     async receiveAndReply(
         createMessageDto: CreateMessageDto,
@@ -59,7 +44,11 @@ export class MessageService {
             }
 
             const chatHistory = new ChatMessageHistory();
-            session.messages.forEach((message) => {
+            const messages = await this.messageModel.findAll({
+                where: { sessionId },
+            });
+
+            messages.forEach((message) => {
                 if (message.isBot) {
                     chatHistory.addAIMessage(message.content);
                 } else {

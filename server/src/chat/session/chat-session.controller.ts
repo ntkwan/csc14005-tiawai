@@ -6,6 +6,7 @@ import {
     Body,
     Param,
     UseGuards,
+    Patch,
 } from '@nestjs/common';
 import {
     ApiTags,
@@ -58,5 +59,15 @@ export class ChatSessionController {
     @Get(':id')
     async findById(@Param('id') id: string): Promise<ChatSessionResponseDto> {
         return this.chatSessionService.findById(id);
+    }
+
+    @ApiBearerAuth('access-token')
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @Roles(Role.USER)
+    @HttpCode(200)
+    @ApiOperation({ summary: 'Disable a specific chat session by ID' })
+    @Patch(':id')
+    async disable(@Param('id') id: string): Promise<ChatSessionResponseDto> {
+        return this.chatSessionService.disable(id);
     }
 }
