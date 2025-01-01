@@ -14,6 +14,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { ExamModule } from './exam/exam.module';
 import { UsersModule } from './users/users.module';
 import { FlashcardModule } from './flashcard/flashcard.module';
+import { PracticeModule } from './practice/practice.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -70,6 +71,7 @@ import { FlashcardModule } from './flashcard/flashcard.module';
         ExamModule,
         UsersModule,
         FlashcardModule,
+        PracticeModule,
     ],
     controllers: [AppController],
     providers: [AppService],

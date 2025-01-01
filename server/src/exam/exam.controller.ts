@@ -44,7 +44,6 @@ export class ExamController {
     @Roles(Role.ADMIN)
     @Get('tests')
     async privateFindAll() {
-        console.log('privateFindAll');
         return this.examService.privateFindAll();
     }
 
