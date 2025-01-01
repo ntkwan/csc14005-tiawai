@@ -8,7 +8,7 @@ import { TestDetailsEntity } from './entities/test-details.entity';
 import { TestQuestionDetailsDto } from './dtos/test-question-details.dto';
 import { TestResultDetailsDto } from './dtos/test-result-details.dto';
 import { MessageService } from 'src/chat/message/message.service';
-import { TEMPLATES } from './template.constant';
+import { TEMPLATES } from './template.constants';
 import { CreateMessageDto } from 'src/chat/message/dtos/create-message.dto';
 import { MessageResponseDto } from 'src/chat/message/dtos/message-response.dto';
 
@@ -86,7 +86,7 @@ export class ExamService {
         userId: string,
     ): Promise<TestResultDetailsDto[]> {
         const newTestResult: TestResultDetailsDto[] = await Promise.all(
-            testResult.map(async (question) => {
+            testResult.map(async (question, index) => {
                 const sampleExplanation = question.explanation || '';
                 const formattedChoices = `
                 A. ${question.choices.A}\n
@@ -135,14 +135,18 @@ export class ExamService {
                             await this.messageService.findBySessionId(
                                 submissionId,
                             );
-                        for (let i = 0; i < message.length; i++) {
-                            if (message[i].isBot) {
-                                return {
-                                    ...question,
-                                    explanation: message[i].content,
-                                };
-                            }
-                        }
+                        const filteredMsg = message.filter((msg) => {
+                            return msg.isBot === true;
+                        });
+                        const sortedMsg = filteredMsg.sort((a, b) => {
+                            return (
+                                a.timestamp.getTime() - b.timestamp.getTime()
+                            );
+                        });
+                        return {
+                            ...question,
+                            explanation: sortedMsg[index].content,
+                        };
                     }
                 } else {
                     const formattedQuestion =
@@ -188,10 +192,17 @@ export class ExamService {
                             await this.messageService.findBySessionId(
                                 submissionId,
                             );
-                        const lastMessage = message[0];
+                        const filteredMsg = message.filter((msg) => {
+                            return msg.isBot === true;
+                        });
+                        const sortedMsg = filteredMsg.sort((a, b) => {
+                            return (
+                                a.timestamp.getTime() - b.timestamp.getTime()
+                            );
+                        });
                         return {
                             ...question,
-                            explanation: lastMessage.content,
+                            explanation: sortedMsg[index].content,
                         };
                     }
                 }

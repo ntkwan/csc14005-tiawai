@@ -13,6 +13,7 @@ import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ExamModule } from './exam/exam.module';
 import { UsersModule } from './users/users.module';
+import { FlashcardModule } from './flashcard/flashcard.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -68,6 +69,7 @@ import { UsersModule } from './users/users.module';
         SharedModule,
         ExamModule,
         UsersModule,
+        FlashcardModule,
     ],
     controllers: [AppController],
     providers: [AppService],
