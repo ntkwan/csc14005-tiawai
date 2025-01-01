@@ -15,7 +15,7 @@ import {
 import type { RadioChangeEvent } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { ExamHistory } from "@/ui/exam";
-import { ExamContext } from "./layout";
+import { ExamContext } from "@/context/exam";
 import { exam_1 } from "./test";
 
 const { Title } = Typography;

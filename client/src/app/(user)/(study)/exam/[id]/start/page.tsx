@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { ChoicesType } from "@/types/exam";
 import { useAppSelector } from "@/lib/hooks/hook";
-import { ExamContext } from "../layout";
+import { ExamContext } from "@/context/exam";
 import { useSubmitExamMutation } from "@/services/exam";
 
 const { Title, Paragraph } = Typography;
@@ -167,7 +167,7 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
 
             <Sider width={250} style={siderStyle}>
                 <Title level={4}>Thời gian còn lại:</Title>
-                <TimeLeft duration={exam.duration} />
+                <TimeLeft duration={exam.duration} onTimeUp={handleSubmit} />
                 <Paragraph className="!mt-2 text-[#ff7a45]">
                     Chú ý: bạn có thể click vào số thứ tự câu hỏi trong bài để
                     đánh dấu review
@@ -202,7 +202,13 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
     );
 }
 
-export const TimeLeft = ({ duration }: { duration: number }) => {
+const TimeLeft = ({
+    duration,
+    onTimeUp,
+}: {
+    duration: number;
+    onTimeUp: () => void;
+}) => {
     const [timeLeft, setTimeLeft] = useState(duration * 60);
 
     const formatTime = (seconds: number) => {
@@ -215,11 +221,17 @@ export const TimeLeft = ({ duration }: { duration: number }) => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+            setTimeLeft((prevTime) => {
+                if (prevTime <= 1) {
+                    clearInterval(timer);
+                    onTimeUp();
+                }
+                return prevTime - 1;
+            });
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [onTimeUp]);
 
     return (
         <Title className="!m-0" type="danger" level={2}>
