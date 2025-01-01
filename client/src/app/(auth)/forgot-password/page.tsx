@@ -37,8 +37,8 @@ export default function ForgotPasswordPage() {
                 form={form}
                 name="forgot-password"
                 layout="vertical"
-                initialValues={{ remember: true }}
                 size="large"
+                initialValues={{ remember: true }}
                 onFinish={onFinish}
             >
                 <FormTitle>Quên mật khẩu</FormTitle>

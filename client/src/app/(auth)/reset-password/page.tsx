@@ -51,8 +51,8 @@ export default function ResetPasswordPage() {
                 form={form}
                 name="reset-password"
                 layout="vertical"
-                initialValues={{ remember: true }}
                 size="large"
+                initialValues={{ remember: true }}
                 onFinish={onFinish}
             >
                 <FormTitle>Khôi phục mật khẩu</FormTitle>
