@@ -123,12 +123,18 @@ const Header = () => {
     return (
         <header className="fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-8 pt-4 backdrop-blur-md">
             <div className="flex items-center gap-2">
-                <div className="min-h-max min-w-max items-center rounded-full bg-[#5369A1] px-[9px] py-[3px]">
-                    <Image className="h-auto w-auto" src={logo} alt="logo" />
-                </div>
-                <Title className="!font-chango !font-normal" level={4}>
-                    tiawai
-                </Title>
+                <Link href="/" className="no-highlight flex items-center gap-2">
+                    <div className="min-h-max min-w-max items-center rounded-full bg-[#5369A1] px-[9px] py-[3px]">
+                        <Image
+                            className="h-auto w-auto"
+                            src={logo}
+                            alt="logo"
+                        />
+                    </div>
+                    <Title className="!font-chango !font-normal" level={4}>
+                        tiawai
+                    </Title>
+                </Link>
             </div>
 
             <Menu

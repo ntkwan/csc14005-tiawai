@@ -34,6 +34,9 @@ export class TestDetailsEntity {
     totalQuestions: number;
 
     @ApiProperty()
+    totalAttempts: number;
+
+    @ApiProperty()
     uploadedAt: Date;
 
     @ApiProperty()

@@ -1,6 +1,6 @@
-"use client";
-import { useState, useContext } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+import { useState, useContext } from 'react';
+import { useRouter } from 'next/navigation';
 import {
     Button,
     Card,
@@ -11,19 +11,18 @@ import {
     Tabs,
     Typography,
     Radio,
-} from "antd";
-import type { RadioChangeEvent } from "antd";
-import { CheckCircleOutlined } from "@ant-design/icons";
-import { ExamHistory } from "@/ui/exam";
-import { ExamContext } from "@/context/exam";
-import { exam_1 } from "./test";
+} from 'antd';
+import type { RadioChangeEvent } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import { ExamHistory } from '@/ui/exam';
+import { ExamContext } from '@/context/exam';
 
 const { Title } = Typography;
 
 export default function ExamPage({ params }: { params: { id: number } }) {
     const router = useRouter();
     const exam = useContext(ExamContext);
-    const [mode, setMode] = useState<"1" | "2">("1");
+    const [mode, setMode] = useState<'1' | '2'>('1');
 
     const onChange = (e: RadioChangeEvent) => {
         setMode(e.target.value);
@@ -31,10 +30,10 @@ export default function ExamPage({ params }: { params: { id: number } }) {
 
     return (
         <Card className="!shadow-xl">
-            <Space direction="vertical" style={{ width: "100%" }}>
+            <Space direction="vertical" style={{ width: '100%' }}>
                 <Title level={4}>
-                    {exam?.title}{" "}
-                    <CheckCircleOutlined style={{ color: "green" }} />
+                    {exam?.title}{' '}
+                    <CheckCircleOutlined style={{ color: 'green' }} />
                 </Title>
 
                 <Radio.Group
@@ -47,14 +46,13 @@ export default function ExamPage({ params }: { params: { id: number } }) {
                     <Radio.Button value="2">Đáp án/transcript</Radio.Button>
                 </Radio.Group>
 
-                {mode === "1" && (
+                {mode === '1' && (
                     <>
                         <Title level={5}>
                             Thời gian làm bài: {exam?.duration} phút
                         </Title>
                         <Title level={5}>
-                            {exam_1.participants.toLocaleString()} người đã
-                            luyện tập đề thi này
+                            Đã có {exam?.totalAttempts} lượt làm đề này
                         </Title>
 
                         <Divider />

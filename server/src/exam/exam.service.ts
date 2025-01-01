@@ -126,6 +126,7 @@ export class ExamService {
                 id: test.id,
                 title: test.title,
                 totalQuestions: test.totalQuestions,
+                totalAttempts: test.submissions?.length || 0,
                 uploadedAt: test.uploadAt,
                 duration: test.duration,
                 questions: newTestQuestions,
