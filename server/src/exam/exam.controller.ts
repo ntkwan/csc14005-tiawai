@@ -24,10 +24,29 @@ import { Role } from '../auth/enums/roles.enum';
 import { PublicTestQuestionsEntity } from './entities/public-test-questions.entity';
 import { PublicTestResultsEntity } from './entities/public-test-results.entity';
 import { TestDetailsEntity } from './entities/test-details.entity';
+import { PrivateTestQuestionsEntity } from './entities/private-test-questions.entity';
 
 @Controller('exam')
 export class ExamController {
     constructor(private readonly examService: ExamService) {}
+
+    @ApiOperation({
+        summary: 'Get all tests [ADMIN]',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Get all tests successfully',
+        type: PrivateTestQuestionsEntity,
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.ADMIN)
+    @Get('tests')
+    async privateFindAll() {
+        console.log('privateFindAll');
+        return this.examService.privateFindAll();
+    }
 
     @ApiOperation({
         summary: 'Create a new test [ADMIN]',
@@ -78,9 +97,12 @@ export class ExamController {
         type: PublicTestQuestionsEntity,
     })
     @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.USER)
     @Get()
-    async findAll() {
-        return this.examService.findAll();
+    async publicFindAll() {
+        return this.examService.publicFindAll();
     }
 
     @ApiOperation({

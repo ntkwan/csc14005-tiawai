@@ -11,7 +11,7 @@ import { MessageService } from 'src/chat/message/message.service';
 import { TEMPLATES } from './template.constants';
 import { CreateMessageDto } from 'src/chat/message/dtos/create-message.dto';
 import { MessageResponseDto } from 'src/chat/message/dtos/message-response.dto';
-import { ChatSessionService } from 'src/chat/session/chat-session.service';
+import { PrivateTestQuestionsEntity } from './entities/private-test-questions.entity';
 
 @Injectable()
 export class ExamService {
@@ -19,11 +19,10 @@ export class ExamService {
         @InjectModel(TestEntity)
         private readonly testModel: typeof TestEntity,
         private readonly submissionService: SubmissionService,
-        private readonly chatSessionService: ChatSessionService,
         private readonly messageService: MessageService,
     ) {}
 
-    async findAll(): Promise<PublicTestQuestionsEntity[]> {
+    async publicFindAll(): Promise<PublicTestQuestionsEntity[]> {
         try {
             const tests = await this.testModel.findAll();
             const publicTests: PublicTestQuestionsEntity[] = tests
@@ -32,17 +31,43 @@ export class ExamService {
                         id: test.id,
                         title: test.title,
                         totalQuestions: test.totalQuestions,
-                        uploadedAt: test.uploadAt,
                         duration: test.duration,
                         totalAttempts: test.submissions?.length || 0,
                     };
                 })
                 .sort((a, b) => {
-                    return a.uploadedAt.getTime() - b.uploadedAt.getTime();
+                    return a.id - b.id;
                 });
             return publicTests;
         } catch (error) {
             console.log(error.message);
+            throw new InternalServerErrorException(
+                'Failed to get all tests',
+                error.message,
+            );
+        }
+    }
+
+    async privateFindAll(): Promise<PrivateTestQuestionsEntity[]> {
+        try {
+            const tests = await this.testModel.findAll();
+            const privateTests: PrivateTestQuestionsEntity[] = tests.map(
+                (test) => {
+                    return {
+                        id: test.id,
+                        title: test.title,
+                        totalQuestions: test.totalQuestions,
+                        uploadedAt: test.uploadAt,
+                        duration: test.duration,
+                        totalAttempts: test.submissions?.length || 0,
+                    };
+                },
+            );
+            const sortedTests = privateTests.sort((a, b) => {
+                return a.uploadedAt.getTime() - b.uploadedAt.getTime();
+            });
+            return sortedTests;
+        } catch (error) {
             throw new InternalServerErrorException(
                 'Failed to get all tests',
                 error.message,
