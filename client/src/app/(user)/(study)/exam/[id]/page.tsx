@@ -62,7 +62,7 @@ export default function ExamPage({ params }: { params: { id: number } }) {
                         <ExamHistory />
 
                         <Tabs size="large" defaultActiveKey="1">
-                            <Tabs.TabPane tab="Luyện tập" key="1">
+                            {/* <Tabs.TabPane tab="Luyện tập" key="1">
                                 <Row gutter={[16, 16]}>
                                     <Col span={24}>
                                         <Card className="!border-[#b7eb8f] !bg-[#f6ffed]">
@@ -96,9 +96,9 @@ export default function ExamPage({ params }: { params: { id: number } }) {
                                         </Button>
                                     </Col>
                                 </Row>
-                            </Tabs.TabPane>
+                            </Tabs.TabPane> */}
 
-                            <Tabs.TabPane tab="Làm full test" key="2">
+                            <Tabs.TabPane tab="Làm full test" key="1">
                                 <Row gutter={[16, 16]}>
                                     <Col span={24}>
                                         <Card className="!border-[#faad14] !bg-[#fff7e6]">
