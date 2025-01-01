@@ -7,6 +7,7 @@ export interface Question {
     question?: string;
     content: string;
     hasParagraph: boolean;
+    paragraph?: string;
     choices: Choices;
     correctChoices: ChoicesType | null;
     answer?: ChoicesType | null;
@@ -15,7 +16,7 @@ export interface Question {
     points?: number;
     explanation?: string;
     isAnswered?: boolean;
-    explanation: string;
+    explanation?: string;
 }
 
 export interface Exam {

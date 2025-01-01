@@ -1,47 +1,49 @@
 /* eslint-disable */
-import { auth } from '@/auth';
+import { auth } from "@/auth";
+import { Role } from "@/types/user";
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
 
-const userRoutes = ['/profile'];
-const adminRoutes = ['/admin'];
-const authenticationRoutes = ['/sign-in', '/sign-up'];
+type ProtectedRoutes = {
+    [key in Role]: {
+        invalidRoutes: string[];
+        redirect?: string;
+    };
+};
+
+const protectedRoutes: ProtectedRoutes = {
+    guest: {
+        invalidRoutes: ["/profile", "/admin"],
+    },
+    user: {
+        invalidRoutes: ["/admin", "/sign-up", "/sign-in"],
+    },
+    administrator: {
+        invalidRoutes: ["/home", "/sign-up", "/sign-in"],
+        redirect: "/admin",
+    },
+};
 
 export default auth((req: any) => {
     const user = req.auth?.user;
+    const pathname =
+        req.nextUrl.pathname === "/" ? "/home" : req.nextUrl.pathname;
 
-    const isUserRoute = userRoutes.some((route) =>
-        req.nextUrl.pathname.startsWith(route),
+    const role: Role = user ? (user?.role as Role) : "guest";
+    const isProtected = protectedRoutes[role].invalidRoutes.some((route) =>
+        pathname.startsWith(route),
     );
 
-    const isAdminRoute = adminRoutes.some((route) =>
-        req.nextUrl.pathname.startsWith(route),
-    );
-
-    const isAuthenticationRoute = authenticationRoutes.some((route) =>
-        req.nextUrl.pathname.startsWith(route),
-    );
-
-    if (!user && isUserRoute) {
-        const newUrl = new URL('/sign-in', req.nextUrl.origin);
-        return Response.redirect(newUrl);
-    }
-
-    if (isAdminRoute && user.role !== 'administrator') {
-        const newUrl = new URL('/', req.nextUrl.origin);
-        return Response.redirect(newUrl);
-    }
-
-    if (user && isAuthenticationRoute) {
-        let newUrl;
-        if (user.role === 'administrator') {
-            newUrl = new URL('/admin', req.nextUrl.origin);
-        } else {
-            newUrl = new URL('/', req.nextUrl.origin);
+    if (isProtected) {
+        const redirect = protectedRoutes[role]?.redirect;
+        if (redirect) {
+            const newUrl = new URL(redirect, req.nextUrl.origin);
+            return Response.redirect(newUrl);
         }
-        return Response.redirect(newUrl);
+
+        return new Response("Unauthorized", { status: 401 });
     }
 
     return;

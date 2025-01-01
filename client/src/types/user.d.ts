@@ -1,4 +1,4 @@
-export type Role = "user" | "administrator";
+export type Role = "guest" | "user" | "administrator";
 
 export type User = {
     id?: string | undefined;

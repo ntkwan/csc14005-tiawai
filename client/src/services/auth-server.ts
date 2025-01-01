@@ -1,21 +1,22 @@
-export const handleSignIn = async ({
-    username,
-    password,
-}: {
-    username: string | unknown;
-    password: string | unknown;
-}) => {
+export const handleSignIn = async (
+    username: string | unknown,
+    password: string | unknown,
+) => {
     try {
-        const res = await fetch(process.env.BACKEND_BASE_URL + "/auth/sign-in", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const res = await fetch(
+            process.env.BACKEND_BASE_URL + "/auth/sign-in",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                }),
             },
-            body: JSON.stringify({
-                username,
-                password,
-            }),
-        });
+        );
+
         if (res.ok) {
             const data = await res.json();
             return {
@@ -24,6 +25,27 @@ export const handleSignIn = async ({
             };
         }
     } catch (error) {
-        return error;
+        return { error };
+    }
+};
+
+export const handleRefreshToken = async (refreshToken: string) => {
+    try {
+        const res = await fetch(
+            process.env.BACKEND_BASE_URL + "/auth/refresh-token",
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${refreshToken}`,
+                },
+            },
+        );
+
+        if (res.ok) {
+            const data = await res.json();
+            return { accessToken: data.accessToken };
+        }
+    } catch (error) {
+        return { error };
     }
 };

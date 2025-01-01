@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
-import type { Provider } from "next-auth/providers";
+import { Provider } from "next-auth/providers";
 import { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { handleSignIn } from "@/services/auth-server";
 import { jwtDecode } from "jwt-decode";
+import { handleSignIn, handleRefreshToken } from "@/services/auth-server";
 
 const providers: Provider[] = [
     Credentials({
@@ -15,8 +15,12 @@ const providers: Provider[] = [
         },
         authorize: async (credentials) => {
             const { username, password } = credentials;
-            const data = await handleSignIn({ username, password });
-            const { accessToken, refreshToken } = data as User;
+            const res = await handleSignIn(username, password);
+
+            if (!res) return null;
+            if (res?.error) return null;
+
+            const { accessToken, refreshToken } = res as User;
             return { accessToken, refreshToken };
         },
     }),
@@ -38,12 +42,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     providers,
     pages: {
         signIn: "/sign-in",
-        signOut: "/sign-in",
     },
     callbacks: {
         async jwt({ token, user }: { token: JWT; user: User }) {
+            const decoded = jwtDecode(
+                user ? user.accessToken : token.accessToken,
+            );
+
             if (user) {
-                const decoded = jwtDecode(user.accessToken);
                 return {
                     ...token,
                     accessToken: user.accessToken,
@@ -56,38 +62,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         role: decoded?.role,
                     },
                 };
-            } else if (Date.now() < (token?.exp || 0) * 1000 - 300) {
-                return token;
             } else {
-                try {
-                    const res = await fetch(
-                        process.env.BACKEND_BASE_URL + "/auth/refresh-token",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${token.refreshToken}`,
-                            },
-                        },
-                    );
-
-                    if (res.ok) {
-                        return {
-                            ...token,
-                            accessToken: (await res.json()).accessToken,
-                            exp: jwtDecode(token.accessToken).exp || 0,
-                        };
+                if (Date.now() < (decoded?.exp || 0) * 1000 - 300) {
+                    return {
+                        ...token,
+                        iat: decoded.iat,
+                        exp: decoded.exp,
+                    };
+                } else {
+                    const res = await handleRefreshToken(token.refreshToken);
+                    if (!res) return token;
+                    if (res?.error) {
+                        token.error = "RefreshTokenError";
+                        return token;
                     }
-                } catch (error) {
-                    console.error(error);
-                    token.error = "RefreshTokenError";
-                    return token;
+
+                    const { accessToken } = res as User;
+                    const newDecoded = jwtDecode(accessToken);
+
+                    return {
+                        ...token,
+                        accessToken,
+                        iat: newDecoded.iat,
+                        exp: newDecoded.exp,
+                    };
                 }
             }
-            return token;
         },
         async session({ session, token }: { session: Session; token: JWT }) {
             const decoded = jwtDecode(token.refreshToken);
+
             return {
                 ...session,
                 accessToken: token.accessToken,
@@ -95,7 +99,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 expires: decoded.exp
                     ? new Date(decoded.exp * 1000).toISOString()
                     : "",
-                user: token.user,
+                user: {
+                    ...token.user,
+                },
                 error: token.error,
             };
         },
