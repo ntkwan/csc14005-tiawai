@@ -77,12 +77,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         return token;
                     }
 
-                    const { accessToken } = res as User;
+                    const { accessToken, refreshToken } = res as User;
                     const newDecoded = jwtDecode(accessToken);
 
                     return {
                         ...token,
                         accessToken,
+                        refreshToken,
                         iat: newDecoded.iat,
                         exp: newDecoded.exp,
                     };

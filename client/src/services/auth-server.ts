@@ -34,6 +34,7 @@ export const handleRefreshToken = async (refreshToken: string) => {
         const res = await fetch(
             process.env.BACKEND_BASE_URL + "/auth/refresh-token",
             {
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${refreshToken}`,
@@ -42,8 +43,20 @@ export const handleRefreshToken = async (refreshToken: string) => {
         );
 
         if (res.ok) {
-            const data = await res.json();
-            return { accessToken: data.accessToken };
+            const setCookieHeader = res.headers.get("set-cookie");
+            if (setCookieHeader) {
+                const getRefreshToken = setCookieHeader.match(
+                    /refresh_token=([^;]+);/,
+                );
+                const newRefreshToken = getRefreshToken
+                    ? getRefreshToken[1]
+                    : "";
+                const data = await res.json();
+                return {
+                    accessToken: data.accessToken,
+                    refreshToken: newRefreshToken,
+                };
+            }
         }
     } catch (error) {
         return { error };
