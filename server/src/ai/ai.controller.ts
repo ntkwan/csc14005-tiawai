@@ -32,10 +32,9 @@ export class AIController {
         type: ParaphraseDto,
     })
     @HttpCode(200)
-    @HttpCode(201)
     @UseGuards(ATAuthGuard, RolesGuard)
     @ApiBearerAuth('access-token')
-    @Roles(Role.ADMIN)
+    @Roles(Role.USER)
     @Post('paraphrase')
     async paraphrase(@Request() req: any, @Res() res: Response): Promise<void> {
         const regex = /[^\w\s~!$@#$%^&*(){}\[\]_+-=:;"'’<>.,?/ ]+/;

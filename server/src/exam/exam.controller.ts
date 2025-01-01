@@ -31,7 +31,7 @@ export class ExamController {
     constructor(private readonly examService: ExamService) {}
 
     @ApiOperation({
-        summary: 'Get all tests [ADMIN]',
+        summary: 'Get all exams [ADMIN]',
     })
     @ApiResponse({
         status: 200,
@@ -42,7 +42,7 @@ export class ExamController {
     @UseGuards(ATAuthGuard, RolesGuard)
     @ApiBearerAuth('access-token')
     @Roles(Role.ADMIN)
-    @Get('tests')
+    @Get('admin/exams')
     async privateFindAll() {
         return this.examService.privateFindAll();
     }
@@ -88,7 +88,7 @@ export class ExamController {
     }
 
     @ApiOperation({
-        summary: 'Get all tests [USER]',
+        summary: 'Get all exams [USER]',
     })
     @ApiResponse({
         status: 200,
@@ -102,6 +102,23 @@ export class ExamController {
     @Get()
     async publicFindAll() {
         return this.examService.publicFindAll();
+    }
+
+    @ApiOperation({
+        summary: 'Get all practice exams [USER]',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Get all practice tests successfully',
+        type: PublicTestQuestionsEntity,
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.USER)
+    @Get('practices')
+    async publicFindAllPractice() {
+        return this.examService.publicFindAllPractice();
     }
 
     @ApiOperation({

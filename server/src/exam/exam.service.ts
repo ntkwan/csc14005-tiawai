@@ -25,24 +25,58 @@ export class ExamService {
     async publicFindAll(): Promise<PublicTestQuestionsEntity[]> {
         try {
             const tests = await this.testModel.findAll();
-            const publicTests: PublicTestQuestionsEntity[] = tests
-                .map((test) => {
-                    return {
+            const publicTests: PublicTestQuestionsEntity[] = [];
+            for (const test of tests) {
+                if (test.isGenerated === false) {
+                    const newTest = {
                         id: test.id,
                         title: test.title,
                         totalQuestions: test.totalQuestions,
                         duration: test.duration,
                         totalAttempts: test.submissions?.length || 0,
                     };
-                })
-                .sort((a, b) => {
-                    return a.id - b.id;
-                });
+
+                    publicTests.push(newTest);
+                }
+            }
+            publicTests.sort((a, b) => {
+                return a.id - b.id;
+            });
             return publicTests;
         } catch (error) {
             console.log(error.message);
             throw new InternalServerErrorException(
-                'Failed to get all tests',
+                'Failed to get all exams',
+                error.message,
+            );
+        }
+    }
+
+    async publicFindAllPractice(): Promise<PublicTestQuestionsEntity[]> {
+        try {
+            const tests = await this.testModel.findAll();
+            const publicTests: PublicTestQuestionsEntity[] = [];
+            for (const test of tests) {
+                if (test.isGenerated === true) {
+                    const newTest = {
+                        id: test.id,
+                        title: test.title,
+                        totalQuestions: test.totalQuestions,
+                        duration: test.duration,
+                        totalAttempts: test.submissions?.length || 0,
+                    };
+
+                    publicTests.push(newTest);
+                }
+            }
+            publicTests.sort((a, b) => {
+                return a.id - b.id;
+            });
+            return publicTests;
+        } catch (error) {
+            console.log(error.message);
+            throw new InternalServerErrorException(
+                'Failed to get all practices',
                 error.message,
             );
         }

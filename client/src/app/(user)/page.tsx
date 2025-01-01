@@ -1,34 +1,34 @@
-"use client";
-import { useGetExamsQuery } from "@/services/exam";
-import { Flex, Space, Typography, Empty } from "antd";
-import Image from "next/image";
-import Link from "next/link";
-import IconFrame from "@/ui/icon-frame";
-import ExamFrame from "@/ui/exam-frame";
-import GenerateButton from "@/ui/generate-button";
-import homeMainImg from "@public/home-main-img.svg";
-import home7Svg from "@public/home-7.svg";
-import bigTiawai from "@public/big-tiawai.svg";
-import homeIconBg2 from "@public/home-icon-bg-2.svg";
-import home11 from "@public/home-11.png";
-import homeGradientBg from "@public/home-gradient-bg.svg";
-import FeaturesBox from "@/ui/home/features-box";
-import { Exam } from "@/types/exam";
+'use client';
+import { useGetExamPracticesQuery, useGetExamsQuery } from '@/services/exam';
+import { Flex, Space, Typography, Empty } from 'antd';
+import Image from 'next/image';
+import Link from 'next/link';
+import IconFrame from '@/ui/icon-frame';
+import ExamFrame from '@/ui/exam-frame';
+import GenerateButton from '@/ui/generate-button';
+import homeMainImg from '@public/home-main-img.svg';
+import home7Svg from '@public/home-7.svg';
+import bigTiawai from '@public/big-tiawai.svg';
+import homeIconBg2 from '@public/home-icon-bg-2.svg';
+import home11 from '@public/home-11.png';
+import homeGradientBg from '@public/home-gradient-bg.svg';
+import FeaturesBox from '@/ui/home/features-box';
+import { Exam } from '@/types/exam';
 const { Title } = Typography;
 
 const mainHighlights = [
     {
-        src: "/home-9.png",
-        alt: "home icon 9",
-        title: "Dễ dàng sử dụng",
-        description: "Thao tác đơn giản",
+        src: '/home-9.png',
+        alt: 'home icon 9',
+        title: 'Dễ dàng sử dụng',
+        description: 'Thao tác đơn giản',
     },
     {
-        src: "/home-10.png",
-        alt: "home icon 10",
-        title: "Trải nghiệm học vui vẻ",
+        src: '/home-10.png',
+        alt: 'home icon 10',
+        title: 'Trải nghiệm học vui vẻ',
         description:
-            "Các bài tập dưới dạng trò chơi mang lại trải nghiệm khác biệt",
+            'Các bài tập dưới dạng trò chơi mang lại trải nghiệm khác biệt',
     },
 ];
 
@@ -40,52 +40,20 @@ export interface ExamData {
 
 export default function Home() {
     const { data, isLoading } = useGetExamsQuery();
+    const { data: practiceData } = useGetExamPracticesQuery();
 
-    if (isLoading || !data) return;
+    if (isLoading || !data || !practiceData) return;
 
     const examData: ExamData[] = [
         {
-            key: "exam",
-            type: "Đề thi thử THPTQG",
+            key: 'exam',
+            type: 'Đề thi thử theo mẫu THPTQG',
             tests: data,
         },
         {
-            key: "practice",
-            type: "Bài luyện tập",
-            tests: [
-                {
-                    id: 0,
-                    title: "Đề thi minh họa THPT Quốc Gia 2023",
-                    duration: 0,
-                    totalQuestions: 0,
-                    uploadedAt: new Date().toISOString(),
-                    totalAttempts: 0,
-                },
-                {
-                    id: 1,
-                    title: "Đề thi minh họa THPT Quốc Gia 2023",
-                    duration: 0,
-                    uploadedAt: new Date().toISOString(),
-                    totalQuestions: 0,
-                    totalAttempts: 0,
-                },
-                {
-                    id: 2,
-                    title: "Đề thi minh họa THPT Quốc Gia 2023",
-                    duration: 0,
-                    uploadedAt: new Date().toISOString(),
-                    totalQuestions: 0,
-                    totalAttempts: 0,
-                },
-                {
-                    id: 3,
-                    title: "Đề thi minh họa THPT Quốc Gia 2023",
-                    duration: 0,
-                    uploadedAt: new Date().toISOString(),
-                    totalQuestions: 0,
-                    totalAttempts: 0,
-                },
-            ],
+            key: 'practice',
+            type: 'Bài tập chuyên đề',
+            tests: practiceData,
         },
     ];
 
@@ -106,7 +74,7 @@ export default function Home() {
                         className="!pr-10 !font-normal !text-[#8A8A8A]"
                         level={5}
                     >
-                        <span className="!font-chango text-xl">tiawai</span>{" "}
+                        <span className="!font-chango text-xl">tiawai</span>{' '}
                         cung cấp đầy đủ nội dung chất lượng gồm các đề luyện thi
                         có sẵn và tạo ra bởi công nghệ AI, các bài luyện tập
                         theo chủ đề, hỗ trợ paraphrase đoạn văn, flashcard mỗi
@@ -132,7 +100,7 @@ export default function Home() {
                                         <Title className="!m-0 !font-bold leading-none">
                                             {exam.type}
                                         </Title>
-                                        <GenerateButton />
+                                        {index == 1 ? <GenerateButton /> : null}
                                     </Flex>
                                     <Link
                                         href={`/${exam.key}`}

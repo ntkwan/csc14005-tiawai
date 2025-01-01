@@ -1,24 +1,24 @@
-"use client";
-import { useState } from "react";
-import { Input, Button, Typography, Tabs, notification } from "antd";
-import type { TabsProps } from "antd";
-import { useParaphraseMutation } from "@/services/ai";
+'use client';
+import { useState } from 'react';
+import { Input, Button, Typography, Tabs, notification } from 'antd';
+import type { TabsProps } from 'antd';
+import { useParaphraseMutation } from '@/services/ai';
 
 const { TextArea } = Input;
 const { Title } = Typography;
-const tabItems: TabsProps["items"] = [
-    { key: "Paraphrase", label: "Tiêu chuẩn" },
-    { key: "Fluency", label: "Trôi chảy" },
-    { key: "Coherence", label: "Mạch lạc" },
-    { key: "Simplification", label: "Thu gọn" },
-    { key: "Formalize", label: "Trang trọng" },
-    { key: "Neutralize", label: "Trung lập" },
+const tabItems: TabsProps['items'] = [
+    { key: 'Paraphrase', label: 'Tiêu chuẩn' },
+    { key: 'Fluency', label: 'Trôi chảy' },
+    { key: 'Coherence', label: 'Mạch lạc' },
+    { key: 'Simplification', label: 'Thu gọn' },
+    { key: 'Formalize', label: 'Trang trọng' },
+    { key: 'Neutralize', label: 'Trung lập' },
 ];
 
 export default function Paraphrasing() {
-    const [inputText, setInputText] = useState<string>("");
-    const [outputText, setOutputText] = useState<string>("");
-    const [tabItem, setTabItem] = useState<string>("Paraphrase");
+    const [inputText, setInputText] = useState<string>('');
+    const [outputText, setOutputText] = useState<string>('');
+    const [tabItem, setTabItem] = useState<string>('Paraphrase');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [paraphrase] = useParaphraseMutation();
 
@@ -31,23 +31,15 @@ export default function Paraphrasing() {
         return regex.test(inputText);
     };
 
-    const splitInputText = (inputText: string) => {
-        const textArr = inputText.split(".");
-        const half = Math.ceil(textArr.length / 2);
-        const firstHalf = textArr.slice(0, half).join(" ");
-        const secondHalf = textArr.slice(half).join(" ");
-        return [firstHalf, secondHalf];
-    };
-
     const handleParaphrase = async () => {
-        const [firstHalf, secondHalf] = splitInputText(inputText);
-        const [res1, res2] = await Promise.all([
-            paraphrase(`${tabItem} this: ${firstHalf}`),
-            paraphrase(`${tabItem} this: ${secondHalf}`),
+        const [result] = await Promise.all([
+            paraphrase(
+                `paraphrase the following text with style ${tabItem}: ${inputText}`,
+            ),
         ]);
 
-        if (!res1.error && !res2.error) {
-            setOutputText(`${res1.data?.data} ${res2.data?.data}`);
+        if (!result.error) {
+            setOutputText(`${result.data?.data}`);
             return false;
         }
         return true;
@@ -56,8 +48,8 @@ export default function Paraphrasing() {
     const handleParaphraseWithRetry = async () => {
         if (isEnglish(inputText)) {
             notification.error({
-                message: "Chỉ hỗ trợ tiếng Anh",
-                description: "Vui lòng nhập hoặc sao chép văn bản tiếng Anh",
+                message: 'Chỉ hỗ trợ tiếng Anh',
+                description: 'Vui lòng nhập hoặc sao chép văn bản tiếng Anh',
             });
             return;
         }
@@ -73,8 +65,8 @@ export default function Paraphrasing() {
         }
         setIsLoading(false);
         notification.error({
-            message: "Đã xảy ra lỗi",
-            description: "Vui lòng thử lại sau",
+            message: 'Đã xảy ra lỗi',
+            description: 'Vui lòng thử lại sau',
         });
     };
 

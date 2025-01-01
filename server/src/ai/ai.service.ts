@@ -8,6 +8,7 @@ export class AIService {
 
     async paraphrase(inputs: string): Promise<ParaphraseDto> {
         try {
+            console.log(inputs);
             const url = this.configService.get<string>('HF_MODEL_URL');
             const model = this.configService.get<string>('HF_MODEL_PARAPHRASE');
             const response = await fetch(`${url}${model}`, {

@@ -4,7 +4,7 @@ export enum TEMPLATES_CLASSIFIER {
 }
 export enum TEMPLATES_GENERATOR {
     CONTEXT_AWARE = 'Bạn là trợ lý ảo của ứng dụng hỗ trợ học Tiếng Anh, chuyên môn của bạn là tạo ra câu hỏi dựa theo phân loại dạng câu hỏi cho trước cùng với các ví dụ về câu hỏi cùng dạng,  sau đó tạo ra 4 lựa chọn đáp án cho câu hỏi (A, B, C, D) và chọn ra câu trả lời đúng cho câu hỏi (A, B, C, D).',
-    CONSTANT_REQUEST = `Bạn sẽ được cho trước dạng câu hỏi cần tạo ra và các câu hỏi cùng dạng, hãy tạo ra một câu hỏi mới dựa trên các câu hỏi mẫu cho trước. Đảm bảo đáp án đúng phải chính xác. Không cần có 'Dạng câu hỏi:'. Hãy định dạng phản hồi theo dạng sau, không có thêm bất kỳ text nào khác, định dạng JSON không được xảy ra lỗi Expected double-quoted property name in JSON và không cần phải thêm "\`\`\`json":
+    CONSTANT_REQUEST = `Bạn sẽ được cho trước dạng câu hỏi cần tạo ra và các câu hỏi cùng dạng, hãy tạo ra một câu hỏi mới dựa trên các câu hỏi mẫu cho trước. Đảm bảo đáp án đúng phải chính xác. Không sử dụng định dạng Markdown trong phản hồi. Không cần có 'Dạng câu hỏi:'. Hãy định dạng phản hồi theo dạng sau, không có thêm bất kỳ text nào khác, định dạng JSON không được xảy ra lỗi Expected double-quoted property name in JSON và không cần phải thêm "\`\`\`json":
     {
         "content": "Câu hỏi",
         "choices": {

@@ -62,8 +62,8 @@ export class PracticeService {
     async classify(category: Category): Promise<Question[]> {
         try {
             const strCategory = JSON.stringify(category);
-            console.log(strCategory);
-            const formattedCategory = strCategory.toLowerCase();
+            const modifiedStrCategory = strCategory.slice(1, -1);
+            const formattedCategory = modifiedStrCategory.toLowerCase();
             const tests: TestEntity[] = await this.testModel.findAll();
             const targetQuestions: Question[] = [];
             for (const test of tests) {
@@ -152,11 +152,10 @@ export class PracticeService {
                     content: parseMsg.content,
                     choices: parseMsg.choices,
                     correctAnswer: parseMsg.correctAnswer,
-                    points: 0.2,
+                    points: 0.1,
                 };
                 newQuestions.push(question);
             }
-
             const test = await this.testModel.create({
                 title: 'blank',
                 questions: newQuestions,
@@ -165,7 +164,7 @@ export class PracticeService {
                 duration: 15,
                 isGenerated: true,
             });
-            test.title = `[${new Date().toLocaleDateString()}] Chuyên đề  ${category} #${test.id}`;
+            test.title = `[${new Date().toLocaleDateString()}] Chuyên đề ${category} #${test.id}`;
             await test.save();
             return test;
         } catch (error) {
