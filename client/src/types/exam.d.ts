@@ -19,6 +19,7 @@ export interface Question {
 }
 
 export interface Exam {
+    id?: number;
     title?: string;
     totalQuestions?: number;
     questions?: Question[];

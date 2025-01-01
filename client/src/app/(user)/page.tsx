@@ -1,5 +1,6 @@
 "use client";
-import { Flex, Space, Typography } from "antd";
+import { useGetExamsQuery } from "@/services/exam";
+import { Flex, Space, Typography, Empty } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import IconFrame from "@/ui/icon-frame";
@@ -10,6 +11,9 @@ import home7Svg from "@public/home-7.svg";
 import bigTiawai from "@public/big-tiawai.svg";
 import homeIconBg2 from "@public/home-icon-bg-2.svg";
 import home11 from "@public/home-11.png";
+import homeGradientBg from "@public/home-gradient-bg.svg";
+import FeaturesBox from "@/ui/home/features-box";
+import { Exam } from "@/types/exam";
 const { Title } = Typography;
 
 const mainHighlights = [
@@ -28,101 +32,62 @@ const mainHighlights = [
     },
 ];
 
-import homeGradientBg from "@public/home-gradient-bg.svg";
-import FeaturesBox from "@/ui/home/features-box";
-import { useEffect, useState } from "react";
-
-export interface Test {
-    duration: number;
-    id: number;
-    title: string;
-    totalQuestions: number;
-    uploadedAt: Date;
-    totalAttempts: number;
-}
 export interface ExamData {
     key: string;
     type: string;
-    tests: Test[];
+    tests: Exam[];
 }
 
 export default function Home() {
-    const [examData, setExamData] = useState<ExamData[]>();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string>('');
+    const { data, isLoading } = useGetExamsQuery();
 
-    const fetchExamData = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/exam`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch exam data");
-            }
-            const data: Test[] = await response.json();
-            const formattedData = [{
-                key: "exam",
-                type: "Đề thi thử THPTQG",
-                tests: data,
-            },
-            {
-                key: "practice",
-                type: "Bài luyện tập",
-                tests: [
-                    {
-                        id: 0,
-                        title: "Đề thi minh họa THPT Quốc Gia 2023",
-                        duration: 0,
-                        totalQuestions: 0,
-                        uploadedAt: new Date(),
-                        totalAttempts: 0,
-                        totalAttempt: 0,
-                    },
-                    {
-                        id: 1,
-                        title: "Đề thi minh họa THPT Quốc Gia 2023",
-                        duration: 0,
-                        totalAttempt: 0,
-                        uploadedAt: new Date(),
-                        totalQuestions: 0,
-                        totalAttempts: 0,
-                    },
-                    {
-                        id: 2,
-                        title: "Đề thi minh họa THPT Quốc Gia 2023",
-                        duration: 0,
-                        totalAttempt: 0,
-                        uploadedAt: new Date(),
-                        totalQuestions: 0,
-                        totalAttempts: 0,
-                    },
-                    {
-                        id: 3,
-                        title: "Đề thi minh họa THPT Quốc Gia 2023",
-                        duration: 0,
-                        totalAttempt: 0,
-                        uploadedAt: new Date(),
-                        totalQuestions: 0,
-                        totalAttempts: 0,
-                    },
-                ],
-            },
-            ];
-            setExamData(formattedData);
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-            console.log(error);
-        }
-    };
+    if (isLoading || !data) return;
 
-    useEffect(() => {
-        if (loading) return;
-        fetchExamData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [examData, loading]);
+    const examData: ExamData[] = [
+        {
+            key: "exam",
+            type: "Đề thi thử THPTQG",
+            tests: data,
+        },
+        {
+            key: "practice",
+            type: "Bài luyện tập",
+            tests: [
+                {
+                    id: 0,
+                    title: "Đề thi minh họa THPT Quốc Gia 2023",
+                    duration: 0,
+                    totalQuestions: 0,
+                    uploadedAt: new Date().toISOString(),
+                    totalAttempts: 0,
+                },
+                {
+                    id: 1,
+                    title: "Đề thi minh họa THPT Quốc Gia 2023",
+                    duration: 0,
+                    uploadedAt: new Date().toISOString(),
+                    totalQuestions: 0,
+                    totalAttempts: 0,
+                },
+                {
+                    id: 2,
+                    title: "Đề thi minh họa THPT Quốc Gia 2023",
+                    duration: 0,
+                    uploadedAt: new Date().toISOString(),
+                    totalQuestions: 0,
+                    totalAttempts: 0,
+                },
+                {
+                    id: 3,
+                    title: "Đề thi minh họa THPT Quốc Gia 2023",
+                    duration: 0,
+                    uploadedAt: new Date().toISOString(),
+                    totalQuestions: 0,
+                    totalAttempts: 0,
+                },
+            ],
+        },
+    ];
 
     return (
         <main className="flex flex-col items-center justify-center">
@@ -159,29 +124,43 @@ export default function Home() {
 
             <Flex className="!mb-20" vertical>
                 <Space size={80} direction="vertical">
-                    {examData && examData.map((exam : ExamData, index) => (
-                        <div key={index}>
-                            <Flex justify="space-between" align="center">
-                                <Flex align="center" className="!gap-4">
-                                    <Title className="!m-0 !font-bold leading-none">
-                                        {exam.type}
-                                    </Title>
-                                    <GenerateButton />
+                    {examData &&
+                        examData.map((exam: ExamData, index) => (
+                            <div key={index}>
+                                <Flex justify="space-between" align="center">
+                                    <Flex align="center" className="!gap-4">
+                                        <Title className="!m-0 !font-bold leading-none">
+                                            {exam.type}
+                                        </Title>
+                                        <GenerateButton />
+                                    </Flex>
+                                    <Link
+                                        href={`/${exam.key}`}
+                                        className="h-max rounded-full px-4 py-2 font-roboto text-xl font-medium leading-none text-black transition duration-500 ease-in-out hover:bg-slate-300 hover:text-black"
+                                    >
+                                        Xem thêm &gt;
+                                    </Link>
                                 </Flex>
-                                <Link
-                                    href={`/${exam.key}`}
-                                    className="h-max rounded-full px-4 py-2 font-roboto text-xl font-medium leading-none text-black transition duration-500 ease-in-out hover:bg-slate-300 hover:text-black"
-                                >
-                                    Xem thêm &gt;
-                                </Link>
-                            </Flex>
-                            <div className="mt-8 grid grid-cols-4 gap-4">
-                                {exam.tests.map((test, index) => (
-                                    <ExamFrame key={index} examData={test} />
-                                ))}
+                                {exam.tests.length > 0 ? (
+                                    <div className="mt-8 grid grid-cols-4 gap-4">
+                                        {exam.tests.map((test, index) => (
+                                            <ExamFrame
+                                                key={index}
+                                                examData={test}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <Empty
+                                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        description="Không có dữ liệu"
+                                        imageStyle={{
+                                            height: 100,
+                                        }}
+                                    />
+                                )}
                             </div>
-                        </div>
-                    ))}
+                        ))}
                 </Space>
             </Flex>
 
