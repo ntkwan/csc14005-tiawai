@@ -63,7 +63,6 @@ export class ExamService {
                         paragraph: question.paragraph,
                     };
                 });
-
             const newTest: TestDetailsEntity = {
                 id: test.id,
                 title: test.title,
@@ -87,6 +86,16 @@ export class ExamService {
         submissionId: string,
         userId: string,
     ): Promise<TestResultDetailsDto[]> {
+        const session =
+            await this.messageService.findChatSessionById(submissionId);
+        if (session === null) {
+            await this.messageService.createChatSession({
+                id: submissionId,
+                userId: userId,
+                isActive: true,
+                topic: `explanation ${submissionId}`,
+            });
+        }
         const newTestResult: TestResultDetailsDto[] = await Promise.all(
             testResult.map(async (question, index) => {
                 const sampleExplanation = question.explanation || '';
@@ -106,16 +115,12 @@ export class ExamService {
                     Các đáp án: ${formattedChoices}
                     Đáp án đúng: ${question.correctAnswer}`;
 
-                    const session =
-                        await this.chatSessionService.findById(submissionId);
-                    if (session === null) {
-                        await this.chatSessionService.create({
-                            id: submissionId,
-                            userId: userId,
-                            isActive: true,
-                            topic: `explanation ${submissionId}`,
-                        });
-
+                    const message =
+                        await this.messageService.findBySessionId(submissionId);
+                    if (
+                        message === null ||
+                        message.length <= testResult.length
+                    ) {
                         const message: CreateMessageDto = {
                             sessionId: submissionId,
                             content: formattedQuestion,
@@ -131,10 +136,6 @@ export class ExamService {
                             explanation: explanation.content,
                         };
                     } else {
-                        const message =
-                            await this.messageService.findBySessionId(
-                                submissionId,
-                            );
                         const filteredMsg = message.filter((msg) => {
                             return msg.isBot === true;
                         });
@@ -161,16 +162,12 @@ export class ExamService {
                     Các đáp án: ${formattedChoices}
                     Đáp án đúng: ${question.correctAnswer}`;
 
-                    const session =
-                        await this.chatSessionService.findById(submissionId);
-                    if (session === null) {
-                        await this.chatSessionService.create({
-                            id: submissionId,
-                            userId: userId,
-                            isActive: true,
-                            topic: `explanation ${submissionId}`,
-                        });
-
+                    const message =
+                        await this.messageService.findBySessionId(submissionId);
+                    if (
+                        message === null ||
+                        message.length <= testResult.length
+                    ) {
                         const message: CreateMessageDto = {
                             sessionId: submissionId,
                             content: formattedQuestion,
@@ -186,10 +183,6 @@ export class ExamService {
                             explanation: explanation.content,
                         };
                     } else {
-                        const message =
-                            await this.messageService.findBySessionId(
-                                submissionId,
-                            );
                         const filteredMsg = message.filter((msg) => {
                             return msg.isBot === true;
                         });
@@ -260,6 +253,7 @@ export class ExamService {
                 submissionId,
                 submission.userId,
             );
+
             let isUpdated: boolean = false;
             let submissions: string[] = test.submissions;
             if (submissions === null) {
