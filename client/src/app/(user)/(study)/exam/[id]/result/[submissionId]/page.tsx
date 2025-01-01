@@ -32,7 +32,6 @@ export default function ExamResultPage({
         content: "",
         hasParagraph: false,
         choices: { A: "", B: "", C: "", D: "" },
-        correctChoices: null,
         answer: null,
         correctAnswer: null,
         isCorrect: false,

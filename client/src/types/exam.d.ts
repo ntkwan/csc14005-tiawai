@@ -9,7 +9,6 @@ export interface Question {
     hasParagraph: boolean;
     paragraph?: string;
     choices: Choices;
-    correctChoices: ChoicesType | null;
     answer?: ChoicesType | null;
     correctAnswer?: ChoicesType | null;
     isCorrect?: boolean;

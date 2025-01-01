@@ -12,7 +12,8 @@ const initialQuestion: Question = {
     content: "",
     hasParagraph: false,
     choices: { A: "", B: "", C: "", D: "" },
-    correctChoices: null,
+    correctAnswer: null,
+    explanation: "",
 };
 
 export default function AdminExamsPage() {
@@ -379,11 +380,11 @@ const QuestionForm = memo(
                         label={<FormLabel>Hãy chọn đáp án đúng</FormLabel>}
                     >
                         <Checkbox.Group
-                            value={[questionData.correctChoices]}
+                            value={[questionData.correctAnswer]}
                             onChange={(values) => {
                                 updateQuestion(
                                     questionIndex,
-                                    "correctChoices",
+                                    "correctAnswer",
                                     values.length > 1 ? values[1] : values[0],
                                 );
                             }}

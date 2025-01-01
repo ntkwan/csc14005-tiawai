@@ -125,7 +125,6 @@ const Header = () => {
             await signOut({ redirect: false });
             await signOutMutation(undefined);
             router.push("/sign-in");
-            console.log("hello");
         }
     };
 
