@@ -52,7 +52,6 @@ export default function ResetPasswordPage() {
                 name="reset-password"
                 layout="vertical"
                 initialValues={{ remember: true }}
-                autoComplete="off"
                 size="large"
                 onFinish={onFinish}
             >

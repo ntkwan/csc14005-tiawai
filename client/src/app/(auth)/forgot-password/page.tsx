@@ -38,7 +38,6 @@ export default function ForgotPasswordPage() {
                 name="forgot-password"
                 layout="vertical"
                 initialValues={{ remember: true }}
-                autoComplete="off"
                 size="large"
                 onFinish={onFinish}
             >

@@ -37,9 +37,8 @@ export default function SignUpPage() {
                 form={form}
                 name="sign-up"
                 layout="vertical"
-                initialValues={{ remember: true }}
-                autoComplete="off"
                 size="large"
+                initialValues={{ remember: true }}
                 onFinish={onFinish}
             >
                 <FormTitle>Đăng ký</FormTitle>
