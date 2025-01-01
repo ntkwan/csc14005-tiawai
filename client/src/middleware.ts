@@ -19,6 +19,7 @@ const protectedRoutes: ProtectedRoutes = {
     },
     user: {
         invalidRoutes: ["/admin", "/sign-up", "/sign-in"],
+        redirect: "/",
     },
     administrator: {
         invalidRoutes: ["/home", "/sign-up", "/sign-in"],
@@ -43,7 +44,7 @@ export default auth((req: any) => {
             return Response.redirect(newUrl);
         }
 
-        return new Response("Unauthorized", { status: 401 });
+        return new Response("Page not found", { status: 404 });
     }
 
     return;

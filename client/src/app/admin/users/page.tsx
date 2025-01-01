@@ -1,117 +1,39 @@
 "use client";
-import Banner from "@/ui/admin/banner";
+import { useState, useEffect, useMemo } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Flex, Input, Pagination } from "antd";
-import { useState } from "react";
+import { Flex, Button, Input, Spin, Table } from "antd";
 import { FilterIcon } from "@/ui/admin/icons";
-
-const users = [
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn A",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-    {
-        name: "Nguyễn Văn B",
-        createdAt: "22/12/2024",
-        email: "abc@gmail.com",
-    },
-];
+import { useGetUsersQuery } from "@/services/admin";
+import { User } from "@/types/user";
+import ContainerBorder from "@/ui/admin/exam/container-border";
+import Banner from "@/ui/admin/banner";
 
 const Users = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
-    const [searchQuery, setSearchQuery] = useState("");
+    const { data: users, isLoading } = useGetUsersQuery();
+    const [searchText, setSearchText] = useState<string>("");
+    const [filteredData, setFilteredData] = useState<User[] | undefined>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(5);
+
+    useEffect(() => {
+        if (users) {
+            setFilteredData(users);
+        }
+    }, [users]);
+
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+        const filtered = users?.filter((user) => {
+            const username = user.username?.toLowerCase() || "";
+            const email = user.email?.toLowerCase() || "";
+            return (
+                username.includes(value.toLowerCase()) ||
+                email.includes(value.toLowerCase())
+            );
+        });
+        setFilteredData(filtered);
+        setCurrentPage(1);
+    };
 
     const handlePageChange = (page: number, pageSize?: number) => {
         setCurrentPage(page);
@@ -120,90 +42,89 @@ const Users = () => {
         }
     };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const filteredUsers = users.filter(
-        (user) =>
-            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchQuery.toLowerCase()),
+    const columns = useMemo(
+        () => [
+            {
+                title: "Tên",
+                dataIndex: "username",
+                key: "username",
+            },
+            {
+                title: "Email",
+                dataIndex: "email",
+                key: "email",
+            },
+            {
+                title: "Thanh điều khiển",
+                key: "actions",
+                render: () => (
+                    <div className="flex gap-4">
+                        <Button
+                            type="default"
+                            className="rounded-full bg-[#DAE3E9] text-black"
+                        >
+                            Xem
+                        </Button>
+                        <Button type="primary" danger className="rounded-full">
+                            Xóa
+                        </Button>
+                    </div>
+                ),
+            },
+        ],
+        [],
     );
 
-    const paginatedUsers = filteredUsers.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize,
-    );
+    if (isLoading || !users) {
+        return (
+            <div style={{ textAlign: "center", padding: "20px" }}>
+                <Spin size="large" />
+            </div>
+        );
+    }
 
     return (
         <main>
             <Banner>Quản lý người dùng</Banner>
-            <Flex
-                justify="space-between"
-                align="center"
-                gap={20}
-                className="mx-20 mb-5"
-            >
-                <Input
-                    size="large"
-                    placeholder="Tìm kiếm"
-                    prefix={<SearchOutlined />}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    style={{
-                        background: "#E9DAE9",
-                    }}
-                    className="font-roboto font-medium text-black"
-                />
-                <Button
-                    icon={<FilterIcon width={18} />}
-                    size="large"
-                    style={{ background: "#E9DAE9" }}
-                    className="font-roboto font-medium"
+            <ContainerBorder>
+                <Flex
+                    justify="space-between"
+                    align="center"
+                    gap={20}
+                    style={{ marginBottom: 20 }}
                 >
-                    Bộ lọc
-                </Button>
-            </Flex>
-            <Flex vertical align="center" justify="center" className="mx-20">
-                {paginatedUsers.map((user, index) => (
-                    <Flex
-                        key={index}
-                        justify="space-between"
-                        align="center"
-                        gap={20}
-                        className={`w-full border-black py-4 ${index == 0 ? "border-y" : "border-b"} pl-8`}
+                    <Input
+                        size="large"
+                        placeholder="Tìm kiếm"
+                        prefix={<SearchOutlined />}
+                        value={searchText}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        className="!bg-[#E9DAE9] font-roboto text-black"
+                    />
+                    <Button
+                        icon={<FilterIcon width={18} />}
+                        size="large"
+                        style={{ background: "#E9DAE9" }}
+                        className="font-roboto font-medium"
                     >
-                        <div className="flex-1 font-roboto text-base font-medium">
-                            {user.name}
-                        </div>
-                        <div className="flex-1 font-roboto text-base font-medium">
-                            {user.createdAt}
-                        </div>
-                        <div className="flex-1 font-roboto text-base font-medium">
-                            {user.email}
-                        </div>
-                        <Flex justify="space-around" gap={20} flex={1}>
-                            <button className="rounded-full bg-[#DAE3E9] px-4 py-1 text-center text-base font-medium transition-all duration-100 hover:scale-110">
-                                Xem
-                            </button>
-                            <button className="rounded-full bg-[#CD6D6D] px-4 py-1 text-center text-base font-medium transition-all duration-100 hover:scale-110">
-                                Xóa
-                            </button>
-                        </Flex>
-                    </Flex>
-                ))}
-            </Flex>
-            <br />
-            <Pagination
-                align="center"
-                total={filteredUsers.length}
-                showSizeChanger
-                showLessItems
-                defaultPageSize={10}
-                current={currentPage}
-                onChange={handlePageChange}
-            />
+                        Bộ lọc
+                    </Button>
+                </Flex>
+                <Table
+                    columns={columns}
+                    dataSource={filteredData}
+                    rowKey={(record) => record?.id || 0}
+                    pagination={{
+                        position: ["bottomCenter"],
+                        pageSize: pageSize,
+                        pageSizeOptions: [5, 10, 20, 50],
+                        total: filteredData?.length || 0,
+                        showSizeChanger: true,
+                        current: currentPage,
+                        onChange: handlePageChange,
+                    }}
+                />
+            </ContainerBorder>
         </main>
     );
 };

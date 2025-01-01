@@ -34,10 +34,6 @@ const adminItems: MenuItem[] = [
         key: "exams",
     },
     {
-        label: <Link href="/admin/practices">Kho đề luyện tập</Link>,
-        key: "practices",
-    },
-    {
         label: <Link href="/admin/reports">Quản lý báo cáo</Link>,
         key: "reports",
     },
