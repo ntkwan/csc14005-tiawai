@@ -42,7 +42,12 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
     const user = useAppSelector((state) => state.auth.user);
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const [answers, setAnswers] = useState<Answer[]>([]);
+    const [timeStart, setTimeStart] = useState<string>("");
     const [submitExam, { isLoading }] = useSubmitExamMutation();
+
+    useEffect(() => {
+        setTimeStart(new Date().toISOString());
+    }, []);
 
     useEffect(() => {
         if (exam?.questions) {
@@ -87,8 +92,6 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
         return null;
     }
 
-    const timeStart = new Date().toISOString();
-
     const handleSubmit = async () => {
         const submission = {
             testId: +params.id,
@@ -101,6 +104,7 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
 
         if (!res.error) {
             setIsSubmit(true);
+            setTimeStart("");
             notification.success({
                 message: "Nộp bài thành công",
                 description: "Bài thi của bạn đã được ghi nhận",
@@ -125,9 +129,13 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
                             key={question.questionId}
                             className="!mb-4"
                         >
+                            {question.paragraph && (
+                                <Title level={5}>{question.paragraph}</Title>
+                            )}
                             <Title level={4}>
                                 {question.questionId}. {question.question}
                             </Title>
+
                             <Radio.Group
                                 onChange={(e) =>
                                     handleAnswerChange(
@@ -155,21 +163,16 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
                             </Radio.Group>
                         </Card>
                     ))}
-
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        size="large"
-                        loading={isLoading}
-                    >
-                        Nộp Bài
-                    </Button>
                 </Form>
             </Content>
 
             <Sider width={250} style={siderStyle}>
                 <Title level={4}>Thời gian còn lại:</Title>
-                <TimeLeft duration={exam.duration} onTimeUp={handleSubmit} />
+                <TimeLeft
+                    timeStart={timeStart}
+                    duration={exam.duration}
+                    onTimeUp={handleSubmit}
+                />
                 <Paragraph className="!mt-2 text-[#ff7a45]">
                     Chú ý: bạn có thể click vào số thứ tự câu hỏi trong bài để
                     đánh dấu review
@@ -199,19 +202,33 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
                         </Button>
                     ))}
                 </div>
+
+                <Divider />
+
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="large"
+                    onClick={handleSubmit}
+                    loading={isLoading}
+                >
+                    Nộp Bài
+                </Button>
             </Sider>
         </Layout>
     );
 }
 
 const TimeLeft = ({
+    timeStart,
     duration,
     onTimeUp,
 }: {
-    duration: number;
+    timeStart?: string;
+    duration: number; // in minutes
     onTimeUp: () => void;
 }) => {
-    const [timeLeft, setTimeLeft] = useState(duration * 60);
+    const [timeLeft, setTimeLeft] = useState<number>(0);
 
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);
@@ -222,11 +239,31 @@ const TimeLeft = ({
     };
 
     useEffect(() => {
+        if (timeStart) {
+            const startTime = new Date(timeStart).getTime();
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - startTime) / 1000);
+            const totalDurationSeconds = duration * 60;
+            const remainingSeconds = totalDurationSeconds - elapsedSeconds;
+
+            if (remainingSeconds <= 0) {
+                onTimeUp();
+                setTimeLeft(0);
+            } else {
+                setTimeLeft(remainingSeconds);
+            }
+        } else {
+            setTimeLeft(duration * 60);
+        }
+    }, [timeStart, duration, onTimeUp]);
+
+    useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft((prevTime) => {
                 if (prevTime <= 1) {
                     clearInterval(timer);
                     onTimeUp();
+                    return 0;
                 }
                 return prevTime - 1;
             });
