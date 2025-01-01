@@ -5,11 +5,36 @@ import { Exam, ExamResult } from "@/types/exam";
 const examApi = appApi.injectEndpoints({
     overrideExisting: false,
     endpoints: (builder) => ({
+        createExam: builder.mutation({
+            query: (exam) => ({
+                url: "/exam",
+                method: "POST",
+                body: exam,
+            }),
+            invalidatesTags: ["Exam"],
+        }),
+
+        getExams: builder.query<Exam[], void>({
+            query: () => ({
+                url: "/exam",
+                method: "GET",
+            }),
+            providesTags: ["Exam"],
+        }),
+
         getExamById: builder.query<Exam, number>({
             query: (id: number) => ({
                 url: `/exam/${id}`,
                 method: "GET",
             }),
+        }),
+
+        deleteExamById: builder.mutation({
+            query: (id: number) => ({
+                url: `/exam/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Exam"],
         }),
 
         submitExam: builder.mutation({
@@ -39,7 +64,10 @@ const examApi = appApi.injectEndpoints({
 });
 
 export const {
+    useCreateExamMutation,
+    useGetExamsQuery,
     useGetExamByIdQuery,
+    useDeleteExamByIdMutation,
     useSubmitExamMutation,
     useGetExamResultQuery,
 } = examApi;

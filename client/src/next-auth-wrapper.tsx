@@ -19,13 +19,19 @@ export default function NextAuthWrapper({
             signOutMutation(undefined);
             signOut();
         } else {
-            dispatch(
-                setAuthState({
-                    user: session?.user,
-                    accessToken: session?.accessToken,
-                    refreshToken: session?.refreshToken,
-                }),
-            );
+            if (
+                session?.user &&
+                session?.accessToken &&
+                session?.refreshToken
+            ) {
+                dispatch(
+                    setAuthState({
+                        user: session?.user,
+                        accessToken: session?.accessToken,
+                        refreshToken: session?.refreshToken,
+                    }),
+                );
+            }
         }
     }, [signOutMutation, dispatch, session]);
 

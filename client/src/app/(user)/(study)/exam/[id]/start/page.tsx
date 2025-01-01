@@ -90,12 +90,14 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
     const timeStart = new Date().toISOString();
 
     const handleSubmit = async () => {
-        const res = await submitExam({
+        const submission = {
             testId: +params.id,
             userId: user?.id,
             answers,
             timeStart,
-        });
+        };
+
+        const res = await submitExam(submission);
 
         if (!res.error) {
             setIsSubmit(true);

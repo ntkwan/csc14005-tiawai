@@ -2,7 +2,9 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { Typography, Form, Button, Input, Checkbox, notification } from "antd";
 import { ChoicesTypes, Question, Exam } from "@/types/exam.d";
-import { useCreateExamMutation } from "@/services/admin";
+import { useCreateExamMutation } from "@/services/exam";
+import ContainerBorder from "@/ui/admin/exam/container-border";
+import ManageExams from "@/ui/admin/exam/manage-exams";
 import Banner from "@/ui/admin/banner";
 import clsx from "clsx";
 
@@ -82,6 +84,8 @@ export default function AdminExamsPage() {
                 message: "Đăng đề thành công",
                 description: "Đề thi đã được đăng thành công.",
             });
+            setQuestions(Array(50).fill(initialQuestion));
+            form.resetFields();
         } else {
             notification.error({
                 message: "Đăng đề thất bại",
@@ -91,10 +95,10 @@ export default function AdminExamsPage() {
     };
 
     return (
-        <div className="p-4">
+        <div className="space-y-10 p-4">
             <Banner>Quản lý Kho Đề Thi</Banner>
             <Title level={2}>Đăng đề và đáp án</Title>
-            <ContainerBorder className="p-8">
+            <ContainerBorder>
                 <Form
                     form={form}
                     layout="vertical"
@@ -221,6 +225,11 @@ export default function AdminExamsPage() {
                         </Button>
                     </Form.Item>
                 </Form>
+            </ContainerBorder>
+
+            <Title level={2}>Đăng đề và đáp án</Title>
+            <ContainerBorder>
+                <ManageExams />
             </ContainerBorder>
         </div>
     );
@@ -431,16 +440,4 @@ const FormLabel = ({ children }: { children: React.ReactNode }) => (
     <Title className={clsx("!text-[#511351]")} level={4}>
         {children}
     </Title>
-);
-
-const ContainerBorder = ({
-    className = "",
-    children,
-}: {
-    className?: string;
-    children: React.ReactNode;
-}) => (
-    <div className={`w-full rounded-xl border border-black ${className}`}>
-        {children}
-    </div>
 );
