@@ -4,10 +4,18 @@ const chatApi = appApi.injectEndpoints({
     overrideExisting: false,
     endpoints: (builder) => ({
         sendMessage: builder.mutation({
-            query: (message) => ({
+            query: (body) => ({
                 url: '/messages',
                 method: 'POST',
-                body: message,
+                body,
+            }),
+            invalidatesTags: ['Chat'],
+        }),
+
+        getBotAnswer: builder.mutation({
+            query: (sessionId: string) => ({
+                url: `/messages/${sessionId}`,
+                method: 'POST',
             }),
             invalidatesTags: ['Chat'],
         }),
@@ -39,6 +47,7 @@ const chatApi = appApi.injectEndpoints({
 
 export const {
     useSendMessageMutation,
+    useGetBotAnswerMutation,
     useGetMessagesBySessionQuery,
     useCreateSessionMutation,
     useDisableSessionMutation,

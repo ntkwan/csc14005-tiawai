@@ -94,6 +94,54 @@ export class MessageService {
         }
     }
 
+    async sendMessage(createMessageDto: CreateMessageDto): Promise<void> {
+        await this.messageModel.create(createMessageDto);
+    }
+
+    async getResponse(sessionId: string, TEMPLATES: any) {
+        try {
+            const session = await this.chatSessionModel.findByPk(sessionId, {
+                include: { all: true },
+            });
+            if (!session) {
+                throw new NotFoundException('Chat session not found');
+            }
+            if (!session.isActive) {
+                throw new HttpException('Chat session is not active', 400);
+            }
+            const chatHistory = new ChatMessageHistory();
+            const messages = await this.messageModel.findAll({
+                where: { sessionId },
+                order: [['createdAt', 'ASC']],
+            });
+            const lastMessage = messages.pop();
+
+            messages.forEach((message) => {
+                if (message.isBot) {
+                    chatHistory.addAIMessage(message.content);
+                } else {
+                    chatHistory.addUserMessage(message.content);
+                }
+            });
+
+            const chain = this.loadRagChain(chatHistory, TEMPLATES);
+            const answer = await (
+                await chain
+            ).invoke(
+                { input: lastMessage.content },
+                { configurable: { sessionId: sessionId } },
+            );
+            const message = await this.messageModel.create({
+                sessionId,
+                content: answer.answer,
+                isBot: true,
+            });
+            return this.toMessageResponseDto(message);
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
     private async loadRagChain(
         chatHistory: BaseChatMessageHistory,
         TEMPLATES: any,

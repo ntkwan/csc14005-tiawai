@@ -1,7 +1,6 @@
 export interface Message {
     content: string;
     isBot: boolean;
-    timestamp: string;
 }
 
 export interface ChatSession {

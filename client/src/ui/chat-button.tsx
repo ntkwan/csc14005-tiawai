@@ -10,12 +10,14 @@ import {
     Typography,
     Flex,
     Avatar,
+    Skeleton,
 } from 'antd';
 import { SendOutlined, CloseOutlined, UserOutlined } from '@ant-design/icons';
 import chatIcon from '@public/chat-icon.svg';
 import logo from '@public/logo.svg';
 import {
     useSendMessageMutation,
+    useGetBotAnswerMutation,
     useGetMessagesBySessionQuery,
 } from '@/services/chat';
 import { useAppSelector } from '@/lib/hooks/hook';
@@ -30,34 +32,40 @@ const ChatButton = () => {
             skip: !chatSessionId,
         });
     const [isOpen, setIsOpen] = useState(false);
-    const [sendMessage, { isLoading }] = useSendMessageMutation();
+    const [sendMessage] = useSendMessageMutation();
+    const [getBotAnswer, { isLoading: isAnswering }] =
+        useGetBotAnswerMutation();
     const [chatMessages, setChatMessages] = useState<Message[]>([
         {
             content:
                 'Xin chào! Mình là Tia. Mình có thể giúp được gì cho bạn ?',
             isBot: true,
-            timestamp: new Date().toLocaleTimeString('vi-VN', {
-                hour: '2-digit',
-                minute: '2-digit',
-            }),
         },
     ]);
     const [inputMessage, setInputMessage] = useState<string>('');
+    const [needBotAnswer, setNeedBotAnswer] = useState(false);
+    useEffect(() => {
+        const getBotResponse = async () => {
+            try {
+                if (!chatSessionId) return;
+                await getBotAnswer(chatSessionId).unwrap();
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (needBotAnswer) {
+            getBotResponse();
+            setNeedBotAnswer(false);
+        }
+    }, [needBotAnswer, chatSessionId, getBotAnswer]);
 
     useEffect(() => {
         if (messages) {
-            const updatedMessages = messages.map((msg: Message) => ({
-                ...msg,
-                timestamp: new Date(msg.timestamp).toLocaleTimeString('vi-VN', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                }),
-            }));
-            setChatMessages((prev) => [...prev, ...updatedMessages]);
+            setChatMessages((prev) => [prev[0], ...messages]);
         }
     }, [messages]);
 
-    console.log(chatMessages);
     const toggleChat = () => {
         setIsOpen(!isOpen);
     };
@@ -71,13 +79,13 @@ const ChatButton = () => {
                 isBot: false,
             }).unwrap();
             setInputMessage('');
+            setNeedBotAnswer(true);
         } catch (error) {
             console.error(error);
         }
     };
 
     if (isMessagesLoading) return null;
-
     return (
         <ConfigProvider
             theme={{
@@ -108,7 +116,7 @@ const ChatButton = () => {
 
             {/* Chat Box */}
             {isOpen && (
-                <div className="fixed bottom-24 right-24 z-50 flex h-[450px] max-h-[450px] w-[350px] flex-col overflow-clip rounded-xl bg-white shadow-xl">
+                <div className="fixed bottom-24 right-24 z-50 flex h-[600px] max-h-[600px] w-[400px] flex-col overflow-clip rounded-xl bg-white shadow-xl">
                     {/* Header */}
                     <Flex
                         justify="space-between"
@@ -185,17 +193,25 @@ const ChatButton = () => {
                                             }}
                                         />
                                     )}
-
-                                    <Text
-                                        style={{
-                                            order: msg.isBot ? 2 : 1,
-                                        }}
-                                    >
-                                        {msg.timestamp}
-                                    </Text>
                                 </Flex>
                             </Flex>
                         ))}
+                        {isAnswering && (
+                            <Flex vertical align="start" className="mb-3">
+                                <Skeleton.Input
+                                    active
+                                    style={{ width: '90%' }}
+                                    className="!ml-2 !rounded-xl"
+                                />
+                                <Image
+                                    className="rounded-full bg-[#5369A1]"
+                                    src={chatIcon}
+                                    alt="Chat with us"
+                                    width={36}
+                                    height={36}
+                                />
+                            </Flex>
+                        )}
                     </div>
 
                     {/* Input */}
@@ -203,7 +219,7 @@ const ChatButton = () => {
                         <Input
                             size="small"
                             name="content"
-                            disabled={isLoading}
+                            disabled={isAnswering}
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             placeholder="Viết tin nhắn của bạn"

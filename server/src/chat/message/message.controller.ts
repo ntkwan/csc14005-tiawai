@@ -6,6 +6,7 @@ import {
     Param,
     UseGuards,
     HttpCode,
+    HttpException,
 } from '@nestjs/common';
 import {
     ApiTags,
@@ -31,13 +32,33 @@ export class MessageController {
     @HttpCode(200)
     @UseGuards(ATAuthGuard, RolesGuard)
     @Roles(Role.USER)
-    @ApiOperation({ summary: 'Receive a message and reply' })
+    @ApiOperation({ summary: 'Send message' })
     @ApiResponse({ type: MessageResponseDto })
     @Post()
-    async receiveAndReply(
+    async sendMessage(
         @Body() createMessageDto: CreateMessageDto,
-    ): Promise<MessageResponseDto> {
-        return this.messageService.receiveAndReply(createMessageDto, TEMPLATES);
+    ): Promise<{ message: string }> {
+        try {
+            await this.messageService.sendMessage(createMessageDto);
+            return {
+                message: 'Message sent successfully',
+            };
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
+    @ApiBearerAuth('access-token')
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @Roles(Role.USER)
+    @ApiOperation({
+        summary: 'Get bot response',
+    })
+    @ApiResponse({ type: MessageResponseDto })
+    @Post(':sessionId')
+    async botResponse(@Param('sessionId') sessionId: string) {
+        return this.messageService.getResponse(sessionId, TEMPLATES);
     }
 
     @ApiBearerAuth('access-token')
