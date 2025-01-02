@@ -9,13 +9,21 @@ export const config = {
 type ProtectedRoutes = {
     [key in Role]: {
         invalidRoutes: string[];
+        validRoutes?: string[];
         redirect?: string;
     };
 };
 
 const protectedRoutes: ProtectedRoutes = {
     guest: {
-        invalidRoutes: ["/profile", "/admin"],
+        invalidRoutes: [],
+        validRoutes: [
+            "/sign-up",
+            "/sign-in",
+            "/forgot-password",
+            "/reset-password",
+        ],
+        redirect: "/",
     },
     user: {
         invalidRoutes: ["/admin", "/sign-up", "/sign-in"],
@@ -33,6 +41,17 @@ export default auth((req: any) => {
         req.nextUrl.pathname === "/" ? "/home" : req.nextUrl.pathname;
 
     const role: Role = user ? (user?.role as Role) : "guest";
+    if (role === "guest") {
+        const valid = protectedRoutes[role]?.validRoutes;
+        if (valid) {
+            const isValid = valid.some((route) => pathname.startsWith(route));
+            if (!isValid) {
+                const newUrl = new URL("/sign-in", req.nextUrl.origin);
+                return Response.redirect(newUrl);
+            }
+        }
+    }
+
     const isProtected = protectedRoutes[role].invalidRoutes.some((route) =>
         pathname.startsWith(route),
     );
