@@ -359,7 +359,7 @@ export class ExamService {
                 const question = test.questions.find(
                     (question) => question.id === answer.questionId,
                 );
-                if (answer.answer.length > 0) {
+                if (answer.answer !== null) {
                     if (question.correctAnswer === answer.answer) {
                         score += question.points;
                         cntCorrect = cntCorrect + 1;
@@ -375,10 +375,12 @@ export class ExamService {
                     choices: question.choices,
                     correctAnswer: question.correctAnswer,
                     answer: answer.answer,
-                    isCorrect: question.correctAnswer === answer.answer,
+                    isCorrect:
+                        answer.answer != null &&
+                        question.correctAnswer === answer.answer,
                     explanation: question.explanation,
                     points: question.points,
-                    isAnswered: answer.answer.length > 0,
+                    isAnswered: answer.answer !== null,
                 });
             });
             const newTestResult = await this.judger(
