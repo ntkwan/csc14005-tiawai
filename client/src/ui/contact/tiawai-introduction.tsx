@@ -1,15 +1,15 @@
-"use client";
-import Image from "next/image";
-import { Row, Col, Typography } from "antd";
-import chatbotIcon from "@public/mascot/chatbot-icon.png";
-import mascot from "@public/mascot/full.webp";
-import mascotBgBlur from "@public/mascot/bg-blur.png";
-import bigTiawai from "@public/big-tiawai.svg";
+'use client';
+import Image from 'next/image';
+import { Row, Col, Typography } from 'antd';
+import chatbotIcon from '@public/mascot/chatbot-icon.png';
+import mascot from '@public/mascot/full.webp';
+import mascotBgBlur from '@public/mascot/bg-blur.png';
+import bigTiawai from '@public/big-tiawai.svg';
 const { Title } = Typography;
 
 export const TiawaiIntroductionHeader = () => {
     return (
-        <section className="tiawai__intro--header relative">
+        <section className="tiawai__intro--header relative select-none">
             <Row justify="center">
                 <Col span={16} className="content-center">
                     <div className="flex items-center justify-center gap-4">
@@ -34,7 +34,7 @@ export const TiawaiIntroductionHeader = () => {
 
 export const TiawaiIntroduction = () => {
     return (
-        <section className="flex items-center gap-24">
+        <section className="flex select-none items-center gap-24">
             <Col span={16}>
                 <Title level={3} className="text-justify !font-normal">
                     <i>
@@ -67,7 +67,7 @@ export const TiawaiIntroduction = () => {
 
 export const TiawaiDescription = () => {
     return (
-        <section className="flex items-center gap-24">
+        <section className="flex select-none items-center gap-24">
             <Col span={6}>
                 <div className="relative h-full w-full content-center text-center">
                     <Image

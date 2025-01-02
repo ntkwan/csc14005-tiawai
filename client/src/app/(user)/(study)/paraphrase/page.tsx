@@ -1,28 +1,28 @@
-"use client";
-import { useState } from "react";
-import { Input, Button, Typography, Tabs, notification, Space } from "antd";
-import type { TabsProps } from "antd";
-import Banner from "@/app/(user)/(study)/_ui/banner";
-import Image from "next/image";
-import fcBannerImage from "@public/flashcard/banner-img.png";
-import { BannerTitle } from "@/ui/common/title";
-import { useParaphraseMutation } from "@/services/ai";
+'use client';
+import { useState } from 'react';
+import { Input, Button, Typography, Tabs, notification, Space } from 'antd';
+import type { TabsProps } from 'antd';
+import Banner from '@/app/(user)/(study)/_ui/banner';
+import Image from 'next/image';
+import { BannerTitle } from '@/ui/common/title';
+import { useParaphraseMutation } from '@/services/ai';
+import bigTiawai from '@public/big-tiawai.svg';
 
 const { TextArea } = Input;
 const { Title } = Typography;
-const tabItems: TabsProps["items"] = [
-    { key: "Paraphrase", label: "Tiêu chuẩn" },
-    { key: "Fluency", label: "Trôi chảy" },
-    { key: "Coherence", label: "Mạch lạc" },
-    { key: "Simplification", label: "Thu gọn" },
-    { key: "Formalize", label: "Trang trọng" },
-    { key: "Neutralize", label: "Trung lập" },
+const tabItems: TabsProps['items'] = [
+    { key: 'Paraphrase', label: 'Tiêu chuẩn' },
+    { key: 'Fluency', label: 'Trôi chảy' },
+    { key: 'Coherence', label: 'Mạch lạc' },
+    { key: 'Simplification', label: 'Thu gọn' },
+    { key: 'Formalize', label: 'Trang trọng' },
+    { key: 'Neutralize', label: 'Trung lập' },
 ];
 
 export default function Paraphrasing() {
-    const [inputText, setInputText] = useState<string>("");
-    const [outputText, setOutputText] = useState<string>("");
-    const [tabItem, setTabItem] = useState<string>("Paraphrase");
+    const [inputText, setInputText] = useState<string>('');
+    const [outputText, setOutputText] = useState<string>('');
+    const [tabItem, setTabItem] = useState<string>('Paraphrase');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [paraphrase] = useParaphraseMutation();
 
@@ -52,8 +52,8 @@ export default function Paraphrasing() {
     const handleParaphraseWithRetry = async () => {
         if (isEnglish(inputText)) {
             notification.error({
-                message: "Chỉ hỗ trợ tiếng Anh",
-                description: "Vui lòng nhập hoặc sao chép văn bản tiếng Anh",
+                message: 'Chỉ hỗ trợ tiếng Anh',
+                description: 'Vui lòng nhập hoặc sao chép văn bản tiếng Anh',
             });
             return;
         }
@@ -69,30 +69,31 @@ export default function Paraphrasing() {
         }
         setIsLoading(false);
         notification.error({
-            message: "Đã xảy ra lỗi",
-            description: "Vui lòng thử lại sau",
+            message: 'Đã xảy ra lỗi',
+            description: 'Vui lòng thử lại sau',
         });
     };
 
     return (
-        <Space direction="vertical" size={60}>
+        <Space direction="vertical" className="select-none" size={60}>
             <Banner>
+                <BannerTitle>
+                    Công cụ paraphrase mạnh mẽ với nhiều lựa chọn
+                </BannerTitle>
                 <Image
-                    className="max-w-60"
-                    src={fcBannerImage}
+                    className="max-h-[400px] w-auto"
+                    src={bigTiawai}
                     alt="big tiawai 2"
                 />
-
-                <BannerTitle>Học Flashcard mỗi ngày theo chủ đề</BannerTitle>
             </Banner>
 
             <Title className="!font-normal" level={3}>
                 <i>
-                    Công cụ paraphrasing hoạt động cùng bạn để giúp bạn tạo ra{" "}
+                    Công cụ paraphrasing hoạt động cùng bạn để giúp bạn tạo ra{' '}
                     <b>những bài viết rõ ràng, mạch lạc và chuyên nghiệp</b> —
                     trong một khoảng
                     <b> thời gian ngắn</b>. Tia - AI của chúng tôi ngay lập tức
-                    diễn đạt lại đoạn văn của bạn{" "}
+                    diễn đạt lại đoạn văn của bạn{' '}
                     <b>
                         mà không làm thay đổi ý nghĩa hay chất lượng của từ ngữ.
                     </b>

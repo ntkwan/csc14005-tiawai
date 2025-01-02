@@ -55,7 +55,10 @@ const mainFeatures = [
 const FeaturesBox = ({ className = '' }: Readonly<{ className?: string }>) => {
     return (
         <Flex
-            className={twMerge('relative mb-20 justify-center p-8', className)}
+            className={twMerge(
+                'relative mb-20 select-none justify-center p-8',
+                className,
+            )}
         >
             <div className="max-h-[26.75rem] max-w-[89.5rem] rounded-xl bg-[rgba(83,105,161,0.7)] p-8">
                 <div className="relative mb-28 content-center text-center text-5xl font-black text-[#050C26]">

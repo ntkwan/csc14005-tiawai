@@ -155,7 +155,7 @@ const testsData = [
 
 const Practice = () => {
     return (
-        <div className="space-y-32">
+        <div className="select-none space-y-32">
             <Banner>
                 <Image src={bigTiawai2} alt="big tiawai 2" height={400} />
                 <BannerTitle>

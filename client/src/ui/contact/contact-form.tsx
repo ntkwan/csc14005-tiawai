@@ -1,5 +1,5 @@
-import { FormTitle } from "@/ui/common/title";
-import { Form, Input, Button } from "antd";
+import { FormTitle } from '@/ui/common/title';
+import { Form, Input, Button } from 'antd';
 const { TextArea } = Input;
 
 export const ContactForm = () => {
@@ -11,6 +11,7 @@ export const ContactForm = () => {
             initialValues={{ remember: true }}
             autoComplete="off"
             size="large"
+            className="select-none"
         >
             <FormTitle>Liên hệ với chúng tôi</FormTitle>
 
@@ -19,7 +20,7 @@ export const ContactForm = () => {
                 rules={[
                     {
                         required: true,
-                        message: "Họ và tên không được bỏ trống",
+                        message: 'Họ và tên không được bỏ trống',
                     },
                 ]}
             >
@@ -31,7 +32,7 @@ export const ContactForm = () => {
                 rules={[
                     {
                         required: true,
-                        message: "Email không được bỏ trống",
+                        message: 'Email không được bỏ trống',
                     },
                 ]}
             >
@@ -43,7 +44,7 @@ export const ContactForm = () => {
                 rules={[
                     {
                         required: true,
-                        message: "Số điện thoại không được bỏ trống",
+                        message: 'Số điện thoại không được bỏ trống',
                     },
                 ]}
             >
