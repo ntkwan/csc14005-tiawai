@@ -1,7 +1,6 @@
 'use client';
 import Image from 'next/image';
 import { Flex, Space, Typography } from 'antd';
-import GenerateButton from '@/ui/generate-button';
 import Banner from '@/app/(user)/(study)/_ui/banner';
 import TestBox from '@/app/(user)/(study)/_ui/test-box';
 import bigTiawai2 from '@public/big-tiawai-2.svg';
