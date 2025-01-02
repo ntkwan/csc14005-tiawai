@@ -11,6 +11,8 @@ import {
     Modal,
     Collapse,
     Divider,
+    Skeleton,
+    Flex,
 } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useGetExamResultQuery } from "@/services/exam";
@@ -61,7 +63,38 @@ export default function ExamResultPage({
     });
 
     if (isLoading) {
-        return null;
+        return (
+            <Space className="!w-full" size={16} direction="vertical">
+                <Skeleton.Node className="!h-12 !w-full" active />
+                <Flex gap={16}>
+                    <Skeleton.Input active />
+                    <Skeleton.Input active />
+                </Flex>
+
+                <Flex gap={60}>
+                    <Skeleton.Node className="!h-60 !w-60" active />
+                    <Skeleton.Node className="!h-40 !w-40" active />
+                    <Skeleton.Node className="!h-40 !w-40" active />
+                    <Skeleton.Node className="!h-40 !w-40" active />
+                </Flex>
+
+                <Divider />
+
+                <Skeleton.Input active />
+                <Skeleton.Input active />
+
+                <Divider />
+
+                <Skeleton.Input active />
+                <Row gutter={[16, 16]}>
+                    {Array.from({ length: 4 }).map((_, index) => (
+                        <Col key={index} span={12}>
+                            <Skeleton active />
+                        </Col>
+                    ))}
+                </Row>
+            </Space>
+        );
     }
 
     return (
@@ -249,17 +282,35 @@ export default function ExamResultPage({
             </Col>
 
             <Modal
-                title="Đáp án chi tiết"
+                title={<Title level={4}>Đáp án chi tiết</Title>}
                 visible={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
             >
                 <Title level={5}>Câu hỏi:</Title>
-                <Paragraph>{currentQuestion.question}</Paragraph>
+                <Paragraph className="px-4">
+                    {currentQuestion.question}
+                </Paragraph>
+                {Object.entries(currentQuestion.choices).map(
+                    ([key, value], index) => (
+                        <Paragraph className="px-4" key={index}>
+                            <Text strong>{key}.</Text> {value}
+                        </Paragraph>
+                    ),
+                )}
 
+                <Divider />
                 <Title level={5}>Đáp án đúng:</Title>
-                <Text>{currentQuestion.correctAnswer}</Text>
+                <Paragraph className="px-4">
+                    <Text strong>{currentQuestion.correctAnswer}.</Text>{" "}
+                    {
+                        currentQuestion.choices[
+                            currentQuestion.correctAnswer || "A"
+                        ]
+                    }
+                </Paragraph>
 
+                <Divider />
                 <Title level={5}>Giải thích chi tiết</Title>
                 <Collapse
                     className="!bg-white"
@@ -267,10 +318,13 @@ export default function ExamResultPage({
                     expandIconPosition="right"
                 >
                     <Panel
-                        header="Click để xem giải thích chi tiết"
                         key="1"
+                        header="Click để xem giải thích chi tiết"
                         className="text-left"
-                        style={{ whiteSpace: "pre-wrap", textAlign: "left" }}
+                        style={{
+                            whiteSpace: "pre-wrap",
+                            textAlign: "left",
+                        }}
                     >
                         <Text>{currentQuestion.explanation}</Text>
                     </Panel>
