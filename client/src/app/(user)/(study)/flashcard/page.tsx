@@ -1,52 +1,52 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { Row, Col, Typography, Input, Modal } from 'antd';
-import { twMerge } from 'tailwind-merge';
-import fcBannerImage from '@public/flashcard/banner-img.png';
-import scienceImage from '@public/flashcard/science.png';
-import researchImage from '@public/flashcard/research.png';
-import officeImage from '@public/flashcard/office.png';
-import itImage from '@public/flashcard/it.png';
-import literatureImage from '@public/flashcard/literature.png';
-import cultureImage from '@public/flashcard/culture.png';
-import Banner from '@/app/(user)/(study)/_ui/banner';
-import { BannerTitle } from '@/ui/common/title';
-import { useState } from 'react';
-import { useCreateFlashcardMutation } from '@/services/flashcard';
+import Link from "next/link";
+import Image from "next/image";
+import { Row, Col, Typography, Input, Modal, Space } from "antd";
+import { twMerge } from "tailwind-merge";
+import fcBannerImage from "@public/flashcard/banner-img.png";
+import scienceImage from "@public/flashcard/science.png";
+import researchImage from "@public/flashcard/research.png";
+import officeImage from "@public/flashcard/office.png";
+import itImage from "@public/flashcard/it.png";
+import literatureImage from "@public/flashcard/literature.png";
+import cultureImage from "@public/flashcard/culture.png";
+import Banner from "@/app/(user)/(study)/_ui/banner";
+import { BannerTitle } from "@/ui/common/title";
+import { useState } from "react";
+import { useCreateFlashcardMutation } from "@/services/flashcard";
 const { TextArea } = Input;
 const { Title } = Typography;
 const topics = [
     {
-        title: 'Khoa học',
+        title: "Khoa học",
         image: scienceImage,
     },
     {
-        title: 'Nghiên cứu',
+        title: "Nghiên cứu",
         image: researchImage,
     },
     {
-        title: 'Văn phòng',
+        title: "Văn phòng",
         image: officeImage,
     },
     {
-        title: 'Công nghệ',
+        title: "Công nghệ",
         image: itImage,
     },
     {
-        title: 'Văn học',
+        title: "Văn học",
         image: literatureImage,
     },
     {
-        title: 'Văn hóa',
+        title: "Văn hóa",
         image: cultureImage,
     },
 ];
 
 export default function FlashCardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [text, setText] = useState('');
+    const [text, setText] = useState("");
     const [createFlashcard, { isLoading: isCreatingFlashcard }] =
         useCreateFlashcardMutation();
 
@@ -62,17 +62,17 @@ export default function FlashCardPage() {
                 console.log(error);
             }
         }
-        setText('');
+        setText("");
         setIsModalOpen(false);
     };
 
     const handleCancel = () => {
-        setText('');
+        setText("");
         setIsModalOpen(false);
     };
 
     return (
-        <div className="flashcard__page space-y-32">
+        <Space direction="vertical" size={60}>
             <Banner>
                 <Image
                     className="max-w-60"
@@ -83,19 +83,18 @@ export default function FlashCardPage() {
                 <BannerTitle>Học Flashcard mỗi ngày theo chủ đề</BannerTitle>
             </Banner>
 
-            <Row justify={'center'} gutter={[0, 40]}>
+            <Row justify={"center"} gutter={[0, 40]}>
                 <Title level={3}>
                     <i>
-                        Tiawai cho phép bạn chọn{' '}
+                        Tiawai cho phép bạn chọn{" "}
                         <b> chủ đề để học Flashcard </b>
-                        hoặc bạn có thể{' '}
+                        hoặc bạn có thể{" "}
                         <b>
                             nhập vào đoạn văn sau đó tiawai sẽ giúp bạn trích
                             xuất các từ vụng dưới dạng Flashcard
                         </b>
                     </i>
                 </Title>
-                <Col span={24}></Col>
 
                 <button
                     className="h-[5rem] min-w-[31.25rem] rounded-xl bg-[#DBE3F8] font-roboto text-3xl font-medium transition-all duration-300 ease-in-out hover:scale-110"
@@ -103,6 +102,7 @@ export default function FlashCardPage() {
                 >
                     Tạo Flashcard từ văn bản
                 </button>
+
                 <Modal
                     open={isModalOpen}
                     onOk={handleOk}
@@ -128,10 +128,10 @@ export default function FlashCardPage() {
                         {topics.map((topic, index) => (
                             <Link
                                 className={twMerge(
-                                    'relative m-auto aspect-[2/1.5] w-full max-w-xl grow content-center rounded-xl text-center',
+                                    "relative m-auto aspect-[2/1.5] w-full max-w-xl grow content-center rounded-xl text-center",
                                     index % 2 == 0
-                                        ? 'bg-[#E9DAE9]'
-                                        : 'bg-[#DAE3E9]',
+                                        ? "bg-[#E9DAE9]"
+                                        : "bg-[#DAE3E9]",
                                 )}
                                 href={`/flashcard/${encodeURIComponent(topic.title)}`}
                                 key={index}
@@ -151,6 +151,6 @@ export default function FlashCardPage() {
                     </div>
                 </Col>
             </Row>
-        </div>
+        </Space>
     );
 }
