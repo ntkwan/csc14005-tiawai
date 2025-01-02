@@ -102,6 +102,7 @@ const ChatButton = () => {
                         src={chatIcon}
                         alt="Chat with us"
                         className="-ml-1 h-auto w-auto"
+                        priority
                     />
                 }
                 type="primary"
@@ -125,10 +126,10 @@ const ChatButton = () => {
                     >
                         <Flex align="center" gap={4}>
                             <Image
+                                className="h-auto"
                                 src={logo}
                                 alt="logo"
                                 width={32}
-                                height={32}
                                 priority
                             />
                             <Flex vertical justify="center">
@@ -178,11 +179,10 @@ const ChatButton = () => {
                                 <Flex gap={8}>
                                     {msg.isBot ? (
                                         <Image
-                                            className="rounded-full bg-[#5369A1]"
+                                            className="h-auto rounded-full bg-[#5369A1]"
                                             src={msg.isBot ? chatIcon : logo}
                                             alt="Chat with us"
                                             width={36}
-                                            height={36}
                                         />
                                     ) : (
                                         <Avatar
@@ -205,11 +205,10 @@ const ChatButton = () => {
                                     className="!ml-2 !rounded-xl"
                                 />
                                 <Image
-                                    className="rounded-full bg-[#5369A1]"
+                                    className="h-auto rounded-full bg-[#5369A1]"
                                     src={chatIcon}
                                     alt="Chat with us"
                                     width={36}
-                                    height={36}
                                 />
                             </Flex>
                         )}
