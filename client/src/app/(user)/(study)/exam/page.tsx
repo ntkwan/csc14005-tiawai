@@ -142,15 +142,14 @@ const Exam = () => {
                 <Space size="large">
                     <Title className="!font-normal" level={2}>
                         <i>
-                            Trải nghiệm tạo ra <b>bộ đề riêng</b> dựa trên năng
-                            lực của bạn bằng <b>AI - Tia</b>
+                            Luyện tập <b>trọn bộ</b> vói các dạng đề{' '}
+                            <b>
+                                chính thức, minh họa và thi thử THPT Quốc gia
+                                của các trường nổi tiếng
+                            </b>{' '}
+                            qua các năm.
                         </i>
                     </Title>
-                    <GenerateButton
-                        className="mr-8 h-[6.5rem] min-w-[31.25rem]"
-                        textStyle="text-3xl"
-                        big={true}
-                    />
                 </Space>
             </Flex>
 
