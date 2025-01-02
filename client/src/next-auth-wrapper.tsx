@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch } from "@/lib/hooks/hook";
 import { useSession, signOut } from "next-auth/react";
 import { setAuthState } from "@/lib/slices/auth";
@@ -10,15 +10,17 @@ export default function NextAuthWrapper({
 }: {
     children: React.ReactNode;
 }) {
-    const [signOutMutation] = useSignOutMutation();
     const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState<boolean>(false);
     const { data: session } = useSession();
+    const [signOutMutation] = useSignOutMutation();
 
     useEffect(() => {
         if (session?.error === "RefreshTokenError") {
             signOutMutation(undefined);
             signOut();
         } else {
+            setLoading(true);
             if (
                 session?.user &&
                 session?.accessToken &&
@@ -26,14 +28,17 @@ export default function NextAuthWrapper({
             ) {
                 dispatch(
                     setAuthState({
-                        user: session?.user,
-                        accessToken: session?.accessToken,
-                        refreshToken: session?.refreshToken,
+                        user: session.user,
+                        accessToken: session.accessToken,
+                        refreshToken: session.refreshToken,
                     }),
                 );
             }
+            setLoading(false);
         }
     }, [signOutMutation, dispatch, session]);
+
+    if (loading) return null;
 
     return <>{children}</>;
 }

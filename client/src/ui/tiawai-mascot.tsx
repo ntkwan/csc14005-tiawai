@@ -25,6 +25,7 @@ export default function TiawaiMascot() {
                     className="tiawai-mascot__cap absolute -left-[5%] right-0 top-[40%] -z-10 -translate-y-1/2 -rotate-[5deg] -scale-y-[250%]"
                     src={mascotBgBlur}
                     alt="tiawai-cap"
+                    priority
                 />
                 <Title
                     className="tiawai-mascot__name text-center !font-chango !font-normal"

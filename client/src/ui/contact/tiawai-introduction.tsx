@@ -73,6 +73,7 @@ export const TiawaiIntroduction = () => {
                         className="absolute left-0 right-0 top-1/2 -z-10 -translate-y-1/2 scale-150"
                         src={mascotBgBlur}
                         alt="maskot-bg-blur"
+                        priority
                     />
                     <Title className="!font-chango !text-5xl !font-normal">
                         tiawai
@@ -92,6 +93,7 @@ export const TiawaiDescription = () => {
                         className="absolute -left-[15%] right-0 top-1/2 -z-10 -translate-y-1/2 scale-150"
                         src={mascotBgBlur}
                         alt="maskot-bg-blur"
+                        priority
                     />
                     <Image
                         className="m-auto h-[500px] scale-[180%]"

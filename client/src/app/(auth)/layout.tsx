@@ -6,7 +6,7 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="auth__layout relative min-h-screen max-w-[100vw] content-center overflow-hidden bg-[url('/auth-bg/auth-bg.png')]">
+        <div className="auth__layout relative min-h-screen max-w-[100vw] content-center overflow-hidden">
             <AuthBackground />
             {children}
         </div>
