@@ -7,7 +7,7 @@ import pg from 'pg';
 import { AuthModule } from './auth/auth.module';
 import { VectorStoreModule } from './vector-store/vector-store.module';
 import { ChatModule } from './chat/chat.module';
-import { AIModule } from './ai/ai.module';
+import { ParaphraseModule } from './ai/paraphrase.module';
 import { SharedModule } from './shared/shared.module';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -66,7 +66,7 @@ import { PracticeModule } from './practice/practice.module';
         AuthModule,
         ChatModule,
         VectorStoreModule,
-        AIModule,
+        ParaphraseModule,
         SharedModule,
         ExamModule,
         UsersModule,

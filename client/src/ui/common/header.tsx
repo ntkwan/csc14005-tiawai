@@ -30,7 +30,7 @@ const adminItems: MenuItem[] = [
         key: 'users',
     },
     {
-        label: <Link href="/admin/exams">Kho đề thi</Link>,
+        label: <Link href="/admin/exams">Quản lý đề thi</Link>,
         key: 'exams',
     },
     {

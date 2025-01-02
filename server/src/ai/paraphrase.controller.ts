@@ -7,8 +7,8 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AIService } from './ai.service';
-import { ParaphraseDto } from './dto/paraphrase.dto';
+import { ParaphraseService } from './paraphrase.service';
+import { ParaphraseDto } from './dtos/paraphrase.dto';
 import {
     ApiResponse,
     ApiOperation,
@@ -20,9 +20,9 @@ import { Role } from 'src/auth/enums/roles.enum';
 import { ATAuthGuard } from 'src/auth/guards/at-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@Controller('ai')
-export class AIController {
-    constructor(private readonly aiService: AIService) {}
+@Controller('paraphrase')
+export class ParaphraseController {
+    constructor(private readonly paraphraseService: ParaphraseService) {}
 
     @ApiOperation({ summary: 'Paraphrase text [USER]' })
     @ApiBody({ type: ParaphraseDto })
@@ -35,7 +35,7 @@ export class AIController {
     @UseGuards(ATAuthGuard, RolesGuard)
     @ApiBearerAuth('access-token')
     @Roles(Role.USER)
-    @Post('paraphrase')
+    @Post('')
     async paraphrase(@Request() req: any, @Res() res: Response): Promise<void> {
         const regex = /[^\w\s~!$@#$%^&*(){}\[\]_+-=:;"'’<>.,?/ ]+/;
         const { inputs } = req.body;
@@ -47,7 +47,7 @@ export class AIController {
             return;
         }
 
-        const paraphrasedText = await this.aiService.paraphrase(inputs);
+        const paraphrasedText = await this.paraphraseService.paraphrase(inputs);
         res.send({
             message: 'Paraphrased text',
             data: paraphrasedText,

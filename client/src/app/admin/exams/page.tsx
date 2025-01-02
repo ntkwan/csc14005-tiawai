@@ -1,21 +1,21 @@
-"use client";
-import { useState, useCallback, memo, useEffect } from "react";
-import { Typography, Form, Button, Input, Checkbox, notification } from "antd";
-import { ChoicesTypes, Question, Exam } from "@/types/exam.d";
-import { useCreateExamMutation } from "@/services/admin";
-import ContainerBorder from "@/ui/admin/exam/container-border";
-import ManageExams from "@/ui/admin/exam/manage-exams";
-import Banner from "@/ui/admin/banner";
-import clsx from "clsx";
+'use client';
+import { useState, useCallback, memo, useEffect } from 'react';
+import { Typography, Form, Button, Input, Checkbox, notification } from 'antd';
+import { ChoicesTypes, Question, Exam } from '@/types/exam.d';
+import { useCreateExamMutation } from '@/services/admin';
+import ContainerBorder from '@/ui/admin/exam/container-border';
+import ManageExams from '@/ui/admin/exam/manage-exams';
+import Banner from '@/ui/admin/banner';
+import clsx from 'clsx';
 
 const { Title } = Typography;
 
 const initialQuestion: Question = {
-    content: "",
+    content: '',
     hasParagraph: false,
-    choices: { A: "", B: "", C: "", D: "" },
+    choices: { A: '', B: '', C: '', D: '' },
     correctAnswer: null,
-    explanation: "",
+    explanation: '',
 };
 
 export default function AdminExamsPage() {
@@ -81,22 +81,22 @@ export default function AdminExamsPage() {
 
         if (!res.error) {
             notification.success({
-                message: "Đăng đề thành công",
-                description: "Đề thi đã được đăng thành công.",
+                message: 'Đăng đề thành công',
+                description: 'Đề thi đã được đăng thành công.',
             });
             setQuestions(Array(50).fill(initialQuestion));
             form.resetFields();
         } else {
             notification.error({
-                message: "Đăng đề thất bại",
-                description: "Vui lòng kiểm tra lại.",
+                message: 'Đăng đề thất bại',
+                description: 'Vui lòng kiểm tra lại.',
             });
         }
     };
 
     return (
         <div className="space-y-10 p-4">
-            <Banner>Quản lý Kho Đề Thi</Banner>
+            <Banner>Quản lý đề thi</Banner>
             <Title level={2}>Đăng đề và đáp án</Title>
             <ContainerBorder>
                 <Form
@@ -112,7 +112,7 @@ export default function AdminExamsPage() {
                         rules={[
                             {
                                 required: true,
-                                message: "Tên đề không được bỏ trống",
+                                message: 'Tên đề không được bỏ trống',
                             },
                         ]}
                     >
@@ -132,7 +132,7 @@ export default function AdminExamsPage() {
                                 {
                                     required: true,
                                     message:
-                                        "Số lượng câu hỏi không được bỏ trống",
+                                        'Số lượng câu hỏi không được bỏ trống',
                                 },
                             ]}
                         >
@@ -156,7 +156,7 @@ export default function AdminExamsPage() {
                                 {
                                     required: true,
                                     message:
-                                        "Thời gian làm bài không được bỏ trống",
+                                        'Thời gian làm bài không được bỏ trống',
                                 },
                             ]}
                         >
@@ -185,16 +185,16 @@ export default function AdminExamsPage() {
                                         key={index}
                                         type={
                                             currentQuestion === index
-                                                ? "primary"
-                                                : "default"
+                                                ? 'primary'
+                                                : 'default'
                                         }
                                         onClick={() =>
                                             setCurrentQuestion(index)
                                         }
                                         className={
                                             currentQuestion === index
-                                                ? "!bg-[#373A66] !text-white"
-                                                : ""
+                                                ? '!bg-[#373A66] !text-white'
+                                                : ''
                                         }
                                     >
                                         {index + 1}
@@ -227,7 +227,7 @@ export default function AdminExamsPage() {
                 </Form>
             </ContainerBorder>
 
-            <Title level={2}>Đăng đề và đáp án</Title>
+            <Title level={2}>Danh sách đề thi</Title>
             <ContainerBorder>
                 <ManageExams />
             </ContainerBorder>
@@ -284,7 +284,7 @@ const QuestionForm = memo(
                                         }));
                                         updateQuestion(
                                             questionIndex,
-                                            "hasParagraph",
+                                            'hasParagraph',
                                             !question.hasParagraph,
                                         );
                                     }}
@@ -294,7 +294,7 @@ const QuestionForm = memo(
                         rules={[
                             {
                                 required: true,
-                                message: "Câu hỏi không được bỏ trống",
+                                message: 'Câu hỏi không được bỏ trống',
                             },
                         ]}
                     >
@@ -304,12 +304,12 @@ const QuestionForm = memo(
                             value={question.paragraph}
                             disabled={!question.hasParagraph}
                             onChange={(e) =>
-                                changeQuestion("paragraph", e.target.value)
+                                changeQuestion('paragraph', e.target.value)
                             }
                             onBlur={(e) =>
                                 updateQuestion(
                                     questionIndex,
-                                    "paragraph",
+                                    'paragraph',
                                     e.target.value,
                                 )
                             }
@@ -323,7 +323,7 @@ const QuestionForm = memo(
                         rules={[
                             {
                                 required: true,
-                                message: "Câu hỏi không được bỏ trống",
+                                message: 'Câu hỏi không được bỏ trống',
                             },
                         ]}
                     >
@@ -333,12 +333,12 @@ const QuestionForm = memo(
                             autoSize={{ minRows: 1 }}
                             value={question.content}
                             onChange={(e) =>
-                                changeQuestion("content", e.target.value)
+                                changeQuestion('content', e.target.value)
                             }
                             onBlur={() =>
                                 updateQuestion(
                                     questionIndex,
-                                    "content",
+                                    'content',
                                     question.content,
                                 )
                             }
@@ -365,7 +365,7 @@ const QuestionForm = memo(
                                     placeholder={`Ghi đáp án ${type}`}
                                     value={question.choices[type]}
                                     onChange={(e) =>
-                                        changeQuestion("choices", {
+                                        changeQuestion('choices', {
                                             ...question.choices,
                                             [type]: e.target.value,
                                         })
@@ -373,7 +373,7 @@ const QuestionForm = memo(
                                     onBlur={(e) =>
                                         updateQuestion(
                                             questionIndex,
-                                            "choices",
+                                            'choices',
                                             {
                                                 ...question.choices,
                                                 [type]: e.target.value,
@@ -393,7 +393,7 @@ const QuestionForm = memo(
                             onChange={(values) => {
                                 updateQuestion(
                                     questionIndex,
-                                    "correctAnswer",
+                                    'correctAnswer',
                                     values.length > 1 ? values[1] : values[0],
                                 );
                             }}
@@ -417,12 +417,12 @@ const QuestionForm = memo(
                             autoSize={{ minRows: 1 }}
                             value={question.explanation}
                             onChange={(e) =>
-                                changeQuestion("explanation", e.target.value)
+                                changeQuestion('explanation', e.target.value)
                             }
                             onBlur={() =>
                                 updateQuestion(
                                     questionIndex,
-                                    "explanation",
+                                    'explanation',
                                     question.explanation,
                                 )
                             }
@@ -434,10 +434,10 @@ const QuestionForm = memo(
     },
 );
 
-QuestionForm.displayName = "QuestionForm";
+QuestionForm.displayName = 'QuestionForm';
 
 const FormLabel = ({ children }: { children: React.ReactNode }) => (
-    <Title className={clsx("!text-[#511351]")} level={4}>
+    <Title className={clsx('!text-[#511351]')} level={4}>
         {children}
     </Title>
 );

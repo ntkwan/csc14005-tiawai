@@ -1,9 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ParaphraseDto } from './dto/paraphrase.dto';
+import { ParaphraseDto } from './dtos/paraphrase.dto';
 
 @Injectable()
-export class AIService {
+export class ParaphraseService {
     constructor(private configService: ConfigService) {}
 
     async paraphrase(inputs: string): Promise<ParaphraseDto> {

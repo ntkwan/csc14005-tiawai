@@ -1,22 +1,12 @@
-import { appApi } from "@/services/config";
+import { appApi } from '@/services/config';
 
 const aiApi = appApi.injectEndpoints({
     overrideExisting: false,
     endpoints: (builder) => ({
         paraphrase: builder.mutation({
             query: (inputs) => ({
-                url: "/ai/paraphrase",
-                method: "POST",
-                body: {
-                    inputs,
-                },
-            }),
-        }),
-
-        flashcard: builder.mutation({
-            query: (inputs) => ({
-                url: "/ai/flashcard",
-                method: "POST",
+                url: '/paraphrase',
+                method: 'POST',
                 body: {
                     inputs,
                 },
@@ -25,4 +15,4 @@ const aiApi = appApi.injectEndpoints({
     }),
 });
 
-export const { useParaphraseMutation, useFlashcardMutation } = aiApi;
+export const { useParaphraseMutation } = aiApi;
