@@ -41,29 +41,10 @@ export const TiawaiIntroduction = () => {
                         <b>tiawai </b>
                         là một ứng dụng tiên tiến được thiết kế để hỗ trợ học
                         sinh trong việc học tiếng Anh, đặc biệt là chuẩn bị cho
-                        kỳ thi THPT Quốc gia. <b> tiawai </b>
-                        tích hợp công
-                        <b> nghệ AI </b>
-                        để mang đến cho người dùng trải nghiệm học tập cá nhân
-                        hóa và hiệu quả. Với <b> tiawai </b>, học sinh có thể
-                        <b> luyện tập qua hàng loạt đề thi và bài tập </b>
-                        đa dạng, giúp cải thiện kỹ năng đọc và viết.. Ứng dụng
-                        này không chỉ cung cấp các bài tập luyện đề mà còn
-                        <b> tích hợp một chatbot thông minh</b>, giúp người dùng
-                        dễ dàng dịch từ, giải thích ngữ pháp, và hướng dẫn học
-                        tập. tiawai
-                        <b> đánh giá quá trình </b>
-                        học của từng người dùng, từ đó đưa ra những gợi ý cải
-                        thiện và chiến lược học tập phù hợp. Một trong những
-                        tính năng nổi bật của tiawai là
-                        <b> khả năng paraphrase</b>, giúp người học nắm vững
-                        cách diễn đạt lại ý tưởng một cách linh hoạt. Hơn nữa,
-                        ứng dụng còn cung cấp chức năng
-                        <b> học flashcard</b>, cho phép người dùng
-                        <b> học 10 từ mới mỗi ngày theo từng chủ đề. </b>
-                        Điều này không chỉ giúp mở rộng vốn từ vựng mà còn tăng
-                        cường khả năng ghi nhớ thông qua việc lặp lại và sử dụng
-                        từ trong ngữ cảnh thực tế.
+                        kỳ thi THPT Quốc gia. <b>tiawai </b> tích hợp
+                        <b> công nghệ </b>
+                        AI để mang đến cho người dùng trải nghiệm học tập cá
+                        nhân hóa và hiệu quả.
                     </i>
                 </Title>
             </Col>

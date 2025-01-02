@@ -1,4 +1,4 @@
-import { FormTitle } from "../common/title";
+import { FormTitle } from "@/ui/common/title";
 import { Form, Input, Button } from "antd";
 const { TextArea } = Input;
 

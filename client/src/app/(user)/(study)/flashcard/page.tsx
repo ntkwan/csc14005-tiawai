@@ -84,7 +84,7 @@ export default function FlashCardPage() {
             </Banner>
 
             <Row justify={"center"} gutter={[0, 40]}>
-                <Title level={3}>
+                <Title className="!font-normal" level={3}>
                     <i>
                         Tiawai cho phép bạn chọn{" "}
                         <b> chủ đề để học Flashcard </b>

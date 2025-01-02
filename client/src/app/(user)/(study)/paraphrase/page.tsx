@@ -86,7 +86,7 @@ export default function Paraphrasing() {
                 <BannerTitle>Học Flashcard mỗi ngày theo chủ đề</BannerTitle>
             </Banner>
 
-            <Title level={3}>
+            <Title className="!font-normal" level={3}>
                 <i>
                     Công cụ paraphrasing hoạt động cùng bạn để giúp bạn tạo ra{" "}
                     <b>những bài viết rõ ràng, mạch lạc và chuyên nghiệp</b> —
