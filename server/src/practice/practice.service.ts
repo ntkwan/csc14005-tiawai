@@ -67,6 +67,7 @@ export class PracticeService {
             const tests: TestEntity[] = await this.testModel.findAll();
             const targetQuestions: Question[] = [];
             for (const test of tests) {
+                if (test.isGenerated == true) continue;
                 const questions = test.questions;
                 for (const question of questions) {
                     const formattedChoices = `

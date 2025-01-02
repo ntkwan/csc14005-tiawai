@@ -7,6 +7,7 @@ import {
     Delete,
     HttpCode,
     UseGuards,
+    Request,
 } from '@nestjs/common';
 import { ExamService } from './exam.service';
 import { CreateTestDto } from './dtos/create-test.dto';
@@ -102,6 +103,23 @@ export class ExamController {
     @Get()
     async publicFindAll() {
         return this.examService.publicFindAll();
+    }
+
+    @ApiOperation({
+        summary: 'Get all submissions of user by test ID [USER]',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Get all submissions successfully',
+        type: PublicTestResultsEntity,
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.USER)
+    @Get(':id/submissions')
+    async getSubmissions(@Request() req: any, @Param('id') id: number) {
+        return this.examService.getSubmissionsByTestId(req.user, +id);
     }
 
     @ApiOperation({

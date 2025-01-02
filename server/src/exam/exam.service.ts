@@ -12,6 +12,7 @@ import { TEMPLATES } from './template.constants';
 import { CreateMessageDto } from 'src/chat/message/dtos/create-message.dto';
 import { MessageResponseDto } from 'src/chat/message/dtos/message-response.dto';
 import { PrivateTestQuestionsEntity } from './entities/private-test-questions.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ExamService {
@@ -21,6 +22,76 @@ export class ExamService {
         private readonly submissionService: SubmissionService,
         private readonly messageService: MessageService,
     ) {}
+
+    async getSubmissionsByTestId(
+        user: User,
+        testId: number,
+    ): Promise<
+        {
+            pts: number;
+            timeConsumed: string;
+            submitAt: Date;
+            submissionId: string;
+        }[]
+    > {
+        try {
+            const submissions = await this.submissionService.findAll();
+
+            if (!submissions) {
+                throw new InternalServerErrorException(
+                    'Failed to get submissions by test id',
+                );
+            }
+
+            const filteredSubmissions = submissions.filter((submission) => {
+                return (
+                    submission.testId === testId &&
+                    submission.userId === user.id
+                );
+            });
+
+            const test = await this.testModel.findByPk(testId);
+            const questions = test.questions;
+            const formattedSubmissions: {
+                pts: number;
+                timeConsumed: string;
+                submitAt: Date;
+                submissionId: string;
+            }[] = [];
+            for (let i = 0; i < filteredSubmissions.length; i++) {
+                const submission = filteredSubmissions[i];
+                let cntCorrect = 0;
+                for (const question of questions) {
+                    const answer = submission.answers.find(
+                        (answer) => answer.questionId === question.id,
+                    );
+                    if (!answer) {
+                        continue;
+                    }
+                    const isCorrect = answer.answer === question.correctAnswer;
+                    if (isCorrect) {
+                        cntCorrect++;
+                    }
+                }
+                const pts = (cntCorrect / test.totalQuestions) * 100;
+                const timeConsumed = submission.timeConsumed;
+                const submitAt = submission.submitAt;
+
+                formattedSubmissions.push({
+                    pts,
+                    timeConsumed,
+                    submitAt,
+                    submissionId: submission.id,
+                });
+            }
+            return formattedSubmissions;
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Failed to get submissions by test id',
+                error.message,
+            );
+        }
+    }
 
     async publicFindAll(): Promise<PublicTestQuestionsEntity[]> {
         try {
