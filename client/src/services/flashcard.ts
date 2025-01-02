@@ -1,15 +1,15 @@
-import { appApi } from '@/services/config';
+import { appApi } from "@/services/config";
 
 const flashcardApi = appApi.injectEndpoints({
-    overrideExisting: false,
+    overrideExisting: true,
     endpoints: (builder) => ({
         createFlashcard: builder.mutation({
             query: (body) => ({
-                url: '/flashcard',
-                method: 'POST',
+                url: "/flashcard",
+                method: "POST",
                 body,
             }),
-            invalidatesTags: ['Flashcard'],
+            invalidatesTags: ["Flashcard"],
         }),
     }),
 });

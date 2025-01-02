@@ -3,7 +3,7 @@ import { appApi } from "@/services/config";
 import { Exam, ExamResult } from "@/types/exam";
 
 const examApi = appApi.injectEndpoints({
-    overrideExisting: false,
+    overrideExisting: true,
     endpoints: (builder) => ({
         getExams: builder.query<Exam[], void>({
             query: () => ({

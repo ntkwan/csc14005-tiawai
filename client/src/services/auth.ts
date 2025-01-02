@@ -4,7 +4,7 @@ import { setSignOut } from "@/lib/slices/auth";
 import { store } from "@/lib/store/store";
 
 const authApi = appApi.injectEndpoints({
-    overrideExisting: false,
+    overrideExisting: true,
     endpoints: (builder) => ({
         signUp: builder.mutation({
             query: ({ username, email, password }) => ({

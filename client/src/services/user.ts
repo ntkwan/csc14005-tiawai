@@ -1,7 +1,7 @@
 import { appApi } from "@/services/config";
 
 const userApi = appApi.injectEndpoints({
-    overrideExisting: false,
+    overrideExisting: true,
     endpoints: (builder) => ({
         getMyProfile: builder.query({
             query: () => ({
