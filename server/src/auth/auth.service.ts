@@ -90,7 +90,6 @@ export class AuthService {
             const newUser = await this.usersService.create(user);
             return newUser;
         } catch (error) {
-            console.log(error.message);
             throw new InternalServerErrorException('Error signing up', {
                 cause: error.message,
             });
@@ -245,7 +244,6 @@ export class AuthService {
 
             await this.usersService.updateRole(id, role);
         } catch (error) {
-            console.log(error.message);
             throw new InternalServerErrorException(error.message);
         }
     }
