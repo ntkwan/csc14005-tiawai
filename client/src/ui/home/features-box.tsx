@@ -1,61 +1,61 @@
-"use client";
-import { Flex, Typography } from "antd";
-import IconFrame from "../icon-frame";
-import Image from "next/image";
-import home7Svg from "@public/home-7.svg";
-import home7Png from "@public/home-7.png";
-import { twMerge } from "tailwind-merge";
+'use client';
+import { Flex, Typography } from 'antd';
+import IconFrame from '../icon-frame';
+import Image from 'next/image';
+import home7Svg from '@public/home-7.svg';
+import home7Png from '@public/home-7.png';
+import { twMerge } from 'tailwind-merge';
 const { Title, Paragraph } = Typography;
 
 const mainFeatures = [
     {
-        src: "/home-1.png",
-        alt: "home icon 1",
-        title: "Luyện từng dạng bài tập",
+        src: '/home-1.png',
+        alt: 'home icon 1',
+        title: 'Luyện từng dạng bài tập',
         description:
-            "Cung cấp kho bài tập khổng lồ tự các nguồn chính thống và do AI tạo ra",
+            'Cung cấp kho bài tập khổng lồ tự các nguồn chính thống và do AI tạo ra',
     },
     {
-        src: "/home-2.svg",
-        alt: "home icon 2",
-        title: "Chatbox với Tia",
+        src: '/home-2.svg',
+        alt: 'home icon 2',
+        title: 'Chatbox với Tia',
         description:
-            "Tia hỗ trợ giải đáp các câu hỏi, dịch nghĩa từ cùng vô vàn những sự hỗ trợ khác như đánh giá quá trình học tập của bạn",
+            'Tia hỗ trợ giải đáp các câu hỏi liên quan tới Tiếng Anh cùng vô vàn những sự hỗ trợ khác',
     },
     {
-        src: "/home-3.svg",
-        alt: "home icon 3",
-        title: "Paraphrase",
+        src: '/home-3.svg',
+        alt: 'home icon 3',
+        title: 'Paraphrase',
         description:
-            "Hỗ trợ viết lại câu hoặc đoạn văn bằng từ ngữ, ngữ pháp, và cấu trúc câu khác những vẫn giữ nguyên ý nghĩa câu",
+            'Hỗ trợ viết lại câu hoặc đoạn văn bằng từ ngữ, ngữ pháp, và cấu trúc câu khác những vẫn giữ nguyên ý nghĩa câu',
     },
     {
-        src: "/home-4.png",
-        alt: "home icon 4",
-        title: "Luyện đề thi",
+        src: '/home-4.png',
+        alt: 'home icon 4',
+        title: 'Luyện đề thi',
         description:
-            "Đề thi THPTQG với trải nghiệm thi thật và kho đề chính thống và do AI tạo ra kèm giải thích chi tiết",
+            'Đề thi THPTQG với trải nghiệm thi thật và kho đề chính thống và do AI tạo ra kèm giải thích chi tiết',
     },
     {
-        src: "/home-5.svg",
-        alt: "home icon 5",
-        title: "Flashcard",
+        src: '/home-5.svg',
+        alt: 'home icon 5',
+        title: 'Flashcard',
         description:
-            "Cung cấp mỗi ngày 10 từ vựng cho bạn bằng phương pháp Flashcard",
+            'Cung cấp mỗi ngày 10 từ vựng cho bạn bằng phương pháp Flashcard',
     },
     {
-        src: "/home-6.svg",
-        alt: "home icon 6",
-        title: "Dịch từ",
+        src: '/home-6.svg',
+        alt: 'home icon 6',
+        title: 'Dịch thuật',
         description:
-            "Hỗ trợ dịch ngôn ngữ Anh-Việt, cung cấp đầy đủ phát âm, loại từ, ví dụ đi kèm,...",
+            'Hỗ trợ dịch ngôn ngữ Anh-Việt, cung cấp đầy đủ loại từ, ví dụ đi kèm,... ',
     },
 ];
 
-const FeaturesBox = ({ className = "" }: Readonly<{ className?: string }>) => {
+const FeaturesBox = ({ className = '' }: Readonly<{ className?: string }>) => {
     return (
         <Flex
-            className={twMerge("relative mb-20 justify-center p-8", className)}
+            className={twMerge('relative mb-20 justify-center p-8', className)}
         >
             <div className="max-h-[26.75rem] max-w-[89.5rem] rounded-xl bg-[rgba(83,105,161,0.7)] p-8">
                 <div className="relative mb-28 content-center text-center text-5xl font-black text-[#050C26]">
@@ -65,7 +65,7 @@ const FeaturesBox = ({ className = "" }: Readonly<{ className?: string }>) => {
                     <Title className="!absolute !left-[38%]">
                         <span className="!font-chango !font-normal !text-[#F5F6FC]">
                             tiawai
-                        </span>{" "}
+                        </span>{' '}
                         <b>có gì</b>
                     </Title>
                 </div>

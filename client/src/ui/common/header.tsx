@@ -45,11 +45,11 @@ const userItems: MenuItem[] = [
         key: 'home',
     },
     {
-        label: <Link href="/exam">Đề luyện thi</Link>,
+        label: <Link href="/exam">Đề thi</Link>,
         key: 'exam',
     },
     {
-        label: <Link href="/practice">Luyện tập</Link>,
+        label: <Link href="/practice">Chuyên đề</Link>,
         key: 'practice',
     },
     {
