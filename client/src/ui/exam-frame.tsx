@@ -1,7 +1,8 @@
 "use client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Flex, Space, Button, Typography } from "antd";
 import IconFrame from "./icon-frame";
-import Image from "next/image";
 import { Exam } from "@/types/exam";
 const { Text, Title } = Typography;
 
@@ -23,12 +24,14 @@ const ExamFrame = ({
     theme?: "pink" | "blue";
     examData: Exam;
 }>) => {
+    const router = useRouter();
     const iconSrc = theme === "pink" ? "/home-8.svg" : "/home-4.png";
     const iconAlt = theme === "pink" ? "home icon 8" : "home icon 4";
     const bgColor = theme === "pink" ? "#E9DAE9" : "#DAE3E9";
     const objColor = theme === "pink" ? "#4D2C5E" : "#2C2F5E";
     const size = theme === "pink" ? 100 : 62;
     const { title, duration, totalAttempts } = examData;
+
     return (
         <Flex
             className="gap-3 !rounded-xl !py-4 px-3"
@@ -76,7 +79,7 @@ const ExamFrame = ({
                         shape="round"
                         type="primary"
                         size="small"
-                        href="exam/1"
+                        onClick={() => router.push(`/exam/${examData.id}`)}
                     >
                         Xem bài test
                     </Button>
