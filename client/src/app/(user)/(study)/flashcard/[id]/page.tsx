@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import FlashcardSlider from "./flashcard-slider";
-import { CarryOutOutlined, LeftOutlined } from "@ant-design/icons";
-import { useParams } from "next/navigation";
-import { Row, Col } from "antd";
+import Link from 'next/link';
+import FlashcardSlider from './flashcard-slider';
+import { CarryOutOutlined, LeftOutlined } from '@ant-design/icons';
+import { useParams } from 'next/navigation';
+import { Row, Col } from 'antd';
 
 import {
     flashcardsScience,
@@ -13,37 +13,37 @@ import {
     flashcardsIT,
     flashcardsLiterature,
     flashcardsCulture,
-} from "./flashcards";
+} from './flashcards';
 
 export default function FlashCardItemPage() {
     const { id } = useParams();
     const decodedId = id
         ? decodeURIComponent(Array.isArray(id) ? id[0] : id)
-        : "Unknown";
+        : 'Unknown';
 
     const data = [
         {
-            topic: "Khoa học",
+            topic: 'Khoa học',
             words: flashcardsScience,
         },
         {
-            topic: "Nghiên cứu",
+            topic: 'Nghiên cứu',
             words: flashcardsResearch,
         },
         {
-            topic: "Văn phòng",
+            topic: 'Văn phòng',
             words: flashcardsOffice,
         },
         {
-            topic: "IT",
+            topic: 'Công nghệ',
             words: flashcardsIT,
         },
         {
-            topic: "Văn học",
+            topic: 'Văn học',
             words: flashcardsLiterature,
         },
         {
-            topic: "Văn hóa",
+            topic: 'Văn hóa',
             words: flashcardsCulture,
         },
     ];

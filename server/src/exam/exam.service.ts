@@ -28,6 +28,7 @@ export class ExamService {
         testId: number,
     ): Promise<
         {
+            testId: number;
             pts: number;
             timeConsumed: string;
             submitAt: Date;
@@ -53,6 +54,7 @@ export class ExamService {
             const test = await this.testModel.findByPk(testId);
             const questions = test.questions;
             const formattedSubmissions: {
+                testId: number;
                 pts: number;
                 timeConsumed: string;
                 submitAt: Date;
@@ -78,6 +80,7 @@ export class ExamService {
                 const submitAt = submission.submitAt;
 
                 formattedSubmissions.push({
+                    testId,
                     pts,
                     timeConsumed,
                     submitAt,
@@ -115,7 +118,6 @@ export class ExamService {
             });
             return publicTests;
         } catch (error) {
-            console.log(error.message);
             throw new InternalServerErrorException(
                 'Failed to get all exams',
                 error.message,

@@ -31,7 +31,7 @@ const topics = [
         image: officeImage,
     },
     {
-        title: 'IT',
+        title: 'Công nghệ',
         image: itImage,
     },
     {
@@ -101,18 +101,18 @@ export default function FlashCardPage() {
                     className="h-[5rem] min-w-[31.25rem] rounded-xl bg-[#DBE3F8] font-roboto text-3xl font-medium transition-all duration-300 ease-in-out hover:scale-110"
                     onClick={showModal}
                 >
-                    Tạo Flashcard từ đoạn văn của bạn
+                    Tạo Flashcard từ văn bản
                 </button>
                 <Modal
                     open={isModalOpen}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     style={{ top: 300 }}
-                    title="Tạo Flashcard từ đoạn văn của bạn"
+                    title="Tạo Flashcard từ văn bản"
                     confirmLoading={isCreatingFlashcard}
                 >
                     <TextArea
-                        placeholder="Nhập văn bản của bạn"
+                        placeholder="Nhập văn bản"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         autoSize={{ minRows: 3, maxRows: 10 }}

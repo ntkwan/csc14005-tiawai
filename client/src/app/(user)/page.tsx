@@ -58,7 +58,9 @@ export default function Home() {
     ];
 
     return (
-        <main className="flex flex-col items-center justify-center">
+        <main
+            className={`flex select-none flex-col items-center justify-center`}
+        >
             <Image
                 className="absolute bottom-0 left-0 right-0 top-0 -z-50 max-h-[3100px] w-svw"
                 src={homeGradientBg}
