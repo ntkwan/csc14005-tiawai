@@ -1,47 +1,44 @@
 "use client";
 import { Table, Typography } from "antd";
+import { useGetSubmissionsQuery } from "@/services/exam";
 const { Title } = Typography;
 
 const columns = [
     {
         title: "Ngày làm",
-        dataIndex: "date",
-        key: "date",
+        dataIndex: "submitAt",
+        key: "submitAt",
+        render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
         title: "Kết quả",
-        dataIndex: "result",
-        key: "result",
+        dataIndex: "pts",
+        key: "pts",
     },
     {
         title: "Thời gian làm bài",
-        dataIndex: "duration",
-        key: "duration",
+        dataIndex: "timeConsumed",
+        key: "timeConsumed",
     },
     {
         title: "",
         dataIndex: "details",
         key: "details",
-        render: () => <a>Xem chi tiết</a>,
+        render: () => <p>Xem chi tiết</p>,
     },
 ];
 
-export const ExamHistory = () => {
-    const dataSource = [
-        {
-            key: "1",
-            date: "2023-10-01",
-            result: "80%",
-            duration: "45 phút",
-            details: "Xem chi tiết",
-        },
-    ];
+export const ExamHistory = ({ id }: { id: number }) => {
+    const { data, isLoading } = useGetSubmissionsQuery(id);
+    if (isLoading) return null;
+
     return (
         <>
             <Title level={5}>Kết quả làm bài của bạn:</Title>
             <Table
                 size="large"
-                dataSource={dataSource}
+                rowKey={(record) => record.submissionId || ""}
+                dataSource={data || []}
                 columns={columns}
                 pagination={false}
             />

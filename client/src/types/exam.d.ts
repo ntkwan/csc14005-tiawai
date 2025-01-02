@@ -30,6 +30,7 @@ export interface Exam {
 
 interface ExamResult {
     score: number;
+    submissionId?: string;
     totalQuestions: number;
     questions: Question[];
     correctAnswers: number;
