@@ -74,16 +74,7 @@ export default function NextAuthWrapper({
             }
         }
         setLoading(false);
-    }, [
-        signOut,
-        dispatch,
-        session,
-        store,
-        appApi,
-        auth.user,
-        auth.refreshToken,
-        status,
-    ]);
+    }, [signOut, dispatch, session, auth.user, auth.refreshToken, status]);
 
     if (loading) return null;
 

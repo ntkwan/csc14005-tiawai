@@ -20,5 +20,5 @@ export const appApi = createApi({
     reducerPath: "appApi",
     baseQuery: baseQuery,
     endpoints: () => ({}),
-    tagTypes: ["Auth", "Exam", "Chat", "Flashcard"],
+    tagTypes: ["Auth", "Exam", "History", "Chat", "Flashcard"],
 });
