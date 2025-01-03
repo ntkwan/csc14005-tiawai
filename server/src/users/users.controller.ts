@@ -11,7 +11,10 @@ import { ATAuthGuard } from '../auth/guards/at-auth.guard';
 import { ApiResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { ProfileEntity } from '../auth/entities/creds.entity';
 import { UsersService } from './users.service';
-import { UserStatsEntity } from './entities/user-stats.entity';
+import {
+    UserHistoryExams,
+    UserStatsEntity,
+} from './entities/user-stats.entity';
 import { UserStatsDto } from './dtos/user-stat.dto';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
@@ -80,5 +83,21 @@ export class UsersController {
             specializedExamPracticeCount: stats.specializedExamPracticeCount,
             vocabsPracticeCount: stats.vocabsPracticeCount,
         });
+    }
+
+    @ApiOperation({ summary: 'Get history of exams [USER]' })
+    @Get('history/exams')
+    @ApiResponse({
+        status: 200,
+        description: 'Get history of exams successfully',
+        type: UserHistoryExams,
+    })
+    @ApiBearerAuth('access-token')
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @Roles(Role.USER)
+    @HttpCode(200)
+    async getHistoryExams(@Request() req: any, @Res() res: Response) {
+        const historyExams = await this.userService.getHistoryExams(req.user);
+        res.send(historyExams);
     }
 }
