@@ -35,6 +35,7 @@ const examApi = appApi.injectEndpoints({
                 method: "POST",
                 body: body,
             }),
+            invalidatesTags: ["History"],
         }),
 
         getSubmissions: builder.query<ExamResult[], number>({

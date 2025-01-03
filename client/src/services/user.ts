@@ -1,4 +1,5 @@
 import { appApi } from "@/services/config";
+import { UserHistoryExam } from "@/types/exam";
 
 const userApi = appApi.injectEndpoints({
     overrideExisting: true,
@@ -18,7 +19,19 @@ const userApi = appApi.injectEndpoints({
             }),
             providesTags: ["Auth"],
         }),
+
+        getHistoryExams: builder.query<UserHistoryExam[], void>({
+            query: () => ({
+                url: "/user/history/exams",
+                method: "GET",
+            }),
+            providesTags: ["Auth", "History"],
+        }),
     }),
 });
 
-export const { useGetMyProfileQuery, useGetMyStatisticsQuery } = userApi;
+export const {
+    useGetMyProfileQuery,
+    useGetMyStatisticsQuery,
+    useGetHistoryExamsQuery,
+} = userApi;
