@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Row, Col, Typography, Input, Modal, Space } from 'antd';
+import { Row, Col, Typography, Input, Modal, Space, Skeleton } from 'antd';
 import { twMerge } from 'tailwind-merge';
 import fcBannerImage from '@public/flashcard/banner-img.png';
 import scienceImage from '@public/flashcard/science.png';
@@ -11,13 +11,19 @@ import officeImage from '@public/flashcard/office.png';
 import itImage from '@public/flashcard/it.png';
 import literatureImage from '@public/flashcard/literature.png';
 import cultureImage from '@public/flashcard/culture.png';
+import heartImage from '@public/flashcard/heart.png';
 import Banner from '@/app/(user)/(study)/_ui/banner';
 import { BannerTitle } from '@/ui/common/title';
 import { useState } from 'react';
-import { useCreateFlashcardMutation } from '@/services/flashcard';
+import {
+    useCreateFlashcardMutation,
+    useGetAllFlashcardTopicsQuery,
+} from '@/services/flashcard';
+import { Flashcard } from '@/types/flashcard';
 const { TextArea } = Input;
 const { Title } = Typography;
-const topics = [
+
+const defaultTopics = [
     {
         title: 'Khoa học',
         image: scienceImage,
@@ -49,6 +55,9 @@ export default function FlashCardPage() {
     const [text, setText] = useState('');
     const [createFlashcard, { isLoading: isCreatingFlashcard }] =
         useCreateFlashcardMutation();
+    const { data: topics, isLoading: isGettingTopics } =
+        useGetAllFlashcardTopicsQuery({});
+    console.log(topics);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -70,7 +79,9 @@ export default function FlashCardPage() {
         setText('');
         setIsModalOpen(false);
     };
-
+    if (isGettingTopics) {
+        return <Skeleton />;
+    }
     return (
         <Space direction="vertical" className="select-none" size={60}>
             <Banner>
@@ -95,14 +106,12 @@ export default function FlashCardPage() {
                         </b>
                     </i>
                 </Title>
-
                 <button
                     className="h-[5rem] min-w-[31.25rem] rounded-xl bg-[#DBE3F8] font-roboto text-3xl font-medium transition-all duration-300 ease-in-out hover:scale-110"
                     onClick={showModal}
                 >
                     Tạo Flashcard từ văn bản
                 </button>
-
                 <Modal
                     open={isModalOpen}
                     onOk={handleOk}
@@ -118,14 +127,45 @@ export default function FlashCardPage() {
                         autoSize={{ minRows: 3, maxRows: 10 }}
                     />
                 </Modal>
-
+                <Col span={24}>
+                    <Title>Flashcard của bạn</Title>
+                </Col>
+                <Col span={24} className="mb-12">
+                    <div className="grid grid-cols-3 justify-items-center gap-12">
+                        {topics &&
+                            topics.map(
+                                (topic: Flashcard, index: number) => (
+                                    console.log(topic),
+                                    (
+                                        <Link
+                                            className="relative m-auto aspect-[2/1.5] w-full max-w-xl grow content-center rounded-xl bg-[#DBE3F8] text-center"
+                                            href={`/flashcard/${encodeURIComponent(topic.topic)}`}
+                                            key={index}
+                                        >
+                                            <Title level={2}>
+                                                {topic.topic}
+                                            </Title>
+                                            <div className="relative m-auto aspect-square w-2/5 content-center rounded-3xl bg-white/50 p-4">
+                                                <Image
+                                                    className="m-auto aspect-square"
+                                                    src={heartImage}
+                                                    alt="tiawai chatbot icon"
+                                                    width={50}
+                                                    height={50}
+                                                />
+                                            </div>
+                                        </Link>
+                                    )
+                                ),
+                            )}
+                    </div>
+                </Col>
                 <Col span={24}>
                     <Title>Các chủ đề</Title>
                 </Col>
-
                 <Col span={24}>
                     <div className="grid grid-cols-3 justify-items-center gap-12">
-                        {topics.map((topic, index) => (
+                        {defaultTopics.map((topic, index) => (
                             <Link
                                 className={twMerge(
                                     'relative m-auto aspect-[2/1.5] w-full max-w-xl grow content-center rounded-xl text-center',

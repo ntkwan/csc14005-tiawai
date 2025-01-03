@@ -16,14 +16,33 @@ export class FlashcardService {
         private configService: ConfigService,
     ) {}
 
-    async findAll(user: User) {
+    async findAllTopics(user: User) {
         try {
             const userId: string = user.id;
             return this.flashcardModel.findAll({
                 where: {
                     userId,
                 },
+                attributes: ['topic'],
                 order: [['uploadAt', 'DESC']],
+            });
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Failed to get flashcards',
+                error.message,
+            );
+        }
+    }
+
+    async findFlashcardsByTopic(topic: string, user: User) {
+        try {
+            const userId: string = user.id;
+            return this.flashcardModel.findOne({
+                where: {
+                    userId,
+                    topic,
+                },
+                attributes: ['flashcards'],
             });
         } catch (error) {
             throw new InternalServerErrorException(

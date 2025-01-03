@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, Button, Progress, Typography } from "antd";
+import { useState } from 'react';
+import { Card, Button, Progress, Typography } from 'antd';
 import {
     LeftOutlined,
     RightOutlined,
     UpOutlined,
     DownOutlined,
-} from "@ant-design/icons";
-import { twMerge } from "tailwind-merge";
+} from '@ant-design/icons';
+import { twMerge } from 'tailwind-merge';
 const { Title } = Typography;
 
 export default function FlashcardSlider({
@@ -17,7 +17,7 @@ export default function FlashcardSlider({
     flashcards: {
         word: string;
         meaning: string;
-        partOfSpeech: string; // Lưu ý: "partOfSpeech" viết hoa P và O
+        wordType: string;
     }[];
 }) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -66,7 +66,7 @@ export default function FlashcardSlider({
                     />
                     <Button
                         className={twMerge(
-                            "!absolute !bottom-0 !left-1/2 !h-12 !w-12 !-translate-x-1/2 !translate-y-1/2",
+                            '!absolute !bottom-0 !left-1/2 !h-12 !w-12 !-translate-x-1/2 !translate-y-1/2',
                         )}
                         size="large"
                         icon={showMeaning ? <DownOutlined /> : <UpOutlined />}
@@ -91,17 +91,17 @@ export default function FlashcardSlider({
                     >
                         <Title
                             className="text-center"
-                            style={{ color: "white" }}
+                            style={{ color: 'white' }}
                             level={3}
                         >
                             {flashcards[currentIndex].meaning}
                         </Title>
                         <Title
                             className="text-center"
-                            style={{ color: "white" }}
+                            style={{ color: 'white' }}
                             level={5}
                         >
-                            ({flashcards[currentIndex].partOfSpeech})
+                            ({flashcards[currentIndex].wordType.trim()})
                         </Title>
                     </Card>
                 )}
@@ -133,16 +133,16 @@ const Flashcard = ({
     return (
         <Card
             className={twMerge(
-                "!relative !aspect-square !content-center !rounded-3xl !bg-[#4d2c5e]",
-                (position === "right" || position === "left") &&
-                    "!w-4/5 !bg-opacity-70",
-                position === "middle" && "!w-full",
-                isHidden && "!select-none !opacity-0",
+                '!relative !aspect-square !content-center !rounded-3xl !bg-[#4d2c5e]',
+                (position === 'right' || position === 'left') &&
+                    '!w-4/5 !bg-opacity-70',
+                position === 'middle' && '!w-full',
+                isHidden && '!select-none !opacity-0',
             )}
         >
             <h2
                 className="min-w-0 text-center text-4xl leading-none"
-                style={{ color: "white" }}
+                style={{ color: 'white' }}
             >
                 {word}
             </h2>

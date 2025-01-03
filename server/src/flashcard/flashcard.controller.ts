@@ -16,6 +16,7 @@ import {
     Body,
     Request,
     Get,
+    Param,
 } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -49,19 +50,35 @@ export class FlashcardController {
     }
 
     @ApiOperation({
-        summary: 'Get all flashcards [USER]',
+        summary: 'Get all topics [USER]',
     })
     @ApiResponse({
         status: 200,
-        description: 'Get all flashcards successfully',
-        type: FlashcardEntity,
+        description: 'Get all topics successfully',
     })
     @HttpCode(200)
     @UseGuards(ATAuthGuard, RolesGuard)
     @ApiBearerAuth('access-token')
     @Roles(Role.USER)
     @Get()
-    async getAll(@Request() req: any) {
-        return this.flashcardService.findAll(req.user);
+    async getAllTopics(@Request() req: any) {
+        return this.flashcardService.findAllTopics(req.user);
+    }
+
+    @ApiOperation({
+        summary: 'Get flashcards by topic [USER]',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Get flashcards by topic successfully',
+        type: FlashcardEntity,
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.USER)
+    @Get(':topic')
+    async getByTopic(@Request() req: any, @Param('topic') topic: string) {
+        return this.flashcardService.findFlashcardsByTopic(topic, req.user);
     }
 }

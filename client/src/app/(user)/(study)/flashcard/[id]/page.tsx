@@ -4,8 +4,7 @@ import Link from 'next/link';
 import FlashcardSlider from './flashcard-slider';
 import { CarryOutOutlined, LeftOutlined } from '@ant-design/icons';
 import { useParams } from 'next/navigation';
-import { Row, Col } from 'antd';
-
+import { Row, Col, Skeleton } from 'antd';
 import {
     flashcardsScience,
     flashcardsResearch,
@@ -14,42 +13,56 @@ import {
     flashcardsLiterature,
     flashcardsCulture,
 } from './flashcards';
+import { useGetFlashcardsByTopicQuery } from '@/services/flashcard';
+
+const data = [
+    {
+        topic: 'Khoa học',
+        words: flashcardsScience,
+    },
+    {
+        topic: 'Nghiên cứu',
+        words: flashcardsResearch,
+    },
+    {
+        topic: 'Văn phòng',
+        words: flashcardsOffice,
+    },
+    {
+        topic: 'Công nghệ',
+        words: flashcardsIT,
+    },
+    {
+        topic: 'Văn học',
+        words: flashcardsLiterature,
+    },
+    {
+        topic: 'Văn hóa',
+        words: flashcardsCulture,
+    },
+];
 
 export default function FlashCardItemPage() {
     const { id } = useParams();
+    const { data: userFlashcards, isLoading } = useGetFlashcardsByTopicQuery(
+        id,
+        {
+            skip: !id,
+        },
+    );
+
     const decodedId = id
         ? decodeURIComponent(Array.isArray(id) ? id[0] : id)
         : 'Unknown';
 
-    const data = [
-        {
-            topic: 'Khoa học',
-            words: flashcardsScience,
-        },
-        {
-            topic: 'Nghiên cứu',
-            words: flashcardsResearch,
-        },
-        {
-            topic: 'Văn phòng',
-            words: flashcardsOffice,
-        },
-        {
-            topic: 'Công nghệ',
-            words: flashcardsIT,
-        },
-        {
-            topic: 'Văn học',
-            words: flashcardsLiterature,
-        },
-        {
-            topic: 'Văn hóa',
-            words: flashcardsCulture,
-        },
-    ];
+    if (isLoading) {
+        return <Skeleton />;
+    }
+    const defaultFlashcards = data.find(
+        (item) => item.topic === decodedId,
+    )?.words;
 
-    const flashcards = data.find((item) => item.topic === decodedId)?.words;
-
+    const flashcards = userFlashcards?.flashcards || defaultFlashcards;
     return (
         <div className="bg-[url('/home-icon-bg.svg')]">
             <Row gutter={[0, 40]}>
