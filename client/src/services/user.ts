@@ -8,12 +8,15 @@ const userApi = appApi.injectEndpoints({
                 url: "/user",
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
+
         getMyStatistics: builder.query({
             query: () => ({
                 url: "/user/exam",
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
     }),
 });

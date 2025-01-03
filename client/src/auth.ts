@@ -63,33 +63,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         role: decoded?.role,
                     },
                 };
-            } else {
-                if (Date.now() < (decoded?.exp || 0) * 1000 - 300) {
+            }
+
+            if (Date.now() >= (decoded?.exp || 0) * 1000) {
+                const res = await handleRefreshToken(token.refreshToken);
+                if (!res) {
                     return {
                         ...token,
                         iat: decoded.iat,
                         exp: decoded.exp,
                     };
-                } else {
-                    const res = await handleRefreshToken(token.refreshToken);
-                    if (!res) return token;
-                    if (res?.error) {
-                        token.error = "RefreshTokenError";
-                        return token;
-                    }
-
-                    const { accessToken, refreshToken } = res as User;
-                    const newDecoded = jwtDecode(accessToken);
-
-                    return {
-                        ...token,
-                        accessToken,
-                        refreshToken,
-                        iat: newDecoded.iat,
-                        exp: newDecoded.exp,
-                    };
                 }
+
+                if (res?.error) {
+                    token.error = "RefreshTokenError";
+                    return token;
+                }
+
+                const { accessToken, refreshToken } = res as User;
+                const newDecoded = jwtDecode(accessToken);
+
+                return {
+                    ...token,
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                    iat: newDecoded.iat,
+                    exp: newDecoded.exp,
+                };
             }
+
+            return {
+                ...token,
+                iat: decoded.iat,
+                exp: decoded.exp,
+            };
         },
         async session({ session, token }: { session: Session; token: JWT }) {
             const decoded = jwtDecode(token.refreshToken);

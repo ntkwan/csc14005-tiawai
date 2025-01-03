@@ -25,7 +25,7 @@ const chatApi = appApi.injectEndpoints({
                 url: `/messages/${sessionId}`,
                 method: "GET",
             }),
-            providesTags: ["Chat"],
+            providesTags: ["Auth", "Chat"],
         }),
 
         createSession: builder.mutation({

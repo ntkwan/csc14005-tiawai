@@ -40,7 +40,8 @@ export default auth((req: any) => {
     const pathname =
         req.nextUrl.pathname === "/" ? "/home" : req.nextUrl.pathname;
 
-    const role: Role = user ? (user?.role as Role) : "guest";
+    const role: Role = (user && (user?.role as Role)) || "guest";
+
     if (role === "guest") {
         const valid = protectedRoutes[role]?.validRoutes;
         if (valid) {
@@ -51,7 +52,6 @@ export default auth((req: any) => {
             }
         }
     }
-
     const isProtected = protectedRoutes[role].invalidRoutes.some((route) =>
         pathname.startsWith(route),
     );

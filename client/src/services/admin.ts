@@ -10,6 +10,7 @@ const adminApi = appApi.injectEndpoints({
                 url: "/user/users",
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
 
         createExam: builder.mutation({
@@ -26,6 +27,7 @@ const adminApi = appApi.injectEndpoints({
                 url: "/exam/admin/exams",
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
 
         deleteExamById: builder.mutation({

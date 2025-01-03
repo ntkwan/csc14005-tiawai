@@ -10,7 +10,7 @@ const examApi = appApi.injectEndpoints({
                 url: "/exam",
                 method: "GET",
             }),
-            providesTags: ["Exam"],
+            providesTags: ["Auth", "Exam"],
         }),
 
         getExamPractices: builder.query<Exam[], void>({
@@ -18,7 +18,7 @@ const examApi = appApi.injectEndpoints({
                 url: "/exam/practices",
                 method: "GET",
             }),
-            providesTags: ["Exam"],
+            providesTags: ["Auth", "Exam"],
         }),
 
         getExamById: builder.query<Exam, number>({
@@ -26,6 +26,7 @@ const examApi = appApi.injectEndpoints({
                 url: `/exam/${id}`,
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
 
         submitExam: builder.mutation({
@@ -41,6 +42,7 @@ const examApi = appApi.injectEndpoints({
                 url: `/exam/${id}/submissions`,
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
 
         getExamResult: builder.query<
@@ -57,6 +59,7 @@ const examApi = appApi.injectEndpoints({
                 url: `/exam/${id}/result/${submissionId}`,
                 method: "GET",
             }),
+            providesTags: ["Auth"],
         }),
     }),
 });

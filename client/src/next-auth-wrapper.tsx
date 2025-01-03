@@ -8,6 +8,8 @@ import { useAppSelector } from "@/lib/hooks/hook";
 import { setCridentials } from "@/lib/slices/auth";
 import { handleRefreshToken } from "@/services/auth";
 import { User } from "next-auth";
+import { appApi } from "@/services/config";
+import { store } from "@/lib/store/store";
 
 export default function NextAuthWrapper({
     children,
@@ -16,9 +18,10 @@ export default function NextAuthWrapper({
 }) {
     const dispatch = useAppDispatch();
     const [loading, setLoading] = useState<boolean>(false);
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [signOut] = useSignOutMutation();
     const auth = useAppSelector((state) => state.auth);
+    const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
     useEffect(() => {
         const handleSignOut = async () => {
@@ -36,28 +39,45 @@ export default function NextAuthWrapper({
             }
         };
 
+        setLoading(true);
+        if (status === "loading") return;
         if (session?.error === "RefreshTokenError" || session === null) {
+            setLoading(false);
             if (auth.user) {
+                setRefreshToken(null);
                 handleSignOut();
             }
         } else {
-            setLoading(true);
             if (
                 session?.user &&
                 session?.accessToken &&
                 session?.refreshToken
             ) {
-                dispatch(
-                    setAuthState({
-                        user: session.user,
-                        accessToken: session.accessToken,
-                        refreshToken: session.refreshToken,
-                    }),
-                );
+                if (session.refreshToken !== refreshToken) {
+                    setRefreshToken(session.refreshToken);
+                    dispatch(
+                        setAuthState({
+                            user: session.user,
+                            accessToken: session.accessToken,
+                            refreshToken: session.refreshToken,
+                        }),
+                    );
+                    store.dispatch(appApi.util.invalidateTags(["Auth"]));
+                }
             }
-            setLoading(false);
         }
-    }, [signOut, dispatch, session, auth.user, auth.refreshToken]);
+        setLoading(false);
+    }, [
+        signOut,
+        dispatch,
+        session,
+        store,
+        appApi,
+        auth.user,
+        auth.refreshToken,
+        refreshToken,
+        status,
+    ]);
 
     if (loading) return null;
 
