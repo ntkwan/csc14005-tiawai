@@ -1,127 +1,42 @@
-'use client';
-import Image from 'next/image';
-import { Flex, Space, Typography } from 'antd';
-import Banner from '@/app/(user)/(study)/_ui/banner';
-import TestBox from '@/app/(user)/(study)/_ui/test-box';
-import bigTiawai2 from '@public/big-tiawai-2.svg';
-import { BannerTitle } from '@/ui/common/title';
+"use client";
+import Image from "next/image";
+import { Flex, Space, Typography } from "antd";
+import Banner from "@/app/(user)/(study)/_ui/banner";
+import TestBox from "@/app/(user)/(study)/_ui/test-box";
+import bigTiawai2 from "@public/big-tiawai-2.svg";
+import { BannerTitle } from "@/ui/common/title";
+import { useGetExamsQuery } from "@/services/exam";
 const { Title } = Typography;
 
-const testsData = [
-    {
-        title: 'Bộ Đề Minh Họa THPTQG Mới Nhất',
-        description:
-            'Bộ đề THPT Quốc gia môn Anh minh họa của Bộ Giáo dục và Đào tạo các năm gần đây. Ôn luyện để nắm vững format đề thi, các dạng bài thường xuyên xuất hiện.',
-        examData: [
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Bộ Đề Thi Chính Thức Các Năm Mới Nhất',
-        description:
-            'Luyện đề thi thực chiến các năm để nâng cao kiến thức, trau dồi vốn từ, luyện nhuần nhuyễn chiến thuật làm bài thông minh.',
-        examData: [
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Bộ Đề Thi Thử Các Trường Nổi Tiếng Mới Nhất',
-        description:
-            'Bộ đề thi THPT Quốc gia môn Anh được chọn lọc tỉ mỉ, công phu nhất. Ôn luyện để nắm chắc format đề thi, trau dồi đủ kiến thức, giúp các sĩ tử tự tin chinh phục điểm số mục tiêu.',
-        examData: [
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-];
-
 const Exam = () => {
+    const { data, isLoading } = useGetExamsQuery();
+    if (isLoading) return;
+
+    const testsData = [
+        {
+            title: "Bộ Đề Minh Họa THPTQG Mới Nhất",
+            description:
+                "Bộ đề THPT Quốc gia môn Anh minh họa của Bộ Giáo dục và Đào tạo các năm gần đây. Ôn luyện để nắm vững format đề thi, các dạng bài thường xuyên xuất hiện.",
+            examData: data?.filter((exam) =>
+                exam.title?.toLocaleLowerCase().includes("minh họa"),
+            ),
+        },
+        {
+            title: "Bộ Đề Thi Chính Thức Các Năm Mới Nhất",
+            description:
+                "Luyện đề thi thực chiến các năm để nâng cao kiến thức, trau dồi vốn từ, luyện nhuần nhuyễn chiến thuật làm bài thông minh.",
+            examData: data?.filter((exam) =>
+                exam.title?.includes("chính thức"),
+            ),
+        },
+        {
+            title: "Bộ Đề Thi Thử Các Trường Nổi Tiếng Mới Nhất",
+            description:
+                "Bộ đề thi THPT Quốc gia môn Anh được chọn lọc tỉ mỉ, công phu nhất. Ôn luyện để nắm chắc format đề thi, trau dồi đủ kiến thức, giúp các sĩ tử tự tin chinh phục điểm số mục tiêu.",
+            examData: data?.filter((exam) => exam.title?.includes("thử")),
+        },
+    ];
+
     return (
         <div className="select-none space-y-20">
             <Banner>
@@ -141,11 +56,11 @@ const Exam = () => {
                 <Space size="large">
                     <Title className="!font-normal" level={2}>
                         <i>
-                            Luyện tập <b>trọn bộ</b> vói các dạng đề{' '}
+                            Luyện tập <b>trọn bộ</b> vói các dạng đề{" "}
                             <b>
                                 chính thức, minh họa và thi thử THPT Quốc gia
                                 của các trường nổi tiếng
-                            </b>{' '}
+                            </b>{" "}
                             qua các năm.
                         </i>
                     </Title>
