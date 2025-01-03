@@ -12,13 +12,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { Role } from '../auth/enums/roles.enum';
 import { SubmissionService } from 'src/exam/submission/submission.service';
 import { UserStatsDto } from './dtos/user-stat.dto';
+import { FlashcardEntity } from 'src/flashcard/entities/flashcard.entity';
+import { FlashcardService } from 'src/flashcard/flashcard.service';
+import { ExamService } from 'src/exam/exam.service';
+import { TestEntity } from 'src/exam/entities/exam.entity';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User)
+        @InjectModel(FlashcardEntity)
+        @InjectModel(TestEntity)
         private readonly userModel: typeof User,
+        private flashcardService: FlashcardService,
         private submissionService: SubmissionService,
+        private examService: ExamService,
         private configService: ConfigService,
     ) {}
 
@@ -36,10 +44,16 @@ export class UsersService {
                 ).values(),
             );
 
+            const flashcards =
+                await this.flashcardService.findAllTopics(profileUser);
+
+            const practices =
+                await this.examService.privateFindAllPractice(profileUser);
+
             return {
                 examPracticeCount: uniqueUserSubmissions.length,
-                specializedExamPracticeCount: -1,
-                vocabsPracticeCount: -1,
+                specializedExamPracticeCount: practices.length,
+                vocabsPracticeCount: flashcards.length,
             };
         } catch (error) {
             throw new InternalServerErrorException(

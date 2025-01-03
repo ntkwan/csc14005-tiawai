@@ -14,9 +14,7 @@ const keyMap: { [key: string]: string } = {
     birthday: 'Ngày sinh',
     address: 'Địa chỉ',
     examTaken: 'Số đề thi đã làm',
-    practiceTaken: 'Số đề luyện tập đã làm',
-    examGenByAI: 'Số đề thi đã tạo bằng AI',
-    practiceByAI: 'Số đề luyện tập đã làm bằng AI',
+    practiceTaken: 'Số chuyên đề đã tạo',
     vocabularies: 'Số từ vựng đã học',
 };
 
@@ -37,9 +35,9 @@ const InfoCard = (props: InfoCardProps) => {
             bordered={true}
         >
             <div className="mb-8">
-                <span className="rounded-full bg-[#DAE3E9] px-12 py-[6px] text-lg font-bold">
+                <p className="m-auto w-max rounded-full bg-[#DAE3E9] px-12 py-[6px] text-lg font-bold">
                     {title}
-                </span>
+                </p>
             </div>
             {!isUpdatingInfo ? (
                 Object.entries(props)

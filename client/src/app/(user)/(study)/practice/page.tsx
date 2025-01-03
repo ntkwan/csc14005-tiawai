@@ -1,159 +1,25 @@
 'use client';
 import Image from 'next/image';
-import { Flex, Space, Typography } from 'antd';
+import { Empty, Flex, Space, Typography } from 'antd';
 import GenerateButton from '@/ui/generate-button';
 import Banner from '@/app/(user)/(study)/_ui/banner';
 import TestBox from '@/app/(user)/(study)/_ui/test-box';
 import bigTiawai2 from '@public/big-tiawai-2.svg';
 import { BannerTitle } from '@/ui/common/title';
 const { Title } = Typography;
-
-const testsData = [
-    {
-        title: 'Luyện tập Phát Âm',
-        examData: [
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi minh họa THPT Quốc Gia 2023',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Luyện tập Trọng Âm',
-        examData: [
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Năm 2023 - Mã đề 401',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Luyện tập Ngữ Pháp',
-        tag: '(câu hỏi đuôi, câu bị động, giới từ, loại từ, đại từ, mạo từ, thì động từ,...)',
-        examData: [
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Luyện tập Từ Vựng',
-        tag: '(phrasal verb, idiom, collocation,word choice, đồng nghĩa - trái nghĩa...)',
-        examData: [
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Luyện tập Tình Huống Giao Tiếp',
-        examData: [
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Luyện tập Tìm Lỗi Sai',
-        examData: [
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-    {
-        title: 'Luyện tập Viết Lại Câu và Kết Hợp Câu',
-        examData: [
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-            {
-                title: 'Đề thi thử Liên Trường Nghệ An',
-                duration: 90,
-                totalAttempts: 100,
-            },
-        ],
-    },
-];
+import { useGetExamPracticesQuery } from '@/services/exam';
 
 const Practice = () => {
+    const { data: practiceData, isLoading } = useGetExamPracticesQuery();
+    if (isLoading) return null;
+
+    const testsData = [
+        {
+            title: 'Chuyên đề của bạn',
+            examData: practiceData,
+        },
+    ];
+
     return (
         <div className="select-none space-y-32">
             <Banner>
@@ -179,9 +45,20 @@ const Practice = () => {
                 </Space>
             </Flex>
             <Space direction="vertical" size={125}>
-                {testsData.map((test, index) => (
-                    <TestBox key={index} theme="blue" {...test} />
-                ))}
+                {testsData[0].examData?.length ? (
+                    testsData.map((test, index) => (
+                        <TestBox key={index} theme="blue" {...test} />
+                    ))
+                ) : (
+                    <div>
+                        <Empty
+                            className="!m-auto"
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            description="Không có dữ liệu"
+                            imageStyle={{ height: 100 }}
+                        />
+                    </div>
+                )}
             </Space>
         </div>
     );

@@ -12,6 +12,6 @@ import { ChatModule } from 'src/chat/chat.module';
     imports: [SequelizeModule.forFeature([TestEntity, Submission]), ChatModule],
     controllers: [ExamController, SubmissionController],
     providers: [ExamService, SubmissionService, AccessControlService],
-    exports: [SubmissionService],
+    exports: [SubmissionService, ExamService],
 })
 export class ExamModule {}
