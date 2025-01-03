@@ -3,7 +3,6 @@ import { Flex } from 'antd';
 import StatFrame from '@/ui/admin/stat-frame';
 import examsIcon from '@public/admin/exams.webp';
 import practicesIcon from '@public/admin/practices.webp';
-import reportsIcon from '@public/admin/reports.webp';
 import usersIcon from '@public/admin/users.webp';
 import UsersCard from '@/ui/admin/users-card';
 import ExamsCard from '@/ui/admin/exams-card';
