@@ -17,7 +17,7 @@ export default function SignUpPage() {
         const formData = form.getFieldsValue();
         const res = await SignUp(formData);
 
-        if (res.error) {
+        if (!res.error) {
             notification.success({
                 message: "Đăng ký thành công",
                 description: "Vui lòng đăng nhập để tiếp tục.",
