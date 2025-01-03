@@ -32,10 +32,6 @@ const adminItems: MenuItem[] = [
         label: <Link href="/admin/exams">Quản lý đề thi</Link>,
         key: 'exams',
     },
-    {
-        label: <Link href="/admin/reports">Quản lý báo cáo</Link>,
-        key: 'reports',
-    },
 ];
 
 const userItems: MenuItem[] = [
