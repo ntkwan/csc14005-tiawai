@@ -46,4 +46,5 @@ export interface UserHistoryExam {
     testId: number;
     testTitle: string;
     totalQuestions: number;
+    isGenerated: boolean;
 }

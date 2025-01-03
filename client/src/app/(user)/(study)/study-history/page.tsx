@@ -31,27 +31,29 @@ interface History {
     onClick?: () => void;
 }
 
-const Profile = () => {
-    const { data: historyExamsData, isLoading } = useGetHistoryExamsQuery();
+const History = () => {
+    const { data, isLoading } = useGetHistoryExamsQuery();
     const [filteredData, setFilteredData] = useState<UserHistoryExam[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
     useEffect(() => {
-        setFilteredData(historyExamsData || []);
-    }, [historyExamsData]);
+        setFilteredData(data || []);
+    }, [data]);
 
     if (isLoading) return null;
+
+    console.log(data);
 
     const history: History[] = [
         {
             title: "Danh sách đề thi",
             buttonName: "Lịch sử làm đề thi",
-            data: historyExamsData || [],
+            data: data?.filter((item) => !item.isGenerated) || [],
         },
         {
             title: "Danh sách đề luyện tập",
             buttonName: "Lịch sử làm luyện tập",
-            data: historyExamsData || [],
+            data: data?.filter((item) => item.isGenerated) || [],
         },
     ];
 
@@ -261,4 +263,4 @@ const ExamFrame = ({
     );
 };
 
-export default Profile;
+export default History;
