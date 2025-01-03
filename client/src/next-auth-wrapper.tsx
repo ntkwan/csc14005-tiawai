@@ -21,7 +21,6 @@ export default function NextAuthWrapper({
     const { data: session, status } = useSession();
     const [signOut] = useSignOutMutation();
     const auth = useAppSelector((state) => state.auth);
-    const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
     useEffect(() => {
         const handleSignOut = async () => {
@@ -36,6 +35,7 @@ export default function NextAuthWrapper({
                 const { accessToken } = res as User;
                 dispatch(setCridentials({ accessToken, refreshToken: "" }));
                 await signOut({});
+                window.localStorage.removeItem("refreshToken");
             }
         };
 
@@ -44,7 +44,6 @@ export default function NextAuthWrapper({
         if (session?.error === "RefreshTokenError" || session === null) {
             setLoading(false);
             if (auth.user) {
-                setRefreshToken(null);
                 handleSignOut();
             }
         } else {
@@ -53,8 +52,16 @@ export default function NextAuthWrapper({
                 session?.accessToken &&
                 session?.refreshToken
             ) {
-                if (session.refreshToken !== refreshToken) {
-                    setRefreshToken(session.refreshToken);
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken");
+                if (
+                    session.refreshToken &&
+                    session.refreshToken !== refreshToken
+                ) {
+                    window.localStorage.setItem(
+                        "refreshToken",
+                        session.refreshToken,
+                    );
                     dispatch(
                         setAuthState({
                             user: session.user,
@@ -75,7 +82,6 @@ export default function NextAuthWrapper({
         appApi,
         auth.user,
         auth.refreshToken,
-        refreshToken,
         status,
     ]);
 
