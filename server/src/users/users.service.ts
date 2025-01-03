@@ -78,7 +78,7 @@ export class UsersService {
                 });
             }
             const sortedSubmission = processedSubmission.sort(
-                (a, b) => b.pts - a.pts,
+                (a, b) => b.pts - a.pts && b.testId - a.testId,
             );
             sortedSubmission.push({
                 testId: -1,

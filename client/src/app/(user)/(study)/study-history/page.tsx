@@ -225,7 +225,7 @@ const ExamFrame = ({
                         <Text strong>
                             {examData.cntCorrect}/{examData.totalQuestions}
                         </Text>
-                        <Text strong>{examData.pts}</Text>
+                        <Text strong>{examData.pts.toPrecision(2)}</Text>
                     </Flex>
 
                     <Flex justify="space-between" className="!w-full !gap-2">
