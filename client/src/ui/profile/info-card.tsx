@@ -1,4 +1,4 @@
-import { Card, Col, Flex, Form, Input, Row } from "antd";
+import { Card, Col, Flex, Form, Input, Row } from 'antd';
 
 interface InfoCardProps {
     [key: string]: string | number | boolean | undefined;
@@ -7,17 +7,17 @@ interface InfoCardProps {
 }
 
 const keyMap: { [key: string]: string } = {
-    name: "Họ và tên",
-    email: "Email",
-    gender: "Giới tính",
-    phone: "Số điện thoại",
-    birth: "Ngày sinh",
-    address: "Địa chỉ",
-    examTaken: "Số đề thi đã làm",
-    practiceTaken: "Số đề luyện tập đã làm",
-    examGenByAI: "Số đề thi đã tạo bằng AI",
-    practiceByAI: "Số đề luyện tập đã làm bằng AI",
-    vocabularies: "Số từ vựng đã học",
+    name: 'Họ và tên',
+    email: 'Email',
+    gender: 'Giới tính',
+    phone: 'Số điện thoại',
+    birthday: 'Ngày sinh',
+    address: 'Địa chỉ',
+    examTaken: 'Số đề thi đã làm',
+    practiceTaken: 'Số đề luyện tập đã làm',
+    examGenByAI: 'Số đề thi đã tạo bằng AI',
+    practiceByAI: 'Số đề luyện tập đã làm bằng AI',
+    vocabularies: 'Số từ vựng đã học',
 };
 
 const InfoCard = (props: InfoCardProps) => {
@@ -27,12 +27,12 @@ const InfoCard = (props: InfoCardProps) => {
             className="font-roboto"
             style={{
                 width: 700,
-                borderRadius: "50px",
-                borderWidth: "2px",
-                borderColor: "black",
-                paddingLeft: "16px",
-                paddingRight: "16px",
-                paddingTop: "10px",
+                borderRadius: '50px',
+                borderWidth: '2px',
+                borderColor: 'black',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+                paddingTop: '10px',
             }}
             bordered={true}
         >
@@ -44,7 +44,7 @@ const InfoCard = (props: InfoCardProps) => {
             {!isUpdatingInfo ? (
                 Object.entries(props)
                     .filter(
-                        ([key]) => key !== "title" && key !== "isUpdatingInfo",
+                        ([key]) => key !== 'title' && key !== 'isUpdatingInfo',
                     )
                     .map(([key, value]) => (
                         <Row key={key} className="mb-4">
@@ -55,7 +55,7 @@ const InfoCard = (props: InfoCardProps) => {
                                 span={12}
                                 className="font-roboto text-lg font-bold"
                             >
-                                {value?.toString() || ""}
+                                {value?.toString() || ''}
                             </Col>
                         </Row>
                     ))
@@ -76,7 +76,7 @@ const InfoCard = (props: InfoCardProps) => {
                     {Object.entries(props)
                         .filter(
                             ([key]) =>
-                                key !== "title" && key !== "isUpdatingInfo",
+                                key !== 'title' && key !== 'isUpdatingInfo',
                         )
                         .map(([key, value]) => (
                             <Form.Item
@@ -91,7 +91,7 @@ const InfoCard = (props: InfoCardProps) => {
                             >
                                 <Input
                                     className="font-roboto font-bold"
-                                    placeholder={value?.toString() || ""}
+                                    placeholder={value?.toString() || ''}
                                 />
                             </Form.Item>
                         ))}

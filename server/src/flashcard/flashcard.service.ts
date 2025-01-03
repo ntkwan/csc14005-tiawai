@@ -6,6 +6,7 @@ import { ExtractFlashcardDto } from './dtos/extract-flashcard.dto';
 import { ConfigService } from '@nestjs/config';
 import { TEMPLATES } from './template.constants';
 import { UserLoginDto } from 'src/users/dtos/user-login.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class FlashcardService {
@@ -14,6 +15,23 @@ export class FlashcardService {
         private readonly flashcardModel: typeof FlashcardEntity,
         private configService: ConfigService,
     ) {}
+
+    async findAll(user: User) {
+        try {
+            const userId: string = user.id;
+            return this.flashcardModel.findAll({
+                where: {
+                    userId,
+                },
+                order: [['uploadAt', 'DESC']],
+            });
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Failed to get flashcards',
+                error.message,
+            );
+        }
+    }
 
     async extract(
         extractFlashcardDto: ExtractFlashcardDto,

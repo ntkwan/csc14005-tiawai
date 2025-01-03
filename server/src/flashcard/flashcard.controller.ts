@@ -15,6 +15,7 @@ import {
     Post,
     Body,
     Request,
+    Get,
 } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -45,5 +46,22 @@ export class FlashcardController {
         @Request() req: any,
     ) {
         return this.flashcardService.extract(extractFlashcardDto, req.user);
+    }
+
+    @ApiOperation({
+        summary: 'Get all flashcards [USER]',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Get all flashcards successfully',
+        type: FlashcardEntity,
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.USER)
+    @Get()
+    async getAll(@Request() req: any) {
+        return this.flashcardService.findAll(req.user);
     }
 }
