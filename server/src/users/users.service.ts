@@ -41,6 +41,7 @@ export class UsersService {
                 (submission) => submission.userId === id,
             );
             const processedSubmission: {
+                isGenerated: boolean;
                 testId: number;
                 submissionId: string;
                 testTitle: string;
@@ -69,6 +70,7 @@ export class UsersService {
                     }
                 }
                 processedSubmission.push({
+                    isGenerated: test.isGenerated,
                     testId: test.id,
                     testTitle: test.title,
                     submissionId: submission.id,
@@ -81,6 +83,7 @@ export class UsersService {
                 (a, b) => b.pts - a.pts && b.testId - a.testId,
             );
             sortedSubmission.push({
+                isGenerated: false,
                 testId: -1,
                 submissionId: '0',
                 testTitle: 'Specialized Exam',
