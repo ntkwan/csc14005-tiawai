@@ -122,7 +122,7 @@ const Profile = () => {
         <div className="mb-9">
             <Banner className="mb-28">
                 <Space size={64}>
-                    <Image src={profileTiawai} alt="profile tiawai" />
+                    <Image src={profileTiawai} alt="profile tiawai" priority />
                     <BannerTitle>Thông Tin Cá Nhân</BannerTitle>
                 </Space>
             </Banner>
