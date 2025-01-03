@@ -22,4 +22,10 @@ export enum TEMPLATES {
     Câu hỏi cần giải thích:
     {input}
     `,
+
+    CLASSIFY = `Cho câu hỏi trong đề thi tiếng anh THPT quốc gia, hãy phân loại nó dựa trên các mục sau: Phát âm, Trọng âm, Tình huống giao tiếp, Ngữ pháp, Kiểm tra từ vựng, Tìm lỗi sai, Viết lại câu, Kết hợp câu, Đọc hiểu văn bản. Lưu ý, chỉ các câu hỏi có cung cấp đoạn văn mới được phân loại Đọc hiểu văn bản. Chỉ cần trả lời phân loại. Ví dụ cho câu hỏi 1, trả lời là "Ngữ pháp".
+
+    Câu hỏi cần phân loại:
+    {input}
+    `,
 }

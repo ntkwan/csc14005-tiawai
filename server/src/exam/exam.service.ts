@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateTestDto, TestQuestionDto } from './dtos/create-test.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { TestEntity } from './entities/exam.entity';
+import { Question, TestEntity } from './entities/exam.entity';
 import { SubmissionService } from './submission/submission.service';
 import { PublicTestQuestionsEntity } from './entities/public-test-questions.entity';
 import { TestDetailsEntity } from './entities/test-details.entity';
@@ -13,6 +13,12 @@ import { CreateMessageDto } from 'src/chat/message/dtos/create-message.dto';
 import { MessageResponseDto } from 'src/chat/message/dtos/message-response.dto';
 import { PrivateTestQuestionsEntity } from './entities/private-test-questions.entity';
 import { User } from 'src/users/entities/user.entity';
+import { VectorStoreService } from 'src/vector-store/vector-store.service';
+import { Document } from '@langchain/core/documents';
+import { ChatOpenAI } from '@langchain/openai';
+import { ConfigService } from '@nestjs/config';
+import { PromptTemplate } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
 
 @Injectable()
 export class ExamService {
@@ -21,6 +27,8 @@ export class ExamService {
         private readonly testModel: typeof TestEntity,
         private readonly submissionService: SubmissionService,
         private readonly messageService: MessageService,
+        private readonly vectorStoreService: VectorStoreService,
+        private readonly configService: ConfigService,
     ) {}
 
     async findAll() {
@@ -227,6 +235,85 @@ export class ExamService {
         } catch (error) {
             throw new InternalServerErrorException(
                 'Failed to find test by id',
+                error.message,
+            );
+        }
+    }
+
+    formattedContent(question: Question): string {
+        const {
+            hasParagraph,
+            paragraph,
+            content: questionContent,
+            choices,
+            correctAnswer,
+            explanation,
+            id,
+        } = question;
+
+        const content =
+            `Câu hỏi ${id}: ${questionContent}\n` +
+            (hasParagraph ? `Đoạn văn: ${paragraph}\n` : '') +
+            `Các đáp án: A. ${choices.A} B. ${choices.B} C. ${choices.C} D. ${choices.D}\n` +
+            `Đáp án đúng: ${correctAnswer}\n` +
+            (explanation && explanation.length > 0
+                ? `Giải thích mẫu: ${explanation}\n`
+                : '');
+
+        return content;
+    }
+
+    async classify(question: Question): Promise<string> {
+        const model = new ChatOpenAI({
+            model: this.configService.get('OPENAI_MODEL'),
+            temperature: parseFloat(
+                this.configService.get<string>('OPENAI_TEMPERATURE'),
+            ),
+        });
+
+        const prompt = PromptTemplate.fromTemplate(TEMPLATES.CLASSIFY);
+        const chain = prompt.pipe(model).pipe(new StringOutputParser());
+        const input = this.formattedContent(question);
+        return await chain.invoke({
+            input: input,
+        });
+    }
+
+    async saveQuestionsToVectorStore(exam: TestEntity) {
+        const { title, questions } = exam;
+        const documents = await Promise.all(
+            questions.map(async (question) => {
+                const category = await this.classify(question);
+                const content =
+                    `${title}\n` +
+                    this.formattedContent(question) +
+                    `Phân loại: ${category}`;
+                return new Document({
+                    pageContent: content,
+                    metadata: {
+                        title: title,
+                        questionId: question.id,
+                    },
+                });
+            }),
+        );
+        await this.vectorStoreService.addDocuments(documents);
+    }
+
+    async saveNotEmbeddedTestToVectorStore() {
+        try {
+            const tests = await this.testModel.findAll({
+                where: {
+                    isGenerated: false,
+                },
+            });
+            for (const test of tests) {
+                await this.saveQuestionsToVectorStore(test);
+            }
+            return 'Successfully saved not embedded test to vector store';
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Failed to save not embedded test to vector store',
                 error.message,
             );
         }
@@ -475,6 +562,7 @@ export class ExamService {
                 isGenerated: false,
                 author: user.id,
             });
+            await this.saveQuestionsToVectorStore(test);
 
             if (!test) {
                 throw new InternalServerErrorException('Failed to create test');

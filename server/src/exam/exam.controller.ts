@@ -168,4 +168,20 @@ export class ExamController {
     async remove(@Param('id') id: number) {
         return this.examService.removeById(+id);
     }
+
+    @ApiOperation({
+        summary: 'Embed test that have not been on vector store [ADMIN]',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Embed test successfully',
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @ApiBearerAuth('access-token')
+    @Roles(Role.ADMIN)
+    @Post('embed')
+    async embed() {
+        return this.examService.saveNotEmbeddedTestToVectorStore();
+    }
 }
