@@ -1,9 +1,9 @@
-'use client';
-import Image from 'next/image';
-import { Typography } from 'antd';
-import mascotCap from '@public/mascot/cap.png';
-import mascotBody from '@public/mascot/body.png';
-import mascotBgBlur from '@public/mascot/bg-blur.png';
+"use client";
+import Image from "next/image";
+import { Typography } from "antd";
+import mascotCap from "@public/mascot/cap.png";
+import mascotBody from "@public/mascot/body.png";
+import mascotBgBlur from "@public/mascot/bg-blur.png";
 const { Title } = Typography;
 
 export default function TiawaiMascot() {
@@ -31,7 +31,7 @@ export default function TiawaiMascot() {
                     className="tiawai-mascot__name text-center !font-chango !font-normal"
                     level={2}
                 >
-                    Tiawai
+                    tiawai
                 </Title>
             </div>
         </div>
