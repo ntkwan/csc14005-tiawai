@@ -112,7 +112,6 @@ export class TestEntity extends Model {
     @ApiProperty()
     @Column({
         allowNull: false,
-        unique: true,
         type: DataType.UUID,
     })
     author: string;
