@@ -8,6 +8,7 @@ import {
     TEMPLATES_GENERATOR,
 } from './template.constants';
 import { Category } from './enums/category.enum';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class PracticeService {
@@ -96,7 +97,10 @@ export class PracticeService {
         }
     }
 
-    async generatePracticeQuestions(category: Category): Promise<TestEntity> {
+    async generatePracticeQuestions(
+        user: User,
+        category: Category,
+    ): Promise<TestEntity> {
         try {
             const questions: Question[] = await this.classify(category);
             const formattedQuestions: string[] = questions.map(
@@ -164,6 +168,7 @@ export class PracticeService {
                 uploadAt: new Date(),
                 duration: 15,
                 isGenerated: true,
+                author: user.id,
             });
             test.title = `[${new Date().toLocaleDateString()}] Chuyên đề ${category} #${test.id}`;
             await test.save();

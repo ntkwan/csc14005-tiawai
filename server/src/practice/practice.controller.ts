@@ -8,6 +8,7 @@ import {
     Post,
     Query,
     ValidationPipe,
+    Request,
 } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -30,8 +31,12 @@ export class PracticeController {
     @Roles(Role.USER)
     @Post(':category')
     async generatePracticeQuestions(
+        @Request() req: any,
         @Query(new ValidationPipe()) query: CategoryDto,
     ): Promise<TestEntity> {
-        return this.practiceService.generatePracticeQuestions(query.category);
+        return this.practiceService.generatePracticeQuestions(
+            req.user,
+            query.category,
+        );
     }
 }

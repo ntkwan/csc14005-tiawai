@@ -125,9 +125,15 @@ export class ExamService {
         }
     }
 
-    async publicFindAllPractice(): Promise<PublicTestQuestionsEntity[]> {
+    async privateFindAllPractice(
+        user: User,
+    ): Promise<PublicTestQuestionsEntity[]> {
         try {
-            const tests = await this.testModel.findAll();
+            const tests = await this.testModel.findAll({
+                where: {
+                    author: user.id,
+                },
+            });
             const publicTests: PublicTestQuestionsEntity[] = [];
             for (const test of tests) {
                 if (test.isGenerated === true) {
@@ -426,7 +432,10 @@ export class ExamService {
         }
     }
 
-    async create(createTestDto: CreateTestDto): Promise<TestEntity> {
+    async create(
+        user: User,
+        createTestDto: CreateTestDto,
+    ): Promise<TestEntity> {
         try {
             const title: string = createTestDto.title;
             const totalQuestions: number = createTestDto.totalQuestions;
@@ -445,7 +454,6 @@ export class ExamService {
                     };
                 },
             );
-
             const test = await this.testModel.create({
                 title: title,
                 questions: questions,
@@ -453,6 +461,7 @@ export class ExamService {
                 uploadAt: new Date(),
                 duration: duration,
                 isGenerated: false,
+                author: user.id,
             });
 
             if (!test) {
@@ -461,6 +470,7 @@ export class ExamService {
 
             return test;
         } catch (error) {
+            console.log(error.message);
             throw new InternalServerErrorException(
                 'Failed to create test',
                 error.message,

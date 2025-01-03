@@ -64,8 +64,8 @@ export class ExamController {
     @ApiBearerAuth('access-token')
     @Roles(Role.ADMIN)
     @Post()
-    async create(@Body() createTestDto: CreateTestDto) {
-        return this.examService.create(createTestDto);
+    async create(@Request() req: any, @Body() createTestDto: CreateTestDto) {
+        return this.examService.create(req.user, createTestDto);
     }
 
     @ApiOperation({
@@ -135,8 +135,8 @@ export class ExamController {
     @ApiBearerAuth('access-token')
     @Roles(Role.USER)
     @Get('practices')
-    async publicFindAllPractice() {
-        return this.examService.publicFindAllPractice();
+    async privateFindAllPractice(@Request() req: any) {
+        return this.examService.privateFindAllPractice(req.user);
     }
 
     @ApiOperation({

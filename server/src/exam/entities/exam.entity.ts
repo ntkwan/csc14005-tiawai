@@ -30,7 +30,7 @@ export interface Answer {
 }
 
 @Table({
-    tableName: 'tests',
+    tableName: 'exams',
 })
 export class TestEntity extends Model {
     @ApiProperty({ example: 1 })
@@ -105,8 +105,17 @@ export class TestEntity extends Model {
     @Column({
         allowNull: false,
         type: DataType.BOOLEAN,
+        defaultValue: false,
     })
     isGenerated: boolean;
+
+    @ApiProperty()
+    @Column({
+        allowNull: false,
+        unique: true,
+        type: DataType.UUID,
+    })
+    author: string;
 }
 
 @Table({
