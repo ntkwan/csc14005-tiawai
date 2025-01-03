@@ -1,13 +1,13 @@
-'use client';
-import Image from 'next/image';
-import { Empty, Flex, Space, Typography } from 'antd';
-import GenerateButton from '@/ui/generate-button';
-import Banner from '@/app/(user)/(study)/_ui/banner';
-import TestBox from '@/app/(user)/(study)/_ui/test-box';
-import bigTiawai2 from '@public/big-tiawai-2.svg';
-import { BannerTitle } from '@/ui/common/title';
+"use client";
+import Image from "next/image";
+import { Empty, Flex, Space, Typography } from "antd";
+import GenerateButton from "@/ui/generate-button";
+import Banner from "@/app/(user)/(study)/_ui/banner";
+import TestBox from "@/app/(user)/(study)/_ui/test-box";
+import bigTiawai2 from "@public/big-tiawai-2.svg";
+import { BannerTitle } from "@/ui/common/title";
 const { Title } = Typography;
-import { useGetExamPracticesQuery } from '@/services/exam';
+import { useGetExamPracticesQuery } from "@/services/exam";
 
 const Practice = () => {
     const { data: practiceData, isLoading } = useGetExamPracticesQuery();
@@ -15,7 +15,7 @@ const Practice = () => {
 
     const testsData = [
         {
-            title: 'Chuyên đề của bạn',
+            title: "Chuyên đề của bạn",
             examData: practiceData,
         },
     ];
@@ -32,7 +32,7 @@ const Practice = () => {
                 <Space size="large">
                     <Title className="!font-normal" level={2}>
                         <i>
-                            Trải nghiệm tạo ra{' '}
+                            Trải nghiệm tạo ra{" "}
                             <b>bộ đề riêng theo dạng mà bạn mong muốn</b> dựa
                             trên năng lực của bạn bằng <b>AI - Tia</b>
                         </i>
@@ -44,20 +44,17 @@ const Practice = () => {
                     />
                 </Space>
             </Flex>
-            <Space direction="vertical" size={125}>
+            <Space className="w-full" direction="vertical" size={125}>
                 {testsData[0].examData?.length ? (
                     testsData.map((test, index) => (
                         <TestBox key={index} theme="blue" {...test} />
                     ))
                 ) : (
-                    <div>
-                        <Empty
-                            className="!m-auto"
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            description="Không có dữ liệu"
-                            imageStyle={{ height: 100 }}
-                        />
-                    </div>
+                    <Empty
+                        className="!m-auto"
+                        description="Không có dữ liệu"
+                        imageStyle={{ height: 100 }}
+                    />
                 )}
             </Space>
         </div>

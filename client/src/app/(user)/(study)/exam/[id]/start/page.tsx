@@ -1,5 +1,5 @@
-'use client';
-import { useState, useEffect, useContext } from 'react';
+"use client";
+import { useState, useEffect, useContext } from "react";
 import {
     Button,
     Typography,
@@ -10,25 +10,26 @@ import {
     Layout,
     Form,
     notification,
-} from 'antd';
-import { useRouter } from 'next/navigation';
-import { ChoicesType } from '@/types/exam';
-import { useAppSelector } from '@/lib/hooks/hook';
-import { ExamContext } from '@/context/exam';
-import { useSubmitExamMutation } from '@/services/exam';
+    Result,
+} from "antd";
+import { useRouter } from "next/navigation";
+import { ChoicesType } from "@/types/exam";
+import { useAppSelector } from "@/lib/hooks/hook";
+import { ExamContext } from "@/context/exam";
+import { useSubmitExamMutation } from "@/services/exam";
 
 const { Title, Paragraph } = Typography;
 const { Sider, Content } = Layout;
 
 const siderStyle: React.CSSProperties = {
-    overflowY: 'auto',
-    maxHeight: '85vh',
-    position: 'sticky',
+    overflowY: "auto",
+    maxHeight: "85vh",
+    position: "sticky",
     top: 80,
-    scrollbarWidth: 'thin',
-    scrollbarGutter: 'stable',
-    backgroundColor: '#f5f5f5',
-    padding: '20px',
+    scrollbarWidth: "thin",
+    scrollbarGutter: "stable",
+    backgroundColor: "#f5f5f5",
+    padding: "20px",
 };
 
 interface Answer {
@@ -42,7 +43,7 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
     const user = useAppSelector((state) => state.auth.user);
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const [answers, setAnswers] = useState<Answer[]>([]);
-    const [timeStart, setTimeStart] = useState<string>('');
+    const [timeStart, setTimeStart] = useState<string>("");
     const [submitExam, { isLoading }] = useSubmitExamMutation();
 
     useEffect(() => {
@@ -79,17 +80,31 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
         };
 
         if (!isSubmit) {
-            window.addEventListener('beforeunload', handleBeforeUnload);
+            window.addEventListener("beforeunload", handleBeforeUnload);
         }
 
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, [isSubmit]);
 
     if (!exam || !exam.questions) {
-        router.push('/exam');
-        return null;
+        return (
+            <Result
+                status="403"
+                title="403"
+                subTitle="Đề thi không tồn tại."
+                extra={
+                    <Button
+                        type="primary"
+                        shape="round"
+                        onClick={() => router.push("/exam")}
+                    >
+                        Quay lại trang đề thi
+                    </Button>
+                }
+            />
+        );
     }
 
     const handleSubmit = async () => {
@@ -104,17 +119,17 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
 
         if (!res.error) {
             setIsSubmit(true);
-            setTimeStart('');
+            setTimeStart("");
             notification.success({
-                message: 'Nộp bài thành công',
-                description: 'Bài thi của bạn đã được ghi nhận',
+                message: "Nộp bài thành công",
+                description: "Bài thi của bạn đã được ghi nhận",
             });
             router.push(`/exam/${params.id}/result/${res.data.id}`);
         } else {
             setIsSubmit(false);
             notification.error({
-                message: 'Nộp bài thất bại',
-                description: 'Vui lòng thử lại sau',
+                message: "Nộp bài thất bại",
+                description: "Vui lòng thử lại sau",
             });
         }
     };
@@ -193,9 +208,9 @@ export default function StartExamPage({ params }: { params: { id: number } }) {
                         <Button
                             key={index}
                             type={
-                                answers[index]?.answer ? 'primary' : 'default'
+                                answers[index]?.answer ? "primary" : "default"
                             }
-                            style={{ padding: '8px', height: '36px' }}
+                            style={{ padding: "8px", height: "36px" }}
                             href={`#${index}`}
                         >
                             {index + 1}
@@ -233,9 +248,9 @@ const TimeLeft = ({
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        return `${String(minutes).padStart(2, '0')}:${String(
+        return `${String(minutes).padStart(2, "0")}:${String(
             remainingSeconds,
-        ).padStart(2, '0')}`;
+        ).padStart(2, "0")}`;
     };
 
     useEffect(() => {
