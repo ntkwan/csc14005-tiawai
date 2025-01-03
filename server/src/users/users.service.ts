@@ -16,6 +16,8 @@ import { FlashcardEntity } from 'src/flashcard/entities/flashcard.entity';
 import { FlashcardService } from 'src/flashcard/flashcard.service';
 import { ExamService } from 'src/exam/exam.service';
 import { TestEntity } from 'src/exam/entities/exam.entity';
+import { AnswerDto } from 'src/exam/submission/dtos/create-submission.dto';
+import { TestDetailsEntity } from 'src/exam/entities/test-details.entity';
 
 @Injectable()
 export class UsersService {
@@ -30,6 +32,79 @@ export class UsersService {
         private configService: ConfigService,
     ) {}
 
+    async getHistoryExams(profileUser: User): Promise<TestDetailsEntity[]> {
+        try {
+            const { id } = profileUser;
+            const tests = await this.examService.findAll();
+            const submissions = await this.submissionService.findAll();
+            const userSubmissions = submissions.filter(
+                (submission) => submission.userId === id,
+            );
+            const processedSubmission: {
+                testId: number;
+                submissionId: string;
+                testTitle: string;
+                pts: number;
+                totalQuestions: number;
+                cntCorrect: number;
+            }[] = [];
+            for (const submission of userSubmissions) {
+                const test = tests.find(
+                    (test) => test.id === submission.testId,
+                );
+                let pts = 0;
+                let cntCorrect = 0;
+                for (const question of test.questions) {
+                    const answer = submission.answers.find(
+                        (answer: AnswerDto) =>
+                            answer.questionId === question.id,
+                    );
+                    if (
+                        answer &&
+                        answer.answer ===
+                            test.questions[answer.questionId - 1].correctAnswer
+                    ) {
+                        pts = pts + 10 / test.totalQuestions;
+                        cntCorrect = cntCorrect + 1;
+                    }
+                }
+                processedSubmission.push({
+                    testId: test.id,
+                    testTitle: test.title,
+                    submissionId: submission.id,
+                    pts: pts,
+                    totalQuestions: test.totalQuestions,
+                    cntCorrect: cntCorrect,
+                });
+            }
+            const sortedSubmission = processedSubmission.sort(
+                (a, b) => b.pts - a.pts,
+            );
+            sortedSubmission.push({
+                testId: -1,
+                submissionId: '0',
+                testTitle: 'Specialized Exam',
+                pts: -1,
+                totalQuestions: -1,
+                cntCorrect: -1,
+            });
+            const result = [];
+            for (let i = 0; i + 1 < sortedSubmission.length; i++) {
+                if (
+                    sortedSubmission[i].testId !==
+                    sortedSubmission[i + 1].testId
+                ) {
+                    result.push(sortedSubmission[i]);
+                }
+            }
+            return result;
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Error getting profile study stats',
+                error.message,
+            );
+        }
+    }
     async getProfileStudyStats(profileUser: User): Promise<UserStatsDto> {
         try {
             const { id } = profileUser;

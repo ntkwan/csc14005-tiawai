@@ -23,6 +23,18 @@ export class ExamService {
         private readonly messageService: MessageService,
     ) {}
 
+    async findAll() {
+        try {
+            const tests = await this.testModel.findAll();
+            return tests;
+        } catch (error) {
+            throw new InternalServerErrorException(
+                'Failed to get all exams',
+                error.message,
+            );
+        }
+    }
+
     async getSubmissionsByTestId(
         user: User,
         testId: number,
