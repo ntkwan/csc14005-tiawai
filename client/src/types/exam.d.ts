@@ -28,7 +28,7 @@ export interface Exam {
     uploadedAt?: string;
 }
 
-interface ExamResult {
+export interface ExamResult {
     score: number;
     submissionId?: string;
     totalQuestions: number;
@@ -37,4 +37,13 @@ interface ExamResult {
     incorrectAnswers: number;
     skippedQuestions: number;
     timeConsumed: number;
+}
+
+export interface UserHistoryExam {
+    cntCorrect: number;
+    pts: number;
+    submissionId: string;
+    testId: number;
+    testTitle: string;
+    totalQuestions: number;
 }

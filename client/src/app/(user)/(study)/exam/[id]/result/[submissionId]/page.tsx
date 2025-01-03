@@ -1,6 +1,7 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useState, useContext } from "react";
+import { ExamContext } from "@/context/exam";
+import { useRouter } from "next/navigation";
 import {
     Button,
     Card,
@@ -13,11 +14,10 @@ import {
     Divider,
     Skeleton,
     Flex,
-} from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { useGetExamResultQuery } from '@/services/exam';
-import { Question } from '@/types/exam';
-import { exam_1 } from '../../test';
+} from "antd";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { useGetExamResultQuery } from "@/services/exam";
+import { Question } from "@/types/exam";
 
 const { Title, Text, Paragraph } = Typography;
 const { Panel } = Collapse;
@@ -27,22 +27,21 @@ export default function ExamResultPage({
 }: {
     params: { id: number; submissionId: string };
 }) {
+    const exam = useContext(ExamContext);
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState<Question>({
-        question: '',
-        content: '',
+        question: "",
+        content: "",
         hasParagraph: false,
-        choices: { A: '', B: '', C: '', D: '' },
+        choices: { A: "", B: "", C: "", D: "" },
         answer: null,
         correctAnswer: null,
         isCorrect: false,
         points: 0,
-        explanation: '',
+        explanation: "",
         isAnswered: false,
     });
-
-    const examData = exam_1;
 
     const showModal = (question: Question) => {
         setCurrentQuestion(question);
@@ -101,7 +100,7 @@ export default function ExamResultPage({
         <Row gutter={[16, 16]}>
             {/* header */}
             <Col span={24}>
-                <Title level={3}>Kết quả thi: {examData.title}</Title>
+                <Title level={3}>Kết quả thi: {exam?.title}</Title>
                 <Space>
                     <Button type="primary" size="large" shape="round">
                         Xem đáp án
@@ -109,7 +108,7 @@ export default function ExamResultPage({
                     <Button
                         size="large"
                         shape="round"
-                        onClick={() => router.push('/exam')}
+                        onClick={() => router.push("/exam")}
                     >
                         Quay về trang đề thi
                     </Button>
@@ -127,7 +126,7 @@ export default function ExamResultPage({
                                 {result?.totalQuestions}
                             </Title>
                             <Paragraph>
-                                Số điểm:{' '}
+                                Số điểm:{" "}
                                 {result?.score !== undefined &&
                                 result?.totalQuestions !== undefined
                                     ? (result?.score).toFixed(1)
@@ -202,13 +201,13 @@ export default function ExamResultPage({
                                     backgroundColor:
                                         question.answer !==
                                         question.correctAnswer
-                                            ? '#f87171'
-                                            : '#E9DAE9',
+                                            ? "#f87171"
+                                            : "#E9DAE9",
                                     color:
                                         question.answer !==
                                         question.correctAnswer
-                                            ? 'white'
-                                            : '',
+                                            ? "white"
+                                            : "",
                                 }}
                             >
                                 {index + 1}
@@ -229,16 +228,16 @@ export default function ExamResultPage({
                                 <div
                                     className="max-h-10 min-h-10 min-w-10 max-w-10 content-center rounded-full bg-[#E9DAE9] text-center font-bold"
                                     style={{
-                                        lineHeight: '40px',
-                                        width: '40px',
-                                        height: '40px',
-                                        textAlign: 'center',
+                                        lineHeight: "40px",
+                                        width: "40px",
+                                        height: "40px",
+                                        textAlign: "center",
                                     }}
                                 >
                                     {index + 1}
                                 </div>
                                 <Text>
-                                    {question.correctAnswer}:{' '}
+                                    {question.correctAnswer}:{" "}
                                     {question.answer ===
                                     question.correctAnswer ? (
                                         <>
@@ -246,7 +245,7 @@ export default function ExamResultPage({
                                             <CheckOutlined
                                                 style={{
                                                     fontSize: 16,
-                                                    color: '#52c41a',
+                                                    color: "#52c41a",
                                                     marginLeft: 8,
                                                 }}
                                             />
@@ -258,7 +257,7 @@ export default function ExamResultPage({
                                                 size={40}
                                                 style={{
                                                     fontSize: 16,
-                                                    color: '#ff4d4f',
+                                                    color: "#ff4d4f",
                                                     marginLeft: 8,
                                                 }}
                                             />
@@ -298,10 +297,10 @@ export default function ExamResultPage({
                 <Divider />
                 <Title level={5}>Đáp án đúng:</Title>
                 <Paragraph className="px-4">
-                    <Text strong>{currentQuestion.correctAnswer}.</Text>{' '}
+                    <Text strong>{currentQuestion.correctAnswer}.</Text>{" "}
                     {
                         currentQuestion.choices[
-                            currentQuestion.correctAnswer || 'A'
+                            currentQuestion.correctAnswer || "A"
                         ]
                     }
                 </Paragraph>
@@ -318,8 +317,8 @@ export default function ExamResultPage({
                         header="Click để xem giải thích chi tiết"
                         className="text-left"
                         style={{
-                            whiteSpace: 'pre-wrap',
-                            textAlign: 'left',
+                            whiteSpace: "pre-wrap",
+                            textAlign: "left",
                         }}
                     >
                         <Text>{currentQuestion.explanation}</Text>
