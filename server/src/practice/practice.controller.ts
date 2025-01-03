@@ -29,7 +29,7 @@ export class PracticeController {
     @UseGuards(ATAuthGuard, RolesGuard)
     @ApiBearerAuth('access-token')
     @Roles(Role.USER)
-    @Post(':category')
+    @Post()
     async generatePracticeQuestions(
         @Request() req: any,
         @Query(new ValidationPipe()) query: CategoryDto,
